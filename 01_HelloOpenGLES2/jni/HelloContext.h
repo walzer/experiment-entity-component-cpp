@@ -28,7 +28,8 @@ private:
             } uniforms;
             struct
             {
-                GLuint myVertex;
+                GLuint coord;
+                GLuint color;
             } attributes;
         } Locations;
 
