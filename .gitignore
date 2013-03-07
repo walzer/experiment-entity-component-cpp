@@ -1,0 +1,6 @@
+# ignore for eclipse
+bin/
+gen/
+libs/
+obj/
+project.properties
