@@ -14,7 +14,7 @@ public:
     virtual bool init();
     virtual int run();
 
-private:
+protected:
     struct
     {
         GLuint  id;

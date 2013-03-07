@@ -5,6 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE        := HelloOpenGLES2
 JNI_SRC_FILES       := $(addprefix  ./,\
     HelloContext.cpp  \
+    HelloContext2.cpp  \
     HelloOpenGLES2.cpp  \
 )
 LOCAL_SRC_FILES     := ${JNI_SRC_FILES}

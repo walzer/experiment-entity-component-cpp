@@ -1,6 +1,6 @@
 #include <jni.h>
 
-#include "HelloContext.h"
+#include "HelloContext2.h"
 
 #include "Runtime.h"
 
@@ -9,7 +9,7 @@ class Application : public RuntimeListener
 public:
     virtual void onSurfaceCreated(Surface * surface)
     {
-        HelloContext * context = new HelloContext();
+        HelloContext * context = new HelloContext2();
         context->init();
         surface->setContext(context);
     }
