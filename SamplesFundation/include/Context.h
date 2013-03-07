@@ -6,8 +6,11 @@
 class Context
 {
 public:
+    virtual ~Context();
+
     Surface* getSurface();
 
+    virtual bool init() = 0;
     virtual int run() = 0;
 };
 

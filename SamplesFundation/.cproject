@@ -24,11 +24,18 @@
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.android.targetPlatform.258813522" isAbstract="false" superClass="com.android.targetPlatform"/>
 							<builder id="com.android.builder.412074448" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Android Builder" superClass="com.android.builder"/>
 							<tool id="com.android.gcc.compiler.1253507719" name="Android GCC Compiler" superClass="com.android.gcc.compiler">
-								<option id="com.android.gcc.option.includePath.1905558490" superClass="com.android.gcc.option.includePath" valueType="includePath"/>
+								<option id="com.android.gcc.option.includePath.1905558490" superClass="com.android.gcc.option.includePath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SamplesFundation/PVRTools/OGLES2}&quot;"/>
+								</option>
 								<inputType id="com.android.gcc.inputType.841448203" superClass="com.android.gcc.inputType"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="PVRTools|fundation" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="fundation"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="PVRTools"/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

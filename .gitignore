@@ -3,4 +3,5 @@ bin/
 gen/
 libs/
 obj/
+.*/
 project.properties

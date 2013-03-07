@@ -9,7 +9,9 @@ class Application : public RuntimeListener
 public:
     virtual void onSurfaceCreated(Surface * surface)
     {
-        surface->setContext(new HelloContext());
+        HelloContext * context = new HelloContext();
+        context->init();
+        surface->setContext(context);
     }
 };
 
