@@ -6,6 +6,7 @@
 
 #include "GLES2/gl2.h"
 
+#include <array>
 #include <vector>
 
 class AppContext;
@@ -64,17 +65,19 @@ protected:
     void drawTrangles();
     void drawTrangleStrip();
     void drawTrangleFan();
+    void drawConnectedStrip();
 
     // Store the touch positions(x,y), at most 6.
     static const unsigned MAX_SIZE = 6 * 2;
     std::vector<float> mPositionArray;
-
+    std::array<float, 8> mAnotherStrip;
     // Program identifier for primitive assembly.
     struct
     {
         GLuint id;
         GLuint attrCoord;
         GLuint unifColor;
+        GLuint unifPSize;
     } mProgPrimitive;
 };
 

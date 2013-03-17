@@ -37,10 +37,12 @@ bool AppContext::init()
 
     // Initialize primitive assembly program.
     const char* primitiveVss =
-        "attribute highp vec4    coord;"
+        "attribute  highp   vec4    coord;"
+        "uniform    mediump float   pointSize;"
         "void main(void)"
         "{"
         "    gl_Position = coord;"
+        "    gl_PointSize = pointSize;"
         "}";
     const char* primitiveFss =
         "uniform vec4    color;"
@@ -59,6 +61,21 @@ bool AppContext::init()
             &mProgPrimitive.attrCoord,
             1);
     mProgPrimitive.unifColor = glGetUniformLocation(mProgPrimitive.id, "color");
+    mProgPrimitive.unifPSize = glGetUniformLocation(mProgPrimitive.id, "pointSize");
+
+    mAnotherStrip =
+    {
+            0.25f, -0.25f,      0.75f, -0.25f,
+            0.25f, -0.75f,      0.75f, -0.75f,
+    };
+    // Get some limits.
+    float   pointSizeRange[2];
+    glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
+    Debug::logd("GLES: point size range:(%f, %f)", pointSizeRange[0], pointSizeRange[1]);
+
+    GLfloat   lineWidthRange[2];
+    glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
+    Debug::logd("GLES: line width range:(%f, %f)", lineWidthRange[0], lineWidthRange[1]);
     return true;
 }
 
@@ -87,9 +104,10 @@ int AppContext::run()
         &AppContext::drawTrangles,      // 4
         &AppContext::drawTrangleStrip,  // 5
         &AppContext::drawTrangleFan,    // 6
+        &AppContext::drawConnectedStrip,    // 7
     };
     // Select a draw function.
-    (this->*drawPrimitive[5])();
+    (this->*drawPrimitive[0])();
 
     glDisableVertexAttribArray(mProgPrimitive.attrCoord);
     return 0;
@@ -97,6 +115,7 @@ int AppContext::run()
 
 void AppContext::drawPoints()
 {
+    glUniform1f(mProgPrimitive.unifPSize, 7.0f);
     glUniform4f(mProgPrimitive.unifColor, 1.0f, 0.0f, 0.0f, 1.0f);
     glDrawArrays(GL_POINTS, 0, mPositionArray.size() / 2);
 }
@@ -145,4 +164,22 @@ void AppContext::onTouchEvent(Surface* sender, PointerData& args)
     Debug::logd("%s(%d)(%f, %f)", __PRETTY_FUNCTION__,
             args.action, args.args[0].x, args.args[0].y);
     clickEvent(sender, args);
+}
+
+void AppContext::drawConnectedStrip()
+{
+    if(mPositionArray.size() == 4 * 2)
+    {
+        float lastX = mPositionArray[mPositionArray.size() - 2];
+        float lastY = mPositionArray[mPositionArray.size() - 1];
+        mPositionArray.push_back(lastX);
+        mPositionArray.push_back(lastY);
+        mPositionArray.push_back(mAnotherStrip[0]);
+        mPositionArray.push_back(mAnotherStrip[1]);
+        mPositionArray.insert(
+                mPositionArray.end(),
+                mAnotherStrip.begin(),
+                mAnotherStrip.end());
+    }
+    drawTrangleStrip();
 }
