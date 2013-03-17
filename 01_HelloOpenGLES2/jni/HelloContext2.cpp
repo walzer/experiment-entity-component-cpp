@@ -1,4 +1,6 @@
 #include "HelloContext2.h"
+#include "Debug.h"
+#include "Runtime.h"
 
 bool HelloContext2::init()
 {
@@ -18,6 +20,7 @@ bool HelloContext2::init()
         0.0f, 0.0f, 1.0f, 1.0f,
     };
     mColorsArray = kColors;
+
     return true;
 }
 
