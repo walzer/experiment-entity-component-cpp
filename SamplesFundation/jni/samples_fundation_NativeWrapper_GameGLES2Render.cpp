@@ -8,7 +8,9 @@
 JNIEXPORT void JNICALL Java_samples_fundation_NativeWrapper_00024GameGLES2Render_onDrawFrame
   (JNIEnv *, jclass)
 {
-    Runtime::getSurface(0)->getContext()->run();
+    Surface * surface = Runtime::getSurface(0);
+    surface->onEvents();
+    surface->getContext()->run();
 }
 
 JNIEXPORT void JNICALL Java_samples_fundation_NativeWrapper_00024GameGLES2Render_onSurfaceChanged

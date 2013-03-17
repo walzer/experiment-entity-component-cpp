@@ -22,6 +22,15 @@ void Surface::setContext(Context * context)
     mContext = context;
 }
 
+void Surface::onEvents()
+{
+    PointerData args;
+    while(pointerQueue.read(args))
+    {
+        pointerEvent.raise(this, args);
+    }
+}
+
 int Surface::getWidth()
 {
     return mWidth;

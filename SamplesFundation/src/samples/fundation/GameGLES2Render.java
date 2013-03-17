@@ -8,10 +8,7 @@ import android.opengl.GLSurfaceView.Renderer;
 
 public class GameGLES2Render implements Renderer {
 
-    private Context mContext;
-
     public GameGLES2Render(Context context) {
-        mContext = context;
     }
 
     @Override

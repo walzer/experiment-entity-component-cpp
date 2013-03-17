@@ -1097,12 +1097,14 @@ unsigned int PVRTTextureFormatGetBPP(const GLuint nFormat, const GLuint nType)
 //		case GL_BGRA:
 			return 32;
 		}
+		break;
 	case GL_UNSIGNED_SHORT_5_5_5_1:
 		switch(nType)
 		{
 		case GL_RGBA:
 			return 16;
 		}
+		break;
 	}
 
 	return 0xFFFFFFFF;
