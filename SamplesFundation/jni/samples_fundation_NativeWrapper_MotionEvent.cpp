@@ -32,7 +32,7 @@ JNIEXPORT jboolean JNICALL Java_samples_fundation_NativeWrapper_00024MotionEvent
 #if 0
     char msg[1024];
     int offset = 0;
-    offset += sprintf(msg + offset, "onPointerAction");
+    offset += sprintf(msg + offset, __FUNCTION__);
     offset += sprintf(msg + offset, "( action: %d, source: %d { ", action, source);
 
     for (int i = 0; i < count; ++i)
@@ -64,6 +64,7 @@ JNIEXPORT jboolean JNICALL Java_samples_fundation_NativeWrapper_00024MotionEvent
 
         bool writed = static_cast<Surface_Android*>(Runtime::getSurface(0))->
                 pointerQueue.write(data);
+
         if (writed == false)
         {
             Debug::logd("pointerQueue.write failed!");

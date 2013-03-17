@@ -8,8 +8,8 @@ class Context;
 struct PointerArgs
 {
     int id;
-    int x;
-    int y;
+    float x;
+    float y;
 };
 
 typedef enum

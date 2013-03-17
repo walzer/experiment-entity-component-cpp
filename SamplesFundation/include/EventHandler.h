@@ -42,6 +42,7 @@ public:
     {
 
     }
+
     bool read(EventData& data)
     {
         size_t toRead = (mReaded + 1) % DataSize;
@@ -53,6 +54,7 @@ public:
         }
         return false;
     }
+
     bool write(const EventData& data)
     {
         if (mToWrite != mReaded)
@@ -63,6 +65,7 @@ public:
         }
         return false;
     }
+
 private:
     std::array<EventData, 10> mData;
     size_t mToWrite;

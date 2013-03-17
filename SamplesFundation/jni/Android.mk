@@ -6,6 +6,7 @@ LOCAL_MODULE        := SamplesFundation
 FUNDATION_SRC_FILES := $(addprefix  ../fundation/, \
     Context.cpp \
     Runtime.cpp \
+    SampleTools.cpp	\
     Surface.cpp  \
 )
 PVRTOOLS_SRC_FILES  := $(addprefix  ../PVRTools/,\
