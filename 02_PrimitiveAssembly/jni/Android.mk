@@ -2,10 +2,10 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := PrimitiveAssemblyAndTexturing
+LOCAL_MODULE    := PrimitiveAssembly
 JNI_SRC_FILES       := $(addprefix  ./,\
     AppContext.cpp  \
-    PrimitiveAssemblyAndTexturing.cpp  \
+    PrimitiveAssembly.cpp  \
 )
 LOCAL_SRC_FILES     := ${JNI_SRC_FILES}
 

@@ -1,4 +1,4 @@
-package samples.opengles2.primitiveassemblyandtexturing;
+package samples.opengles2.primitiveassembly;
 
 import samples.fundation.GameView;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 
     static {
-        System.loadLibrary("PrimitiveAssemblyAndTexturing");
+        System.loadLibrary("PrimitiveAssembly");
     }
     
 	private GameView mView;
