@@ -63,19 +63,6 @@ bool AppContext::init()
     mProgPrimitive.unifColor = glGetUniformLocation(mProgPrimitive.id, "color");
     mProgPrimitive.unifPSize = glGetUniformLocation(mProgPrimitive.id, "pointSize");
 
-    mAnotherStrip =
-    {
-            0.25f, -0.25f,      0.75f, -0.25f,
-            0.25f, -0.75f,      0.75f, -0.75f,
-    };
-    // Get some limits.
-    float   pointSizeRange[2];
-    glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
-    Debug::logd("GLES: point size range:(%f, %f)", pointSizeRange[0], pointSizeRange[1]);
-
-    GLfloat   lineWidthRange[2];
-    glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
-    Debug::logd("GLES: line width range:(%f, %f)", lineWidthRange[0], lineWidthRange[1]);
     return true;
 }
 
@@ -98,13 +85,6 @@ int AppContext::run()
     static void (AppContext::*drawPrimitive[])() =
     {
         &AppContext::drawPoints,        // 0
-        &AppContext::drawLines,         // 1
-        &AppContext::drawLineLoop,      // 2
-        &AppContext::drawLineStrip,     // 3
-        &AppContext::drawTrangles,      // 4
-        &AppContext::drawTrangleStrip,  // 5
-        &AppContext::drawTrangleFan,    // 6
-        &AppContext::drawConnectedStrip,    // 7
     };
     // Select a draw function.
     (this->*drawPrimitive[0])();
@@ -118,63 +98,6 @@ void AppContext::drawPoints()
     glUniform1f(mProgPrimitive.unifPSize, 7.0f);
     glUniform4f(mProgPrimitive.unifColor, 1.0f, 0.0f, 0.0f, 1.0f);
     glDrawArrays(GL_POINTS, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawLines()
-{
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
-    glLineWidth(3);
-    glDrawArrays(GL_LINES, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawLineLoop()
-{
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
-    glLineWidth(3);
-    glDrawArrays(GL_LINE_LOOP, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawLineStrip()
-{
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
-    glLineWidth(3);
-    glDrawArrays(GL_LINE_STRIP, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawTrangles()
-{
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
-    glDrawArrays(GL_TRIANGLES, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawTrangleStrip()
-{
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawTrangleFan()
-{
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, mPositionArray.size() / 2);
-}
-
-void AppContext::drawConnectedStrip()
-{
-    if(mPositionArray.size() == 4 * 2)
-    {
-        float lastX = mPositionArray[mPositionArray.size() - 2];
-        float lastY = mPositionArray[mPositionArray.size() - 1];
-        mPositionArray.push_back(lastX);
-        mPositionArray.push_back(lastY);
-        mPositionArray.push_back(mAnotherStrip[0]);
-        mPositionArray.push_back(mAnotherStrip[1]);
-        mPositionArray.insert(
-                mPositionArray.end(),
-                mAnotherStrip.begin(),
-                mAnotherStrip.end());
-    }
-    drawTrangleStrip();
 }
 
 void AppContext::onTouchEvent(Surface* sender, PointerData& args)

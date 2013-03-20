@@ -1,4 +1,4 @@
-package samples.opengles2.primitiveassembly;
+package samples.opengles2.texturing;
 
 import samples.fundation.GameView;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 
     static {
-        System.loadLibrary("PrimitiveAssembly");
+        System.loadLibrary("Texturing");
     }
     
     private GameView mView;
@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
