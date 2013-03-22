@@ -2,8 +2,8 @@
 
 #include "Context.h"
 #include "Debug.h"
-#include "Runtime_Android.h"
 #include "Surface_Android.h"
+#include "Runtime_Android.h"
 
 JNIEXPORT void JNICALL Java_samples_fundation_NativeWrapper_00024GameGLES2Render_onDrawFrame
   (JNIEnv *, jclass)

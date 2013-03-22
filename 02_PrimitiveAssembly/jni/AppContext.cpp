@@ -54,14 +54,14 @@ bool AppContext::init()
     {
             "coord",    // index = 0
     };
-    mProgPrimitive.id = createProgramFromSource(
+    mProgram.id = createProgramFromSource(
             primitiveVss,
             primitiveFss,
             primitiveAttribs,
-            &mProgPrimitive.attrCoord,
+            &mProgram.attrCoord,
             1);
-    mProgPrimitive.unifColor = glGetUniformLocation(mProgPrimitive.id, "color");
-    mProgPrimitive.unifPSize = glGetUniformLocation(mProgPrimitive.id, "pointSize");
+    mProgram.unifColor = glGetUniformLocation(mProgram.id, "color");
+    mProgram.unifPSize = glGetUniformLocation(mProgram.id, "pointSize");
 
     mAnotherStrip =
     {
@@ -84,11 +84,11 @@ int AppContext::run()
     glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(mProgPrimitive.id);
+    glUseProgram(mProgram.id);
 
-    glEnableVertexAttribArray(mProgPrimitive.attrCoord);
+    glEnableVertexAttribArray(mProgram.attrCoord);
     glVertexAttribPointer(
-            mProgPrimitive.attrCoord,
+            mProgram.attrCoord,
             2,
             GL_FLOAT,
             GL_FALSE,
@@ -109,53 +109,53 @@ int AppContext::run()
     // Select a draw function.
     (this->*drawPrimitive[0])();
 
-    glDisableVertexAttribArray(mProgPrimitive.attrCoord);
+    glDisableVertexAttribArray(mProgram.attrCoord);
     return 0;
 }
 
 void AppContext::drawPoints()
 {
-    glUniform1f(mProgPrimitive.unifPSize, 7.0f);
-    glUniform4f(mProgPrimitive.unifColor, 1.0f, 0.0f, 0.0f, 1.0f);
+    glUniform1f(mProgram.unifPSize, 7.0f);
+    glUniform4f(mProgram.unifColor, 1.0f, 0.0f, 0.0f, 1.0f);
     glDrawArrays(GL_POINTS, 0, mPositionArray.size() / 2);
 }
 
 void AppContext::drawLines()
 {
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
+    glUniform4f(mProgram.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
     glLineWidth(3);
     glDrawArrays(GL_LINES, 0, mPositionArray.size() / 2);
 }
 
 void AppContext::drawLineLoop()
 {
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
+    glUniform4f(mProgram.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
     glLineWidth(3);
     glDrawArrays(GL_LINE_LOOP, 0, mPositionArray.size() / 2);
 }
 
 void AppContext::drawLineStrip()
 {
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
+    glUniform4f(mProgram.unifColor, 0.0f, 1.0f, 0.0f, 1.0f);
     glLineWidth(3);
     glDrawArrays(GL_LINE_STRIP, 0, mPositionArray.size() / 2);
 }
 
 void AppContext::drawTrangles()
 {
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
+    glUniform4f(mProgram.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
     glDrawArrays(GL_TRIANGLES, 0, mPositionArray.size() / 2);
 }
 
 void AppContext::drawTrangleStrip()
 {
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
+    glUniform4f(mProgram.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, mPositionArray.size() / 2);
 }
 
 void AppContext::drawTrangleFan()
 {
-    glUniform4f(mProgPrimitive.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
+    glUniform4f(mProgram.unifColor, 0.0f, 0.0f, 1.0f, 1.0f);
     glDrawArrays(GL_TRIANGLE_FAN, 0, mPositionArray.size() / 2);
 }
 

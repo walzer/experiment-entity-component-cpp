@@ -10,4 +10,7 @@ unsigned createProgramFromSource(
         const unsigned  num         // attribute list size
 );
 
+void* readDataFromAsset(const char* pPath, char** pData, long& size);
+bool  releaseDataFromAsset(void* handle);
+
 #endif /* SAMPLETOOLS_H_ */

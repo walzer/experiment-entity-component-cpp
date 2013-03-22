@@ -78,7 +78,7 @@ protected:
         GLuint attrCoord;
         GLuint unifColor;
         GLuint unifPSize;
-    } mProgPrimitive;
+    } mProgram;
 };
 
 #endif /* __APP_CONTEXT_H__ */

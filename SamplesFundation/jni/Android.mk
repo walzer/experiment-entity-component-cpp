@@ -42,16 +42,20 @@ PVRTOOLS_SRC_FILES  := $(addprefix  ../PVRTools/,\
     PVRTVertex.cpp  \
 )
 JNI_SRC_FILES := $(addprefix ./, \
-    Debug_Android.cpp \
-    Runtime_Android.cpp \
-    samples_fundation_NativeWrapper_GameGLES2Render.cpp \
-    samples_fundation_NativeWrapper_MotionEvent.cpp \
-    Surface_Android.cpp \
+    Debug_Android.cpp  \
+    JNIHelper.cpp  \
+    NativeWrapper.cpp  \
+    Runtime_Android.cpp  \
+    samples_fundation_NativeWrapper_GameGLES2Render.cpp  \
+    samples_fundation_NativeWrapper_MotionEvent.cpp  \
+    SampleTools_Android.cpp  \
+    Surface_Android.cpp  \
 )
 LOCAL_SRC_FILES     := ${FUNDATION_SRC_FILES} ${PVRTOOLS_SRC_FILES} ${JNI_SRC_FILES}
 
 LOCAL_C_INCLUDES    := $(addprefix ${LOCAL_PATH}/../, \
     include \
+    include/pal/android \
     fundation \
     PVRTools \
     PVRTools/OGLES2 \

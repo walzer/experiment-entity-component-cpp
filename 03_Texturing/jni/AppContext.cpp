@@ -4,6 +4,8 @@
 #include "Runtime.h"
 #include "SampleTools.h"
 
+#include "OGLES2Tools.h"
+
 using namespace std;
 
 AppContext::AppContext()
@@ -35,34 +37,46 @@ bool AppContext::init()
         };
     clickEvent.clickEvent.add(onClick);
 
-    // Initialize primitive assembly program.
-    const char* primitiveVss =
-        "attribute  highp   vec4    coord;"
-        "uniform    mediump float   pointSize;"
+    // Initialize texturing program.
+    const char* vss =
+        "attribute  highp   vec2    attPosCoord;"
+//        "attribute  highp   vec2    attTexCoord;"
+        "uniform    mediump float   uniPointSize;"
+//        "varying    mediump vec2    varTexCoord;"
         "void main(void)"
         "{"
-        "    gl_Position = coord;"
-        "    gl_PointSize = pointSize;"
+        "    gl_Position = vec4(attPosCoord.x, attPosCoord.y, 0.0f, 1.0f);"
+        "    gl_PointSize = uniPointSize;"
+//        "    varTexCoord = attTexCoord;"
         "}";
-    const char* primitiveFss =
-        "uniform vec4    color;"
+    const char* fss =
+        "uniform    sampler2D       samTexture2d;"
+//        "varying    mediump vec2    varTexCoord;"
         "void main (void)"
         "{"
-        "    gl_FragColor = color;"
+        "    gl_FragColor = texture2D(samTexture2d, gl_PointCoord);"
+//        "    gl_FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);"
         "}";
-    const char * primitiveAttribs[] =
+    const char * attribs[] =
     {
-            "coord",    // index = 0
+            "attPosCoord",      // index = 0
+            "attTexCoord",      // index = 1
     };
-    mProgPrimitive.id = createProgramFromSource(
-            primitiveVss,
-            primitiveFss,
-            primitiveAttribs,
-            &mProgPrimitive.attrCoord,
+    mProgram.id = createProgramFromSource(
+            vss,
+            fss,
+            attribs,
+            (unsigned int *)&mProgram.attLocations,
             1);
-    mProgPrimitive.unifColor = glGetUniformLocation(mProgPrimitive.id, "color");
-    mProgPrimitive.unifPSize = glGetUniformLocation(mProgPrimitive.id, "pointSize");
+    mProgram.uniPointSize = glGetUniformLocation(mProgram.id, "uniPointSize");
+    mProgram.samTexture2d = glGetUniformLocation(mProgram.id, "samTexture2d");
 
+    // Initialize data.
+    mData.pointSize = 128;
+    if(PVRTTextureLoadFromPVR("texPoint.pvr", &mData.texPoint) != PVR_SUCCESS)
+    {
+        Debug::logd("PVRTTextureLoadFromPVR failed!!");
+    }
     return true;
 }
 
@@ -71,33 +85,37 @@ int AppContext::run()
     glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(mProgPrimitive.id);
+    glUseProgram(mProgram.id);
 
-    glEnableVertexAttribArray(mProgPrimitive.attrCoord);
+    glEnableVertexAttribArray(mProgram.attLocations.attPosCoord);
+    //glEnableVertexAttribArray(mProgram.attLocations.attTexCoord);
+    if (mPositionArray.size())
+        Debug::logd("Draw at point(%f, %f)",mPositionArray[0],mPositionArray[1]);
     glVertexAttribPointer(
-            mProgPrimitive.attrCoord,
+            mProgram.attLocations.attPosCoord,
             2,
             GL_FLOAT,
             GL_FALSE,
             sizeof(float) * 2,
             mPositionArray.data());
 
-    static void (AppContext::*drawPrimitive[])() =
+    static void (AppContext::*drawTextures[])() =
     {
         &AppContext::drawPoints,        // 0
     };
     // Select a draw function.
-    (this->*drawPrimitive[0])();
+    (this->*drawTextures[0])();
 
-    glDisableVertexAttribArray(mProgPrimitive.attrCoord);
+    glDisableVertexAttribArray(mProgram.attLocations.attPosCoord);
     return 0;
 }
 
 void AppContext::drawPoints()
 {
-    glUniform1f(mProgPrimitive.unifPSize, 7.0f);
-    glUniform4f(mProgPrimitive.unifColor, 1.0f, 0.0f, 0.0f, 1.0f);
+    glUniform1f(mProgram.uniPointSize, mData.pointSize);
+    glBindTexture(GL_TEXTURE_2D, mData.texPoint);
     glDrawArrays(GL_POINTS, 0, mPositionArray.size() / 2);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void AppContext::onTouchEvent(Surface* sender, PointerData& args)

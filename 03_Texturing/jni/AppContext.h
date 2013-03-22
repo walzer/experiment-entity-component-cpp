@@ -66,10 +66,19 @@ protected:
     struct
     {
         GLuint id;
-        GLuint attrCoord;
-        GLuint unifColor;
-        GLuint unifPSize;
-    } mProgPrimitive;
+        struct
+        {
+            GLuint attPosCoord;
+            GLuint attTexCoord;
+        } attLocations;
+        GLuint uniPointSize;
+        GLuint samTexture2d;
+    } mProgram;
+    struct
+    {
+        GLuint  texPoint;
+        float   pointSize;
+    } mData;
 };
 
 #endif /* __APP_CONTEXT_H__ */
