@@ -10,6 +10,7 @@ using namespace std;
 
 AppContext::AppContext()
 {
+    mProgram.id = 0;
 }
 
 AppContext::~AppContext()
@@ -18,109 +19,172 @@ AppContext::~AppContext()
 
 bool AppContext::init()
 {
-    // Initialize touch event delegate.
-    auto delegate = std::bind(&AppContext::onTouchEvent, this, placeholders::_1, placeholders::_2);
-    Runtime::getSurface(0)->pointerEvent.add(delegate);
+    createProgram();
+    loadIndicesAttribs();
+    loadTextures();
+    return true;
+}
 
-    auto onClick = [this](Surface * sender, PointerArgs& args)
-        {
-            Debug::logd("click at: %f, %f", args.x, args.y);
-            if (this->mPositionArray.size() >= MAX_SIZE)
-            {
-                this->mPositionArray.clear();
-            }
-            else
-            {
-                this->mPositionArray.push_back(args.x);
-                this->mPositionArray.push_back(args.y);
-            }
-        };
-    clickEvent.clickEvent.add(onClick);
-
-    // Initialize texturing program.
+void AppContext::createProgram()
+{
     const char* vss =
-        "attribute  highp   vec2    attPosCoord;"
-//        "attribute  highp   vec2    attTexCoord;"
-        "uniform    mediump float   uniPointSize;"
-//        "varying    mediump vec2    varTexCoord;"
+        "attribute  highp   vec2    attCoordPos;"
+        "attribute  highp vec2      attCoordTexImage;"
+//        "attribute  highp vec2    attCoordTexGrating;"
+        "varying    mediump vec2    varCoordTexImage;"
+//        "varying    mediump vec2    varCoordTexGrating;"
         "void main(void)"
         "{"
-        "    gl_Position = vec4(attPosCoord.x, attPosCoord.y, 0.0f, 1.0f);"
-        "    gl_PointSize = uniPointSize;"
-//        "    varTexCoord = attTexCoord;"
+        "    gl_Position = vec4(attCoordPos.x, attCoordPos.y, 0.0, 1.0);"
+        "    varCoordTexImage = vec2(gl_Position.x, gl_Position.y);"//attCoordTexImage;"
+//        "    varCoordTexGrating = attCoordTexGrating;"
         "}";
     const char* fss =
-        "uniform    sampler2D       samTexture2d;"
-//        "varying    mediump vec2    varTexCoord;"
+        "varying    mediump vec2    varCoordTexImage;"
+//        "varying    mediump vec2    varCoordTexGrating;"
+        "uniform    sampler2D       samImage;"
+//        "uniform    sampler2D       samGrating;"
         "void main (void)"
         "{"
-        "    gl_FragColor = texture2D(samTexture2d, gl_PointCoord);"
-//        "    gl_FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);"
+        "    mediump vec4 color = vec4(1.0, 0.0, 0.0, 1.0);"//texture2D(samImage, varCoordTexImage);"
+        "    gl_FragColor = color;"
         "}";
     const char * attribs[] =
     {
-            "attPosCoord",      // index = 0
-            "attTexCoord",      // index = 1
+            "attCoordPos",          // index = 0
+            "attCoordTexImage",     // index = 1
+            "attCoordTexGrating",   // index = 2
     };
     mProgram.id = createProgramFromSource(
             vss,
             fss,
             attribs,
-            (unsigned int *)&mProgram.attLocations,
-            1);
-    mProgram.uniPointSize = glGetUniformLocation(mProgram.id, "uniPointSize");
-    mProgram.samTexture2d = glGetUniformLocation(mProgram.id, "samTexture2d");
+            (unsigned int *)&mProgram.attLocations.attCoordPos,
+            2);
+    Debug::logd("ProgramID(%d)", mProgram.id);
+//    glUseProgram(mProgram.id);
+//    mProgram.samImage = glGetUniformLocation(mProgram.id, "samImage");
+//    mProgram.samGrating = glGetUniformLocation(mProgram.id, "samGrating");
+}
 
-    // Initialize data.
-    mData.pointSize = 128;
-    if(PVRTTextureLoadFromPVR("texPoint.pvr", &mData.texPoint) != PVR_SUCCESS)
+// Rectangle indices index
+// 2----3
+// |\   |
+// | \  |
+// |  \ |
+// |   \|
+// 0----1
+void AppContext::loadIndicesAttribs()
+{
+    static Coord coordPosArray[] =
+    {
+            {-1.0f,-1.0f},      { 1.0f,-1.0f},
+            {-1.0f, 1.0f},      { 1.0f, 1.0f},
+    };
+    mData.coordPos = (const float *)coordPosArray;
+
+    static Coord coordTexImageArray[] =
+    {
+            { 0.0f, 0.0f},      { 1.0f, 0.0f},
+            { 0.0f, 1.0f},      { 1.0f, 1.0f},
+    };
+    mData.coordTexImage = (const float *)coordTexImageArray;
+}
+
+void AppContext::loadTextures()
+{
+    if(PVRTTextureLoadFromPVR("texPoint.pvr", &mData.texImage) != PVR_SUCCESS)
     {
         Debug::logd("PVRTTextureLoadFromPVR failed!!");
     }
-    return true;
+
+    mTexGratingData.reset(new std::array<unsigned, kGratingW * kGratingH>());
+#define CLR_MASK    0xffffffff
+#define CLR_NONE    0x00000000
+    static const unsigned gratingOneLineData[] =
+    {
+        CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,
+        CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,
+
+        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
+        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
+
+        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
+        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
+
+        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
+        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
+    };
+    for (int i = 0; i < kGratingH; ++i)
+    {
+        for (int j = 0; j < kGratingW; ++j)
+        {
+            (*mTexGratingData)[i * kGratingW + j] = gratingOneLineData[j];
+        }
+    }
+    glGenTextures(1, &mData.texGrating);
+    glBindTexture(GL_TEXTURE_2D, mData.texGrating);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kGratingW, kGratingH, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, mTexGratingData->data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+#define CLR_BKGND    0.0f, 0.0f, 1.0f, 1.0f
 int AppContext::run()
 {
-    glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
+    glClearColor(CLR_BKGND);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    drawAnimation();
+
+    return 0;
+}
+
+void AppContext::drawAnimation()
+{
     glUseProgram(mProgram.id);
 
-    glEnableVertexAttribArray(mProgram.attLocations.attPosCoord);
-    //glEnableVertexAttribArray(mProgram.attLocations.attTexCoord);
-    if (mPositionArray.size())
-        Debug::logd("Draw at point(%f, %f)",mPositionArray[0],mPositionArray[1]);
+    // Assign position coordinate attribute
+    glEnableVertexAttribArray(mProgram.attLocations.attCoordPos);
     glVertexAttribPointer(
-            mProgram.attLocations.attPosCoord,
+            mProgram.attLocations.attCoordPos,
             2,
             GL_FLOAT,
             GL_FALSE,
             sizeof(float) * 2,
-            mPositionArray.data());
+            mData.coordPos);
+    // Assign image texture coordinate attribute
+//    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
+//    glVertexAttribPointer(
+//            mProgram.attLocations.attCoordTexImage,
+//            2,
+//            GL_FLOAT,
+//            GL_FALSE,
+//            sizeof(float) * 2,
+//            mData.coordTexImage);
+//    // Assign grating texture coordinate attribute
+//    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
+//    glVertexAttribPointer(
+//            mProgram.attLocations.attCoordTexGrating,
+//            2,
+//            GL_FLOAT,
+//            GL_FALSE,
+//            sizeof(float) * 2,
+//            mGratingTexCoords.data());
 
-    static void (AppContext::*drawTextures[])() =
-    {
-        &AppContext::drawPoints,        // 0
-    };
-    // Select a draw function.
-    (this->*drawTextures[0])();
+//    glActiveTexture(GL_TEXTURE0);
+//    glUniform1i(mProgram.samImage, 0);
+//    glBindTexture(GL_TEXTURE_2D, mData.texImage);
 
-    glDisableVertexAttribArray(mProgram.attLocations.attPosCoord);
-    return 0;
-}
-
-void AppContext::drawPoints()
-{
-    glUniform1f(mProgram.uniPointSize, mData.pointSize);
-    glBindTexture(GL_TEXTURE_2D, mData.texPoint);
-    glDrawArrays(GL_POINTS, 0, mPositionArray.size() / 2);
+    static const unsigned char indices[] = { 0, 1, 2, 3};
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
     glBindTexture(GL_TEXTURE_2D, 0);
-}
 
-void AppContext::onTouchEvent(Surface* sender, PointerData& args)
-{
-    Debug::logd("%s(%d)(%f, %f)", __PRETTY_FUNCTION__,
-            args.action, args.args[0].x, args.args[0].y);
-    clickEvent(sender, args);
+//    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
+//    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
+    glDisableVertexAttribArray(mProgram.attLocations.attCoordPos);
 }

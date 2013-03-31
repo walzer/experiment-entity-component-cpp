@@ -14,38 +14,60 @@ JNIEnv * JNIHelper::getJNIEnv()
     return env;
 }
 
-int JNIHelper::registerNativeMethods(
+jclass JNIHelper::findClass(JNIEnv * env, const char * className)
+{
+    jclass clazz = nullptr;
+    if (env && className)
+    {
+        clazz = env->FindClass(className);
+        if (!clazz)
+        {
+            Debug::loge("(%04d)%s(%s):failed",
+                    __LINE__,
+                    __FUNCTION__,
+                    className);
+        }
+    }
+    return clazz;
+}
+
+bool JNIHelper::registerNativeMethods(
             JNIEnv * env,
             const char * className,
             const JNINativeMethod * methods,
             int numMethods)
 {
-    Debug::logd("%d %s", __LINE__, __FUNCTION__);
-    int ret = 0;
+    bool ret = false;
     do
     {
         if (!env || !className || !methods || numMethods <= 0)
         {
-            Debug::logd("Invalid agrs!");
+            Debug::loge("(%04d)%s:Invalid agrs!", __LINE__, __FUNCTION__);
             break;
         }
         jclass clazz = env->FindClass(className);
         if (!clazz)
         {
-            Debug::logd("Can't find class(%s)", className);
+            Debug::loge("(%04d)%s:Can't find class(%s)",
+                    __LINE__,
+                    __FUNCTION__,
+                    className);
             break;
         }
-        ret = env->RegisterNatives(clazz, methods, numMethods);
-        if (ret < 0)
+        int rtn = env->RegisterNatives(clazz, methods, numMethods);
+        if (rtn != JNI_OK)
         {
-            Debug::logd("RegisterNatives failed for(%s)!", className);
+            Debug::logd("RegisterNatives failed for(%s), return(%d)!",
+                    className,
+                    rtn);
+            break;
         }
+        ret = true;
     } while (false);
-    Debug::logd("%d %s", __LINE__, __FUNCTION__);
     return ret;
 }
 
-int JNIHelper::findClassMethods(
+bool JNIHelper::findClassMethods(
         JNIEnv * env,
         const char * className,
         const JNINativeMethod * methods,
@@ -56,13 +78,16 @@ int JNIHelper::findClassMethods(
     {
         if (!env || !className || !methods || numMethods <= 0)
         {
-            Debug::loge("Invalid agrs!");
+            Debug::loge("(%04d)%s:Invalid agrs!", __LINE__, __FUNCTION__);
             break;
         }
         jclass clazz = env->FindClass(className);
         if (!clazz)
         {
-            Debug::loge("Can't find class(%s)", className);
+            Debug::loge("(%04d)%s:Can't find class(%s)",
+                    __LINE__,
+                    __FUNCTION__,
+                    className);
             break;
         }
         jmethodID id;
@@ -72,12 +97,16 @@ int JNIHelper::findClassMethods(
             id = env->GetStaticMethodID(clazz, method.name, method.signature);
             if (!id)
             {
-                Debug::loge("RegisterNatives failed for(%s)!", className);
+                Debug::loge("(%04d)%s:GetStaticMethodID failed for(%s(%s))",
+                    __LINE__,
+                    __FUNCTION__,
+                    method.name,
+                    method.signature);
                 continue;
             }
             *((jmethodID*)method.fnPtr) = id;
             ++ret;
         }
     } while (false);
-    return ret;
+    return (ret == numMethods) ? true : false;
 }

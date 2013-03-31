@@ -1,5 +1,6 @@
-APP_ABI := x86
-APP_CPPFLAGS += -std=gnu++0x -frtti -DBUILD_OGLES2
+APP_ABI := armeabi x86
+APP_CPPFLAGS += -std=gnu++0x -frtti -D__FUNCTION__=__PRETTY_FUNCTION__
+APP_CPPFLAGS += -DBUILD_OGLES2 -DEGL_NOT_PRESENT
 APP_STL := gnustl_static
 APP_MODULES := SamplesFundation
 APP_PLATFORM := android-8

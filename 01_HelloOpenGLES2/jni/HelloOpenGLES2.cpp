@@ -2,7 +2,8 @@
 
 #include "HelloContext2.h"
 
-#include "Runtime.h"
+#include "pal/android/JNIHelper.h"
+#include "pal/android/Runtime_Android.h"
 
 class Application : public RuntimeListener
 {
@@ -19,7 +20,8 @@ extern "C"
 {
     jint JNI_OnLoad(JavaVM *vm, void *reserved)
     {
-        //JniHelper::setJavaVM(vm);
+        JNIHelper::s_vm = vm;
+        Runtime_Android::init();
 
         static Application app;
 

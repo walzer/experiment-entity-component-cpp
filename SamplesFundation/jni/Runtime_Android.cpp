@@ -18,7 +18,10 @@ bool Runtime_Android::init()
     bool ret = false;
     do
     {
-        if (false == NativeWrapper::init()) break;
+        if (false == NativeWrapper::init())
+        {
+            Debug::loge("%d:%s:NativeWrapper::init() failed!", __LINE__, __FUNCTION__);
+        }
         CPVRTResourceFile::SetLoadReleaseFunctions(
                 (void*)readDataFromAsset,
                 (void*)releaseDataFromAsset);

@@ -26,13 +26,15 @@ struct JNIHelper
 
     static JNIEnv * getJNIEnv();
 
-    static int      registerNativeMethods(
+    static jclass   findClass(JNIEnv * env, const char * className);
+
+    static bool     registerNativeMethods(
             JNIEnv * env,
             const char * className,
             const JNINativeMethod * methods,
             int numMethods);
 
-    static int      findClassMethods(
+    static bool     findClassMethods(
             JNIEnv * env,
             const char * className,
             const JNINativeMethod * methods,

@@ -8,6 +8,6 @@ LOCAL_EXPORT_C_INCLUDES := $(addprefix ${LOCAL_PATH}/, \
     include \
     PVRTools/OGLES2 \
 )
-LOCAL_EXPORT_LDLIBS     := -lEGL -lGLESv2 -llog
+LOCAL_EXPORT_LDLIBS     := -lGLESv2 -llog
 
 include $(PREBUILT_STATIC_LIBRARY)

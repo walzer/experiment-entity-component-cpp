@@ -6,43 +6,24 @@
 
 #include "GLES2/gl2.h"
 
-#include <vector>
+#include <array>
+#include <memory>
 
-class AppContext;
-
-class ClickRecognizer
+struct Coord
 {
-public:
-    EventHandler<Surface, PointerArgs> clickEvent;
-    void operator () (Surface* sender, PointerData& args)
+    union
     {
-        switch (args.action)
+        struct
         {
-        case ACTION_DOWN:
-            mCapture = true;
-            mArgs = args.args[0];
-            break;
-
-        case ACTION_UP:
-            if (mCapture == true &&
-                mArgs.id == args.args[0].id &&
-                mArgs.x == args.args[0].x &&
-                mArgs.y == args.args[0].y)
-            {
-                // Convert windows coordinate to gl coordinate
-                mArgs.x = 2 * (mArgs.x / sender->getWidth()) - 1.0f;
-                mArgs.y = 2 * ((sender->getHeight() - mArgs.y) / sender->getHeight()) - 1.0f;
-                clickEvent.raise(sender, mArgs);
-            }
-            break;
-
-        default:
-            break;
-        }
-    }
-private:
-    bool  mCapture;
-    PointerArgs mArgs;
+            float x;
+            float y;
+        };
+        struct
+        {
+            float u;
+            float v;
+        };
+    };
 };
 class AppContext : public Context
 {
@@ -53,31 +34,36 @@ public:
     virtual bool init();
     virtual int run();
 
-    ClickRecognizer clickEvent;
-    void onTouchEvent(Surface* sender, PointerData& args);
-
 protected:
-    void drawPoints();
+    void createProgram();
+    void loadIndicesAttribs();
+    void loadTextures();
 
-    // Store the touch positions(x,y), at most 6.
-    static const unsigned MAX_SIZE = 6 * 2;
-    std::vector<float> mPositionArray;
-    // Program identifier for primitive assembly.
+    void drawAnimation();
+
+    std::array<Coord, 4> mGratingTexCoords;
+    static const unsigned kGratingW = 64;
+    static const unsigned kGratingH = 64;
+    std::shared_ptr<std::array<unsigned, kGratingW * kGratingH>> mTexGratingData;
+
     struct
     {
         GLuint id;
         struct
         {
-            GLuint attPosCoord;
-            GLuint attTexCoord;
+            GLuint attCoordPos;
+            GLuint attCoordTexImage;
+            GLuint attCoordTexGrating;
         } attLocations;
-        GLuint uniPointSize;
-        GLuint samTexture2d;
+        GLuint samImage;
+        GLuint samGrating;
     } mProgram;
     struct
     {
-        GLuint  texPoint;
-        float   pointSize;
+        const float * coordPos;
+        const float * coordTexImage;
+        GLuint texImage;
+        GLuint texGrating;
     } mData;
 };
 

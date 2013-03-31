@@ -17,30 +17,33 @@ unsigned createProgramFromSource(
     unsigned fs = 0;
     EPVRTError ret = PVR_SUCCESS;
     CPVRTString msg;
-
+    int step = 0;
     do
     {
-        // 1 Compile vertex shader.
         if (!vss || !fss || (num && (!attribs || !attrLocal)))
         {
             Debug::logd("There's no shader source!!");
             break;
         }
+        // 1 Compile vertex shader.
+        step = 1;
         if (PVR_SUCCESS != PVRTShaderLoadSourceFromMemory(
                 vss, GL_VERTEX_SHADER, &vs, &msg, 0, 0))
             break;
         // 2 Compile fragment shader.
+        step = 2;
         if (PVR_SUCCESS != PVRTShaderLoadSourceFromMemory(
                 fss, GL_FRAGMENT_SHADER, &fs, &msg, 0, 0))
             break;
         // 3 Link two shaders to program, and bind attribs to specific locations.
+        step = 3;
         if (PVR_SUCCESS != PVRTCreateProgram( &id, vs, fs, attribs, num, &msg))
             break;
         for (unsigned i = 0; i < num; i++)  *attrLocal = i;
     } while (false);
     if (! id)
     {
-        Debug::logd(msg.c_str());
+        Debug::logd("(step:%d)%s", step, msg.c_str());
     }
     return id;
 }

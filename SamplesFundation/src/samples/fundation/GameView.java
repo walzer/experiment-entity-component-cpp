@@ -24,6 +24,7 @@ public class GameView extends GLSurfaceView {
     private void initView(Context context) {
         this.setFocusableInTouchMode(true);
         this.setEGLContextClientVersion(2);
+        this.setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
         this.setRenderer(new GameGLES2Render(context));
     }
     

@@ -46,8 +46,6 @@ JNI_SRC_FILES := $(addprefix ./, \
     JNIHelper.cpp  \
     NativeWrapper.cpp  \
     Runtime_Android.cpp  \
-    samples_fundation_NativeWrapper_GameGLES2Render.cpp  \
-    samples_fundation_NativeWrapper_MotionEvent.cpp  \
     SampleTools_Android.cpp  \
     Surface_Android.cpp  \
 )
@@ -61,6 +59,6 @@ LOCAL_C_INCLUDES    := $(addprefix ${LOCAL_PATH}/../, \
     PVRTools/OGLES2 \
 )
 
-LOCAL_LDLIBS        := -lEGL -lGLESv2 -llog
+LOCAL_LDLIBS        := -lGLESv2 -llog
 
 include $(BUILD_STATIC_LIBRARY)
