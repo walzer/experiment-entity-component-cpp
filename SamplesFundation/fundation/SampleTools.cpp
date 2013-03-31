@@ -39,7 +39,7 @@ unsigned createProgramFromSource(
         step = 3;
         if (PVR_SUCCESS != PVRTCreateProgram( &id, vs, fs, attribs, num, &msg))
             break;
-        for (unsigned i = 0; i < num; i++)  *attrLocal = i;
+        for (unsigned i = 0; i < num; i++)  *(attrLocal + i) = i;
     } while (false);
     if (! id)
     {

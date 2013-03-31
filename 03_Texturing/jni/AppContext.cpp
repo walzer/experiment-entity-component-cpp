@@ -29,25 +29,19 @@ void AppContext::createProgram()
 {
     const char* vss =
         "attribute  highp   vec2    attCoordPos;"
-        "attribute  highp vec2      attCoordTexImage;"
-//        "attribute  highp vec2    attCoordTexGrating;"
+        "attribute  highp   vec2    attCoordTexImage;"
         "varying    mediump vec2    varCoordTexImage;"
-//        "varying    mediump vec2    varCoordTexGrating;"
         "void main(void)"
         "{"
-        "    gl_Position = vec4(attCoordPos.x, attCoordPos.y, 0.0, 1.0);"
-        "    varCoordTexImage = vec2(gl_Position.x, gl_Position.y);"//attCoordTexImage;"
-//        "    varCoordTexGrating = attCoordTexGrating;"
+        "    gl_Position = vec4(attCoordPos.x, attCoordPos.y, 0.0f, 1.0f);"
+        "    varCoordTexImage = attCoordTexImage;"
         "}";
     const char* fss =
         "varying    mediump vec2    varCoordTexImage;"
-//        "varying    mediump vec2    varCoordTexGrating;"
         "uniform    sampler2D       samImage;"
-//        "uniform    sampler2D       samGrating;"
         "void main (void)"
         "{"
-        "    mediump vec4 color = vec4(1.0, 0.0, 0.0, 1.0);"//texture2D(samImage, varCoordTexImage);"
-        "    gl_FragColor = color;"
+        "    gl_FragColor = texture2D(samImage, varCoordTexImage);"
         "}";
     const char * attribs[] =
     {
@@ -62,8 +56,11 @@ void AppContext::createProgram()
             (unsigned int *)&mProgram.attLocations.attCoordPos,
             2);
     Debug::logd("ProgramID(%d)", mProgram.id);
-//    glUseProgram(mProgram.id);
-//    mProgram.samImage = glGetUniformLocation(mProgram.id, "samImage");
+    Debug::logd("attrib(%d, %d, %d)", mProgram.attLocations.attCoordPos,
+            mProgram.attLocations.attCoordTexImage,
+            mProgram.attLocations.attCoordTexGrating);
+    //    glUseProgram(mProgram.id);
+    mProgram.samImage = glGetUniformLocation(mProgram.id, "samImage");
 //    mProgram.samGrating = glGetUniformLocation(mProgram.id, "samGrating");
 }
 
@@ -158,14 +155,14 @@ void AppContext::drawAnimation()
             sizeof(float) * 2,
             mData.coordPos);
     // Assign image texture coordinate attribute
-//    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
-//    glVertexAttribPointer(
-//            mProgram.attLocations.attCoordTexImage,
-//            2,
-//            GL_FLOAT,
-//            GL_FALSE,
-//            sizeof(float) * 2,
-//            mData.coordTexImage);
+    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
+    glVertexAttribPointer(
+            mProgram.attLocations.attCoordTexImage,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(float) * 2,
+            mData.coordTexImage);
 //    // Assign grating texture coordinate attribute
 //    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
 //    glVertexAttribPointer(
@@ -178,13 +175,14 @@ void AppContext::drawAnimation()
 
 //    glActiveTexture(GL_TEXTURE0);
 //    glUniform1i(mProgram.samImage, 0);
-//    glBindTexture(GL_TEXTURE_2D, mData.texImage);
+    glBindTexture(GL_TEXTURE_2D, mData.texImage);
 
     static const unsigned char indices[] = { 0, 1, 2, 3};
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
+
     glBindTexture(GL_TEXTURE_2D, 0);
 
 //    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
-//    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
+    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
     glDisableVertexAttribArray(mProgram.attLocations.attCoordPos);
 }
