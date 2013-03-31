@@ -30,18 +30,25 @@ void AppContext::createProgram()
     const char* vss =
         "attribute  highp   vec2    attCoordPos;"
         "attribute  highp   vec2    attCoordTexImage;"
+        "attribute  highp vec2    attCoordTexGrating;"
         "varying    mediump vec2    varCoordTexImage;"
+        "varying    mediump vec2    varCoordTexGrating;"
         "void main(void)"
         "{"
         "    gl_Position = vec4(attCoordPos.x, attCoordPos.y, 0.0f, 1.0f);"
         "    varCoordTexImage = attCoordTexImage;"
+        "    varCoordTexGrating = attCoordTexGrating;"
         "}";
     const char* fss =
         "varying    mediump vec2    varCoordTexImage;"
+        "varying    mediump vec2    varCoordTexGrating;"
         "uniform    sampler2D       samImage;"
+        "uniform    sampler2D       samGrating;"
         "void main (void)"
         "{"
-        "    gl_FragColor = texture2D(samImage, varCoordTexImage);"
+        "    vec4 clrImg = texture2D(samImage, varCoordTexImage);"
+        "    vec4 clrGrt = texture2D(samGrating, varCoordTexGrating);"
+        "    gl_FragColor = (clrGrt.a < 0.1) ? clrImg : clrGrt;"
         "}";
     const char * attribs[] =
     {
@@ -54,14 +61,10 @@ void AppContext::createProgram()
             fss,
             attribs,
             (unsigned int *)&mProgram.attLocations.attCoordPos,
-            2);
-    Debug::logd("ProgramID(%d)", mProgram.id);
-    Debug::logd("attrib(%d, %d, %d)", mProgram.attLocations.attCoordPos,
-            mProgram.attLocations.attCoordTexImage,
-            mProgram.attLocations.attCoordTexGrating);
-    //    glUseProgram(mProgram.id);
+            3);
+
     mProgram.samImage = glGetUniformLocation(mProgram.id, "samImage");
-//    mProgram.samGrating = glGetUniformLocation(mProgram.id, "samGrating");
+    mProgram.samGrating = glGetUniformLocation(mProgram.id, "samGrating");
 }
 
 // Rectangle indices index
@@ -164,25 +167,30 @@ void AppContext::drawAnimation()
             sizeof(float) * 2,
             mData.coordTexImage);
 //    // Assign grating texture coordinate attribute
-//    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
-//    glVertexAttribPointer(
-//            mProgram.attLocations.attCoordTexGrating,
-//            2,
-//            GL_FLOAT,
-//            GL_FALSE,
-//            sizeof(float) * 2,
+    glEnableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
+    glVertexAttribPointer(
+            mProgram.attLocations.attCoordTexGrating,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(float) * 2,
+            mData.coordTexImage);
 //            mGratingTexCoords.data());
 
-//    glActiveTexture(GL_TEXTURE0);
-//    glUniform1i(mProgram.samImage, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glUniform1i(mProgram.samImage, 0);
     glBindTexture(GL_TEXTURE_2D, mData.texImage);
+
+    glActiveTexture(GL_TEXTURE1);
+    glUniform1i(mProgram.samGrating, 1);
+    glBindTexture(GL_TEXTURE_2D, mData.texGrating);
 
     static const unsigned char indices[] = { 0, 1, 2, 3};
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-//    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
+    glDisableVertexAttribArray(mProgram.attLocations.attCoordTexGrating);
     glDisableVertexAttribArray(mProgram.attLocations.attCoordTexImage);
     glDisableVertexAttribArray(mProgram.attLocations.attCoordPos);
 }
