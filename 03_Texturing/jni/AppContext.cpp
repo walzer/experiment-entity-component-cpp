@@ -98,7 +98,6 @@ void AppContext::loadTextures()
         Debug::logd("PVRTTextureLoadFromPVR failed!!");
     }
 
-    mTexGratingData.reset(new std::array<unsigned, kGratingW * kGratingH>());
 #define CLR_MASK    0xffffffff
 #define CLR_NONE    0x00000000
     static const unsigned gratingOneLineData[] =
@@ -115,17 +114,11 @@ void AppContext::loadTextures()
         CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
         CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
     };
-    for (int i = 0; i < kGratingH; ++i)
-    {
-        for (int j = 0; j < kGratingW; ++j)
-        {
-            (*mTexGratingData)[i * kGratingW + j] = gratingOneLineData[j];
-        }
-    }
+
     glGenTextures(1, &mData.texGrating);
     glBindTexture(GL_TEXTURE_2D, mData.texGrating);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kGratingW, kGratingH, 0, GL_RGBA,
-            GL_UNSIGNED_BYTE, mTexGratingData->data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 1, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, gratingOneLineData);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -146,6 +139,27 @@ int AppContext::run()
 
 void AppContext::drawAnimation()
 {
+    // Update mGratingTexCoords first
+    static clock_t beginTime = clock();
+    clock_t elapseTime = clock() - beginTime;
+    float f = (float)elapseTime / CLOCKS_PER_SEC;
+    Debug::logd("elapse(%d, %f)", elapseTime, f);
+    // screenWidth = 480; texGratingWidth = 64; texGrantingWidthValue[0, 7.5)
+    // screenHeight= 800; texGratingHeight = 1; texGrantingHeightValue[0, 800);
+    static Coord kInitCoords[] =
+    {
+            {0, 0}, {7.5, 0}, {0, 800}, {7.5, 800}
+    };
+    mGratingTexCoords[0].x = kInitCoords[0].x + f;
+    mGratingTexCoords[0].y = kInitCoords[0].y;
+    mGratingTexCoords[1].x = kInitCoords[1].x + f;
+    mGratingTexCoords[1].y = kInitCoords[1].y;
+    mGratingTexCoords[2].x = kInitCoords[2].x + f;
+    mGratingTexCoords[2].y = kInitCoords[2].y;
+    mGratingTexCoords[3].x = kInitCoords[3].x + f;
+    mGratingTexCoords[3].y = kInitCoords[3].y;
+
+    // begin draw
     glUseProgram(mProgram.id);
 
     // Assign position coordinate attribute
@@ -174,8 +188,7 @@ void AppContext::drawAnimation()
             GL_FLOAT,
             GL_FALSE,
             sizeof(float) * 2,
-            mData.coordTexImage);
-//            mGratingTexCoords.data());
+            mGratingTexCoords.data());
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(mProgram.samImage, 0);

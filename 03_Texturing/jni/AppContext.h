@@ -42,9 +42,6 @@ protected:
     void drawAnimation();
 
     std::array<Coord, 4> mGratingTexCoords;
-    static const unsigned kGratingW = 64;
-    static const unsigned kGratingH = 64;
-    std::shared_ptr<std::array<unsigned, kGratingW * kGratingH>> mTexGratingData;
 
     struct
     {
