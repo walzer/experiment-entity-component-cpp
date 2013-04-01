@@ -3,7 +3,7 @@
 #include "Debug.h"
 #include "Runtime.h"
 #include "SampleTools.h"
-
+#include "Surface.h"
 #include "OGLES2Tools.h"
 
 using namespace std;
@@ -91,39 +91,38 @@ void AppContext::loadIndicesAttribs()
     mData.coordTexImage = (const float *)coordTexImageArray;
 }
 
+#define GRATINGW    8
+#define GRATINGH    1
+#define GRATRATE    4
+#define GRAT_GPS    1
+
 void AppContext::loadTextures()
 {
-    if(PVRTTextureLoadFromPVR("texPoint.pvr", &mData.texImage) != PVR_SUCCESS)
+    if(PVRTTextureLoadFromPVR("texImage.pvr", &mData.texImage) != PVR_SUCCESS)
     {
         Debug::logd("PVRTTextureLoadFromPVR failed!!");
     }
 
-#define CLR_MASK    0xffffffff
+#define CLR_MASK    0xff000000
 #define CLR_NONE    0x00000000
-    static const unsigned gratingOneLineData[] =
+    unsigned * data = new unsigned[GRATINGW * GRATINGH];
+    for(int i = 0; i < GRATINGH; ++i)
     {
-        CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,
-        CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,CLR_NONE,
-
-        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
-        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
-
-        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
-        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
-
-        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
-        CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,CLR_MASK,
-    };
-
+        int mid = GRATINGW / GRATRATE;
+        int j = 0;
+        for(; j < mid; ++j) { data[i * GRATINGW + j] = CLR_NONE; }
+        for(; j < GRATINGW; ++j) { data[i * GRATINGW + j] = CLR_MASK; }
+    }
     glGenTextures(1, &mData.texGrating);
     glBindTexture(GL_TEXTURE_2D, mData.texGrating);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 1, 0, GL_RGBA,
-            GL_UNSIGNED_BYTE, gratingOneLineData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GRATINGW, GRATINGH, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glBindTexture(GL_TEXTURE_2D, 0);
+    delete[] data;
 }
 
 #define CLR_BKGND    0.0f, 0.0f, 1.0f, 1.0f
@@ -142,21 +141,29 @@ void AppContext::drawAnimation()
     // Update mGratingTexCoords first
     static clock_t beginTime = clock();
     clock_t elapseTime = clock() - beginTime;
-    float f = (float)elapseTime / CLOCKS_PER_SEC;
+#if 0
+    float f = ((float)((elapseTime % CLOCKS_PER_SEC) / (CLOCKS_PER_SEC / GRATRATE))) / GRATRATE;
+#else
+    float f = (float)(elapseTime % CLOCKS_PER_SEC) / CLOCKS_PER_SEC;
+#endif
+    f *= GRAT_GPS;
     Debug::logd("elapse(%d, %f)", elapseTime, f);
     // screenWidth = 480; texGratingWidth = 64; texGrantingWidthValue[0, 7.5)
     // screenHeight= 800; texGratingHeight = 1; texGrantingHeightValue[0, 800);
+    float scrW = (float)getSurface()->getWidth();
+    float scrH = (float)getSurface()->getHeight();
     static Coord kInitCoords[] =
     {
-            {0, 0}, {7.5, 0}, {0, 800}, {7.5, 800}
+        {0, 0},             {scrW/GRATINGW, 0},
+        {0, scrH/GRATINGH}, {scrW/GRATINGW, scrH/GRATINGH}
     };
-    mGratingTexCoords[0].x = kInitCoords[0].x + f;
+    mGratingTexCoords[0].x = kInitCoords[0].x - f;
     mGratingTexCoords[0].y = kInitCoords[0].y;
-    mGratingTexCoords[1].x = kInitCoords[1].x + f;
+    mGratingTexCoords[1].x = kInitCoords[1].x - f;
     mGratingTexCoords[1].y = kInitCoords[1].y;
-    mGratingTexCoords[2].x = kInitCoords[2].x + f;
+    mGratingTexCoords[2].x = kInitCoords[2].x - f;
     mGratingTexCoords[2].y = kInitCoords[2].y;
-    mGratingTexCoords[3].x = kInitCoords[3].x + f;
+    mGratingTexCoords[3].x = kInitCoords[3].x - f;
     mGratingTexCoords[3].y = kInitCoords[3].y;
 
     // begin draw

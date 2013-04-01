@@ -20,6 +20,7 @@ Context * Surface::getContext()
 void Surface::setContext(Context * context)
 {
     mContext = context;
+    mContext->setSurface(this);
 }
 
 void Surface::onEvents()
