@@ -1,4 +1,4 @@
-#include "AppContext.h"
+#include "MultiTextureContext.h"
 
 #include "Debug.h"
 #include "Runtime.h"
@@ -8,16 +8,16 @@
 
 using namespace std;
 
-AppContext::AppContext()
+MultiTextureContext::MultiTextureContext()
 {
     mProgram.id = 0;
 }
 
-AppContext::~AppContext()
+MultiTextureContext::~MultiTextureContext()
 {
 }
 
-bool AppContext::init()
+bool MultiTextureContext::init()
 {
     createProgram();
     loadIndicesAttribs();
@@ -25,36 +25,36 @@ bool AppContext::init()
     return true;
 }
 
-void AppContext::createProgram()
+void MultiTextureContext::createProgram()
 {
     const char* vss =
         "attribute  highp   vec2    attCoordPos;"
+        "attribute  highp   vec2    attCoordTexGrating;"
         "attribute  highp   vec2    attCoordTexImage;"
-        "attribute  highp vec2    attCoordTexGrating;"
-        "varying    mediump vec2    varCoordTexImage;"
         "varying    mediump vec2    varCoordTexGrating;"
+        "varying    mediump vec2    varCoordTexImage;"
         "void main(void)"
         "{"
         "    gl_Position = vec4(attCoordPos.x, attCoordPos.y, 0.0f, 1.0f);"
-        "    varCoordTexImage = attCoordTexImage;"
         "    varCoordTexGrating = attCoordTexGrating;"
+        "    varCoordTexImage = attCoordTexImage;"
         "}";
     const char* fss =
-        "varying    mediump vec2    varCoordTexImage;"
-        "varying    mediump vec2    varCoordTexGrating;"
-        "uniform    sampler2D       samImage;"
         "uniform    sampler2D       samGrating;"
+        "uniform    sampler2D       samImage;"
+        "varying    mediump vec2    varCoordTexGrating;"
+        "varying    mediump vec2    varCoordTexImage;"
         "void main (void)"
         "{"
-        "    vec4 clrImg = texture2D(samImage, varCoordTexImage);"
         "    vec4 clrGrt = texture2D(samGrating, varCoordTexGrating);"
+        "    vec4 clrImg = texture2D(samImage, varCoordTexImage);"
         "    gl_FragColor = (clrGrt.a < 0.1) ? clrImg : clrGrt;"
         "}";
     const char * attribs[] =
     {
             "attCoordPos",          // index = 0
-            "attCoordTexImage",     // index = 1
-            "attCoordTexGrating",   // index = 2
+            "attCoordTexGrating",   // index = 1
+            "attCoordTexImage",     // index = 2
     };
     mProgram.id = createProgramFromSource(
             vss,
@@ -63,8 +63,8 @@ void AppContext::createProgram()
             (unsigned int *)&mProgram.attLocations.attCoordPos,
             3);
 
-    mProgram.samImage = glGetUniformLocation(mProgram.id, "samImage");
     mProgram.samGrating = glGetUniformLocation(mProgram.id, "samGrating");
+    mProgram.samImage = glGetUniformLocation(mProgram.id, "samImage");
 }
 
 // Rectangle indices index
@@ -74,7 +74,7 @@ void AppContext::createProgram()
 // |  \ |
 // |   \|
 // 0----1
-void AppContext::loadIndicesAttribs()
+void MultiTextureContext::loadIndicesAttribs()
 {
     static Coord coordPosArray[] =
     {
@@ -96,7 +96,7 @@ void AppContext::loadIndicesAttribs()
 #define GRATRATE    4
 #define GRAT_GPS    1
 
-void AppContext::loadTextures()
+void MultiTextureContext::loadTextures()
 {
     if(PVRTTextureLoadFromPVR("texImage.pvr", &mData.texImage) != PVR_SUCCESS)
     {
@@ -126,7 +126,7 @@ void AppContext::loadTextures()
 }
 
 #define CLR_BKGND    0.0f, 0.0f, 1.0f, 1.0f
-int AppContext::run()
+int MultiTextureContext::run()
 {
     glClearColor(CLR_BKGND);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -136,7 +136,7 @@ int AppContext::run()
     return 0;
 }
 
-void AppContext::drawAnimation()
+void MultiTextureContext::drawAnimation()
 {
     // Update mGratingTexCoords first
     static clock_t beginTime = clock();
@@ -147,7 +147,7 @@ void AppContext::drawAnimation()
     float f = (float)(elapseTime % CLOCKS_PER_SEC) / CLOCKS_PER_SEC;
 #endif
     f *= GRAT_GPS;
-    Debug::logd("elapse(%d, %f)", elapseTime, f);
+
     // screenWidth = 480; texGratingWidth = 64; texGrantingWidthValue[0, 7.5)
     // screenHeight= 800; texGratingHeight = 1; texGrantingHeightValue[0, 800);
     float scrW = (float)getSurface()->getWidth();
@@ -198,12 +198,12 @@ void AppContext::drawAnimation()
             mGratingTexCoords.data());
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(mProgram.samImage, 0);
-    glBindTexture(GL_TEXTURE_2D, mData.texImage);
+    glUniform1i(mProgram.samGrating, 0);
+    glBindTexture(GL_TEXTURE_2D, mData.texGrating);
 
     glActiveTexture(GL_TEXTURE1);
-    glUniform1i(mProgram.samGrating, 1);
-    glBindTexture(GL_TEXTURE_2D, mData.texGrating);
+    glUniform1i(mProgram.samImage, 1);
+    glBindTexture(GL_TEXTURE_2D, mData.texImage);
 
     static const unsigned char indices[] = { 0, 1, 2, 3};
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_BYTE, indices);

@@ -1,6 +1,7 @@
 #include <jni.h>
 
-#include "AppContext.h"
+#include "MipmapContext.h"
+#include "MultiTextureContext.h"
 
 #include "pal/android/JNIHelper.h"
 #include "pal/android/Runtime_Android.h"
@@ -10,7 +11,11 @@ class Application : public RuntimeListener
 public:
     virtual void onSurfaceCreated(Surface * surface)
     {
-        AppContext * context = new AppContext();
+#if 0
+        MipmapContext * context = new MipmapContext();
+#else
+        MultiTextureContext * context = new MultiTextureContext();
+#endif
         surface->setContext(context);
         context->init();
     }

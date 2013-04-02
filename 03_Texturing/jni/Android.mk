@@ -4,7 +4,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := Texturing
 JNI_SRC_FILES       := $(addprefix  ./,\
-    AppContext.cpp  \
+    MipmapContext.cpp \
+    MultiTextureContext.cpp  \
     Texturing.cpp  \
 )
 LOCAL_SRC_FILES     := ${JNI_SRC_FILES}

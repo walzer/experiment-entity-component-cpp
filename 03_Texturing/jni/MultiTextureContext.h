@@ -1,5 +1,5 @@
-#ifndef __APP_CONTEXT_H__
-#define __APP_CONTEXT_H__
+#ifndef __MULTI_TEXTURE_CONTEXT_H__
+#define __MULTI_TEXTURE_CONTEXT_H__
 
 #include "Context.h"
 #include "Surface.h"
@@ -25,11 +25,11 @@ struct Coord
         };
     };
 };
-class AppContext : public Context
+class MultiTextureContext : public Context
 {
 public:
-    AppContext();
-    virtual ~AppContext();
+    MultiTextureContext();
+    virtual ~MultiTextureContext();
 
     virtual bool init();
     virtual int run();
@@ -49,8 +49,8 @@ protected:
         struct
         {
             GLuint attCoordPos;
-            GLuint attCoordTexImage;
             GLuint attCoordTexGrating;
+            GLuint attCoordTexImage;
         } attLocations;
         GLuint samImage;
         GLuint samGrating;
@@ -64,4 +64,4 @@ protected:
     } mData;
 };
 
-#endif /* __APP_CONTEXT_H__ */
+#endif /* __MULTI_TEXTURE_CONTEXT_H__ */
