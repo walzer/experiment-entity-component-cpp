@@ -55,10 +55,6 @@ void MipmapContext::createProgram()
             (unsigned int *)&mProgram.attLocations.attCoordPos,
             2);
 
-    Debug::logd("Program(%d)(%d,%d)",
-            mProgram.id,
-            mProgram.attLocations.attCoordPos,
-            mProgram.attLocations.attCoordTexMipmap);
     mProgram.uniScale = glGetUniformLocation(mProgram.id, "uniScale");
     mProgram.samMipmap = glGetUniformLocation(mProgram.id, "samMipmap");
 }
