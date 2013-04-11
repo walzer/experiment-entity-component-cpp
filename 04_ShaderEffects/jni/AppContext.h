@@ -27,14 +27,21 @@ protected:
         struct
         {
             GLuint attCoordPos;
+            GLuint attCoordPosNext;
             GLuint attCoordTex;
         } attLocations;
         GLuint samShark;
+        GLuint uniStep;
         GLuint id;
     } mProgram;
+    static const unsigned FRAME_COUNT = 8;
     struct
     {
-        const float * indices;
+        const float * coordPossFrames[FRAME_COUNT];
+        const float * coordTexs;
+        unsigned frameCount;
+        const unsigned char * indices;
+        unsigned indicesCount;
         GLuint texShark;
     } mData;
 };
