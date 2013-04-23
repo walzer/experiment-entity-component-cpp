@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="platform">
+      <UniqueIdentifier>{b73921ab-5f18-4118-bb35-1a3adb7b9dca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\win32">
+      <UniqueIdentifier>{7e181922-fea7-42f3-81bd-e01729ef4475}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\stdafx.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\GameView.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\platform\win32\stdafx.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\00_HelloEngine\platform\win32\00_HelloEngine.ico">
+      <Filter>platform\win32</Filter>
+    </Image>
+    <Image Include="..\..\00_HelloEngine\platform\win32\small.ico">
+      <Filter>platform\win32</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\00_HelloEngine\platform\win32\00_HelloEngine.rc">
+      <Filter>platform\win32</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

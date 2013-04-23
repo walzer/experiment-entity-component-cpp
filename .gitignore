@@ -5,3 +5,10 @@ libs/
 obj/
 .*/
 project.properties
+
+# ignore for visual studio
+Debug/
+ipch/
+Release/
+*.sdf
+*.suo
