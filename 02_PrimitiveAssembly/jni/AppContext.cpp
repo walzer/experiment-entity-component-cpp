@@ -107,7 +107,7 @@ int AppContext::run()
         &AppContext::drawConnectedStrip,    // 7
     };
     // Select a draw function.
-    (this->*drawPrimitive[0])();
+    (this->*drawPrimitive[3])();
 
     glDisableVertexAttribArray(mProgram.attrCoord);
     return 0;

@@ -17,5 +17,7 @@
 #include <memory.h>
 #include <tchar.h>
 
+// C++ Template Library
+#include <memory>
 
 // TODO: reference additional headers your program requires here

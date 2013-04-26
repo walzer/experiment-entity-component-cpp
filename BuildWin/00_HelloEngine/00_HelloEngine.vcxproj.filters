@@ -7,6 +7,9 @@
     <Filter Include="platform\win32">
       <UniqueIdentifier>{7e181922-fea7-42f3-81bd-e01729ef4475}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fundation">
+      <UniqueIdentifier>{8c1b8ae0-38f8-408d-b9c2-3b61b1084ad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h">
@@ -21,6 +24,36 @@
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\GameView.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCComponent.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCContext.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCEntity.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCFundation.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\pch.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCManager.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCEntityManager.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCString.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCFundationMacrosCPP.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCEvent.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
@@ -31,6 +64,18 @@
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp">
       <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Fundation\CCContext.cpp">
+      <Filter>Fundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Fundation\pch.cpp">
+      <Filter>Fundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Fundation\CCManager.cpp">
+      <Filter>Fundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Fundation\CCEvent.cpp">
+      <Filter>Fundation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

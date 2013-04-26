@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\00_HelloEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\00_HelloEngine\;..\..\00_HelloEngine\platform\win32;..\..\Fundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -69,7 +69,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\00_HelloEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\00_HelloEngine\;..\..\00_HelloEngine\platform\win32;..\..\Fundation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -84,11 +84,25 @@
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\stdafx.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h" />
+    <ClInclude Include="..\..\Fundation\CCEvent.h" />
+    <ClInclude Include="..\..\Fundation\CCString.h" />
+    <ClInclude Include="..\..\Fundation\CCComponent.h" />
+    <ClInclude Include="..\..\Fundation\CCContext.h" />
+    <ClInclude Include="..\..\Fundation\CCEntity.h" />
+    <ClInclude Include="..\..\Fundation\CCFundation.h" />
+    <ClInclude Include="..\..\Fundation\CCFundationMacrosCPP.h" />
+    <ClInclude Include="..\..\Fundation\CCManager.h" />
+    <ClInclude Include="..\..\Fundation\CCEntityManager.h" />
+    <ClInclude Include="..\..\Fundation\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\stdafx.cpp" />
+    <ClCompile Include="..\..\Fundation\CCContext.cpp" />
+    <ClCompile Include="..\..\Fundation\CCEvent.cpp" />
+    <ClCompile Include="..\..\Fundation\CCManager.cpp" />
+    <ClCompile Include="..\..\Fundation\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\00_HelloEngine\platform\win32\00_HelloEngine.ico" />
