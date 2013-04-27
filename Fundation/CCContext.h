@@ -4,7 +4,9 @@
 #include <memory>
 #include <vector>
 
+#include "CCEvent.h"
 #include "CCString.h"
+#include "CCTimeManager.h"
 
 class CCManager;
 
@@ -23,8 +25,14 @@ public:
     ThisType&   add(ManagerPtr manager, const CCString& name);
     CCManager*  get(const CCString& name);
 
+    ThisType&   setTimeManager(::std::shared_ptr<CCTimeManager> tm);
+    CCTimeManager* getTimeManager();
+
+    CCEvent<CCContext, float> updateEvent;
+
     void run();
 private:
+    ::std::shared_ptr<CCTimeManager> _tm;
     ::std::map<CCString, CCManager*> _nameMap;
     ::std::vector<::std::shared_ptr<CCManager>> _managers;
 };

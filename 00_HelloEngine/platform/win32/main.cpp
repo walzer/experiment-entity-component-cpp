@@ -74,7 +74,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     FILE * console = nullptr;
     freopen_s(&console, "CONOUT$", "w", stdout);
 
-    CCEventTest();
+    //CCEventTest();
 
     s_Instance = hInstance;
     MSG msg;
@@ -151,6 +151,7 @@ void initContext()
 {
     s_context.reset(new CCContext());
     s_context->add(make_shared<CCEntityManager>(), "entity_manager");
+    s_context->init();
 }
 
 void doneContext()

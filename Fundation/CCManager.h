@@ -1,18 +1,15 @@
 #ifndef __FUNDATION__CCMANAGER_H__
 #define __FUNDATION__CCMANAGER_H__
 
+class CCContext;
+
 class CCManager
 {
 public:
-    typedef CCManager                       ThisType;
+    virtual ~CCManager() {}
 
-    virtual ~CCManager();
-    virtual bool init();
-    virtual void done();
-
-    void update();
-
-private:
+    virtual bool init(CCContext *) = 0;
+    virtual void done(CCContext *) = 0;
 };
 
 #endif  // __FUNDATION__CCMANAGER_H__
