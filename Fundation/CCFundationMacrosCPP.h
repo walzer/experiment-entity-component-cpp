@@ -7,6 +7,14 @@ extern int printf_stdout_logfile(const char *format, ...);
 #include <stdio.h>
 #define CCLOG   printf
 
+#define CCTYPE_TO_STRING(t) #t
+
+#define CCGLUE(a, b) \
+    _CCGLUE_EXPEND(a, b)
+
+#define _CCGLUE_EXPEND(a, b) _CCGLUE_IMPL(a, b)
+#define _CCGLUE_IMPL(a, b)  a##b
+
 #define CCFUNCTION_SIGN  __FUNCSIG__
 
 // Need define IMPLEMENT_CLASS name first
