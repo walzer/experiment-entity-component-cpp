@@ -3,6 +3,11 @@
 
 #include "CCManager.h"
 
+#include <vector>
+
+class CCEntity;
+class CCContext;
+
 class CCEntityManager : public CCManager
 {
 public:
@@ -15,6 +20,7 @@ public:
     void update(CCContext * context, float dt);
 
 private:
+    ::std::vector<::std::shared_ptr<CCEntity>> _entities;
     CCContext* _context;
 };
 

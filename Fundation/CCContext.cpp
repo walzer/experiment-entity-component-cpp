@@ -3,6 +3,7 @@
 #include "CCContext.h"
 
 #include "CCManager.h"
+#include "CCTimeManager.h"
 
 using namespace std;
 

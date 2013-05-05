@@ -6,9 +6,9 @@
 
 #include "CCEvent.h"
 #include "CCString.h"
-#include "CCTimeManager.h"
 
 class CCManager;
+class CCTimeManager;
 
 class CCContext
 {

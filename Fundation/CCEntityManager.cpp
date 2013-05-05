@@ -3,6 +3,7 @@
 #include "CCEntityManager.h"
 
 #include "CCContext.h"
+#include "CCEntity.h"
 
 using namespace std;
 
@@ -24,8 +25,13 @@ bool IMPLEMENT_FUNCTION(init, CCContext * ctx)
 
 void IMPLEMENT_FUNCTION(done, CCContext * ctx)
     ctx->updateEvent.remove("CCEntityManager::update");
+    _entities.clear();
 }
 
 void IMPLEMENT_FUNCTION(update, CCContext* ctx, float dt)
-
+    for_each(_entities.begin(), _entities.end(),
+    [dt](const shared_ptr<CCEntity>& ptr)
+    {
+        ptr->update(dt);
+    });
 }

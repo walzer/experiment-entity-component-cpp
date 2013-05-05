@@ -83,6 +83,12 @@
     <ClCompile Include="..\..\Fundation\CCEntityManager.cpp">
       <Filter>Fundation</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Fundation\CCEntity.cpp">
+      <Filter>Fundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Fundation\CCComponent.cpp">
+      <Filter>Fundation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\00_HelloEngine\platform\win32\00_HelloEngine.ico">

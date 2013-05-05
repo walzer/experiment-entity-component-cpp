@@ -100,7 +100,9 @@
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\stdafx.cpp" />
+    <ClCompile Include="..\..\Fundation\CCComponent.cpp" />
     <ClCompile Include="..\..\Fundation\CCContext.cpp" />
+    <ClCompile Include="..\..\Fundation\CCEntity.cpp" />
     <ClCompile Include="..\..\Fundation\CCEntityManager.cpp" />
     <ClCompile Include="..\..\Fundation\CCEvent.cpp" />
     <ClCompile Include="..\..\Fundation\CCTimeManager.cpp" />
