@@ -10,6 +10,7 @@
 #include "GameView.h"
 #include "Resource.h"
 #include "CCEvent.h"
+#include "CCComponent.h"
 
 struct _OfpGuard
 {
@@ -75,6 +76,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     freopen_s(&console, "CONOUT$", "w", stdout);
 
     //CCEventTest();
+    CCComponentTest();
 
     s_Instance = hInstance;
     MSG msg;

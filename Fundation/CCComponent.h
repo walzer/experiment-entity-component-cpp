@@ -10,6 +10,16 @@
 class CCContext;
 class CCEntity;
 
+struct CCSelectorBase
+{
+};
+
+template < typename FunctionType >
+struct CCSelectorVoidVoid : public CCSelectorBase
+{
+    FunctionType pfn;
+};
+
 class CCComponent
 {
 public:
@@ -19,7 +29,20 @@ public:
     CCComponent();
     virtual ~CCComponent();
 
+    virtual bool init();
+    virtual void done();
     virtual CCString getName();
+    
+    template < typename FunctionType >
+    ThisType& registerFunction(const CCString& funcName, FunctionType func);
+    template < typename FunctionType, typename Para1 >
+    ThisType& registerFunction(const CCString& funcName, FunctionType func, Para1 para1);
+    ::std::map<CCString, ::std::shared_ptr<CCSelectorBase>> _functions;
+
+    template <typename ReturnType>
+    ReturnType callFunction(const CCString& funcName);
+
+    void callVoidFunction(const CCString& funcName);
 
 public:
     typedef Ptr (CreatorSignature)();
@@ -49,6 +72,8 @@ struct CCComponentRegister
         CCComponent::registerCreator(typeName, creator);
     }
 };
+
+void CCComponentTest();
 
 #define CCCOMPONENT_REGISTER_CREATOR \
     _CCCOMPONENT_REGISTER_CREATOR_IMPL(IMPLEMENT_CLASS)
