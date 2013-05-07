@@ -24,39 +24,56 @@ CCString CCComponent::getName()
     return typeid(*this).name();
 }
 
-template < typename FunctionType >
-CCComponent& CCComponent::registerFunction(const CCString& funcName, FunctionType func)
+template < typename FunctionTypeT >
+CCComponent* CCComponent::registerFunction(const CCString& funcName, FunctionTypeT func)
 {
-    auto functor = make_shared<CCSelectorVoidVoid<FunctionType>>();
-    functor->pfn = func;
-    _functions.insert(make_pair(funcName, functor));
-    return *this;
+    auto fonctionType = make_shared<FunctionType<FunctionTypeT>>();
+    fonctionType->functor = func;
+    _functions.insert(make_pair(funcName, fonctionType));
+    return this;
 }
 
-template < typename FunctionType, typename Para1 >
-CCComponent& CCComponent::registerFunction(const CCString& funcName, FunctionType func, Para1 para1)
+CCComponent* CCComponent::unregisterFunction(const CCString& funcName)
 {
-
-    return *this;
+    _functions.erase(funcName);
+    return this;
 }
 
 template <typename ReturnType>
 ReturnType CCComponent::callFunction(const CCString& funcName)
 {
-    ReturnType ret;
-    return ret;
-}
-
-void CCComponent::callVoidFunction(const CCString& funcName)
-{
+    FunctionType<function<ReturnType()>>* pfn = nullptr;
     auto it = _functions.find(funcName);
     if (it != _functions.end())
     {
-        CCSelectorVoidVoid<function<void()>>* pfn = (CCSelectorVoidVoid<function<void()>>*)it->second.get();
-        (pfn->pfn)();
+        pfn = (FunctionType<function<ReturnType()>>*)it->second.get();
+    }
+    if (pfn)
+    {
+        return (pfn->functor)();
     }
     else
     {
+        return ReturnType();
+    }
+}
+
+template <typename ReturnType, typename Arg1>
+ReturnType CCComponent::callFunction(const CCString& funcName, Arg1 aArg1)
+{
+    FunctionType<function<ReturnType(Arg1)>>* pfn = nullptr;
+    auto it = _functions.find(funcName);
+    if (it != _functions.end())
+    {
+        pfn = (FunctionType<function<ReturnType(Arg1)>>*)it->second.get();
+    }
+    if (pfn)
+    {
+        return (pfn->functor)(aArg1);
+    }
+    else
+    {
+        return ReturnType();
     }
 }
 
@@ -98,15 +115,41 @@ class TestComponent : public CCComponent
 public:
     typedef shared_ptr<TestComponent> Ptr;
 
+    TestComponent()
+        : _i(0)
+    {
+    }
+
     virtual CCString getName()
     {
         return "TestComponent";
     }
     virtual bool init()
     {
-        function<void()> func = bind(&TestComponent::void_selector, this);
-        registerFunction("void_selector", func);
+        {
+            function<void()> func = bind(&TestComponent::void_selector, this);
+            registerFunction("void_selector", func);
+        }
+        {
+            function<int()> func = bind(&TestComponent::int_selector, this);
+            registerFunction("int_selector", func);
+        }
+        {
+            function<void(int)> func = bind(&TestComponent::void_selector_int, this, placeholders::_1);
+            registerFunction("void_selector_int", func);
+        }
+        {
+            function<int(int)> func = bind(&TestComponent::int_selector_int, this, placeholders::_1);
+            registerFunction("int_selector_int", func);
+        }
         return true;
+    }
+    virtual void done()
+    {
+        unregisterFunction("void_selector");
+        unregisterFunction("int_selector");
+        unregisterFunction("void_selector_int");
+        unregisterFunction("int_selector_int");
     }
     void void_selector()
     {
@@ -143,5 +186,11 @@ void CCComponentTest()
     printf("%s\n", typeid(b).name());
     printf("%s\n", typeid(f).name());
 
-    com->callVoidFunction("void_selector");
+    com->callFunction<void>("void_selector");
+    com->callFunction<void, int>("void_selector_int", 1);
+    int i = com->callFunction<int>("int_selector");
+    printf("int_selector return %d\n", i);
+    i = com->callFunction<int, int>("int_selector_int", 2);
+    printf("int_selector_int(1) return %d\n", i);
+    com->done();
 }

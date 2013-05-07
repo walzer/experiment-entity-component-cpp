@@ -10,16 +10,6 @@
 class CCContext;
 class CCEntity;
 
-struct CCSelectorBase
-{
-};
-
-template < typename FunctionType >
-struct CCSelectorVoidVoid : public CCSelectorBase
-{
-    FunctionType pfn;
-};
-
 class CCComponent
 {
 public:
@@ -33,16 +23,28 @@ public:
     virtual void done();
     virtual CCString getName();
     
-    template < typename FunctionType >
-    ThisType& registerFunction(const CCString& funcName, FunctionType func);
-    template < typename FunctionType, typename Para1 >
-    ThisType& registerFunction(const CCString& funcName, FunctionType func, Para1 para1);
-    ::std::map<CCString, ::std::shared_ptr<CCSelectorBase>> _functions;
+    // Register a std::function object with funcName.
+    template <
+        typename FunctionTypeT
+    >
+    ThisType* registerFunction(const CCString& funcName,
+        FunctionTypeT func);
 
-    template <typename ReturnType>
+    // Unregister function object with name funcName.
+    ThisType* unregisterFunction(const CCString& funcName);
+
+    // Call a registered function named funcName with none arguments.
+    template <
+        typename ReturnType
+    >
     ReturnType callFunction(const CCString& funcName);
 
-    void callVoidFunction(const CCString& funcName);
+    template <
+        typename ReturnType,
+        typename Arg1
+    >
+    ReturnType callFunction(const CCString& funcName,
+        Arg1 Arg1);
 
 public:
     typedef Ptr (CreatorSignature)();
@@ -53,6 +55,15 @@ public:
     static CreatorEntry& getCreatorEntry();
     static void registerCreator(const CCString& typeName, const Creator& creator);
 private:
+    struct FunctionTypeBase {};
+    template <
+        typename FunctionTypeT
+    >
+    struct FunctionType : public FunctionTypeBase
+    {
+        FunctionTypeT functor;
+    };
+    ::std::map<CCString, ::std::shared_ptr<FunctionTypeBase>> _functions;
     CCEntity* _owner;
 };
 
