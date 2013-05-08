@@ -1,19 +1,8 @@
 #ifndef __FUNCATION__FUNDATION_MACROS_CPP_H__
 #define __FUNCATION__FUNDATION_MACROS_CPP_H__
 
-extern int printf_stdout_logfile(const char *format, ...);
-#define printf  printf_stdout_logfile
+#include "CCFundationMacrosH.h"
 
-#include <stdio.h>
-#define CCLOG   printf
-
-#define CCTYPE_TO_STRING(t) #t
-
-#define CCGLUE(a, b) \
-    _CCGLUE_EXPEND(a, b)
-
-#define _CCGLUE_EXPEND(a, b) _CCGLUE_IMPL(a, b)
-#define _CCGLUE_IMPL(a, b)  a##b
 
 #define CCFUNCTION_SIGN  __FUNCSIG__
 
@@ -32,11 +21,11 @@ public:
     _FuncGuardClass(const char * funcSign)
     {
         _funcSign = funcSign;
-        CCLOG("Enter %s\n", _funcSign);
+        CCLOGI("Enter %s\n", _funcSign);
     }
     ~_FuncGuardClass()
     {
-        CCLOG("Exist %s\n", _funcSign);
+        CCLOGI("Exist %s\n", _funcSign);
     }
 private:
     const char * _funcSign;

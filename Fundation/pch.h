@@ -14,4 +14,7 @@
 #include <vector>
 
 #include "CCFundationMacrosCPP.h"
+
+void pchTest();
+
 #endif  // __FUNDATION_PCH_H__

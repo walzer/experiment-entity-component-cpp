@@ -12,47 +12,6 @@
 #include "CCEvent.h"
 #include "CCComponent.h"
 
-struct _OfpGuard
-{
-    FILE* ofp;
-    _OfpGuard(const char * name = nullptr)
-        : ofp(nullptr)
-    {
-        open(name);
-    }
-    ~_OfpGuard()
-    {
-        if (ofp)
-        {
-            fclose(ofp);
-            ofp = nullptr;
-        }
-    }
-    void open(const char * name)
-    {
-        if (name)
-        {
-                fopen_s(&ofp, name, "w");
-        }
-    }
-} s_OfpGuard("application.log");
-
-int printf_stdout_logfile(const char *format, ...)
-{
-  va_list ap;
-  int  rc;
-
-  va_start(ap, format);
-  rc = vprintf(format, ap);
-  if (s_OfpGuard.ofp)
-  {
-    rc = vfprintf(s_OfpGuard.ofp, format, ap);
-  }
-  va_end(ap);
-
-  return rc;
-}
-
 using namespace std;
 
 #define MAX_LOADSTRING 100
@@ -62,6 +21,7 @@ HINSTANCE s_Instance;					        // current instance
 unique_ptr<CCContext> s_context(nullptr);
 void initContext();
 void doneContext();
+extern void pchTest();
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -76,6 +36,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     freopen_s(&console, "CONOUT$", "w", stdout);
 
     //CCEventTest();
+    pchTest();
     CCComponentTest();
 
     s_Instance = hInstance;

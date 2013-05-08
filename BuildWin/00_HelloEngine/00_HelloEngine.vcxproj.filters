@@ -57,6 +57,9 @@
     <ClInclude Include="..\..\Fundation\CCTimeManager.h">
       <Filter>Fundation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Fundation\CCFundationMacrosH.h">
+      <Filter>Fundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">

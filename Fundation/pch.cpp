@@ -1,25 +1,5 @@
 #include "pch.h"
 
-#define CCNARGS(...) \
-    _CCNARGS_EXPAND(_CCNARGS_IMPL(__VA_ARGS__, \
-    20,19,18,17,16,15,14,13,12,11, \
-    10,9,8,7,6,5,4,3,2,1,0))
-
-#define _CCNARGS_EXPAND(x)    x
-#define _CCNARGS_IMPL( \
-    _1, _2, _3, _4, _5, _6, _7, _8, _9,_10, \
-    _11,_12,_13,_14,_15,_16,_17,_18,_19,_20, \
-    N,...) N
-
-#define CCGLUE(a, b) \
-    _CCGLUE_EXPEND(a, b)
-
-#define _CCGLUE_EXPEND(a, b) _CCGLUE_IMPL(a, b)
-#define _CCGLUE_IMPL(a, b)  a##b
-
-#define CCEXPAND_NARGS(name, ...) \
-    CCGLUE(name, CCNARGS(__VA_ARGS__))
-
 int i = CCNARGS(a, b, c);
 
 class A
@@ -40,4 +20,72 @@ void IMPLEMENT_FUNCTION(func, int a)
 
 void IMPLEMENT_FUNCTION(func, int a, int b)
 
+}
+// get template args number.
+template<typename T>
+struct is_non_template_param
+{
+    enum { have_template_param =1 };
+};
+ 
+template<>
+struct is_non_template_param<void>
+{
+    enum { have_template_param =0 };
+};
+ 
+template<typename T1,typename T2,typename T3,typename T4,typename T5>
+struct template_params
+{
+    enum { count = is_non_template_param<T1>::have_template_param +
+                  is_non_template_param<T2>::have_template_param +
+                  is_non_template_param<T3>::have_template_param +
+                  is_non_template_param<T4>::have_template_param +
+                  is_non_template_param<T5>::have_template_param };
+};
+
+template<typename T1 = void,
+         typename T2 = void,
+        typename T3 = void,
+        typename T4 = void,
+        typename T5 = void>
+struct Delegate
+{
+    enum{ ParamsCount = template_params<T1,T2,T3,T4,T5>::count };
+    int GetParamsCount()
+    {
+        return ParamsCount;
+    }
+ 
+};
+#include <functional>
+#include <iostream>
+using namespace std;
+
+int add5(int i1, int i2, int i3, int i4, int i5)
+{
+    return i1 + i2 + i3 + i4 + i5;
+}
+
+int add10(int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10)
+{
+    return i1 + i2 + i3 + i4 + i5 + i6 + i7 + i8 + i9 + i10;
+};
+
+void pchTest()
+{
+    Delegate<int,double,char> d1;
+    Delegate<int,int*,char*,int> d2;
+    Delegate<void> d3;
+   
+    cout <<"d1 params count =" << d1.GetParamsCount()<<endl;
+    cout <<"d2 params count =" << d2.GetParamsCount()<<endl;
+    cout <<"d3 params count =" << d3.GetParamsCount()<<endl;
+
+    function<int (int, int, int, int, int)> f;
+    f = bind(&add5, placeholders::_1, placeholders::_2, placeholders::_3, 
+        placeholders::_4, placeholders::_5);
+
+    int ret = f(1,2,3,4,5);
+    cout << endl;
 }

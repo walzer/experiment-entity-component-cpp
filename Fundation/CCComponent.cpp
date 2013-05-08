@@ -24,57 +24,10 @@ CCString CCComponent::getName()
     return typeid(*this).name();
 }
 
-template < typename FunctionTypeT >
-CCComponent* CCComponent::registerFunction(const CCString& funcName, FunctionTypeT func)
-{
-    auto fonctionType = make_shared<FunctionType<FunctionTypeT>>();
-    fonctionType->functor = func;
-    _functions.insert(make_pair(funcName, fonctionType));
-    return this;
-}
-
 CCComponent* CCComponent::unregisterFunction(const CCString& funcName)
 {
     _functions.erase(funcName);
     return this;
-}
-
-template <typename ReturnType>
-ReturnType CCComponent::callFunction(const CCString& funcName)
-{
-    FunctionType<function<ReturnType()>>* pfn = nullptr;
-    auto it = _functions.find(funcName);
-    if (it != _functions.end())
-    {
-        pfn = (FunctionType<function<ReturnType()>>*)it->second.get();
-    }
-    if (pfn)
-    {
-        return (pfn->functor)();
-    }
-    else
-    {
-        return ReturnType();
-    }
-}
-
-template <typename ReturnType, typename Arg1>
-ReturnType CCComponent::callFunction(const CCString& funcName, Arg1 aArg1)
-{
-    FunctionType<function<ReturnType(Arg1)>>* pfn = nullptr;
-    auto it = _functions.find(funcName);
-    if (it != _functions.end())
-    {
-        pfn = (FunctionType<function<ReturnType(Arg1)>>*)it->second.get();
-    }
-    if (pfn)
-    {
-        return (pfn->functor)(aArg1);
-    }
-    else
-    {
-        return ReturnType();
-    }
 }
 
 bool CCComponent::init()
@@ -108,6 +61,7 @@ void CCComponent::registerCreator(const CCString& comName, const Creator& creato
     getCreatorEntry().insert(make_pair(comName, creator));
 }
 
+#undef  IMPLEMENT_CLASS
 ////////////////////////////////////////////////////////////////////////////////
 class TestComponent : public CCComponent
 {
@@ -124,32 +78,16 @@ public:
     {
         return "TestComponent";
     }
-    virtual bool init()
-    {
-        {
-            function<void()> func = bind(&TestComponent::void_selector, this);
-            registerFunction("void_selector", func);
-        }
-        {
-            function<int()> func = bind(&TestComponent::int_selector, this);
-            registerFunction("int_selector", func);
-        }
-        {
-            function<void(int)> func = bind(&TestComponent::void_selector_int, this, placeholders::_1);
-            registerFunction("void_selector_int", func);
-        }
-        {
-            function<int(int)> func = bind(&TestComponent::int_selector_int, this, placeholders::_1);
-            registerFunction("int_selector_int", func);
-        }
-        return true;
-    }
+    virtual bool init();
     virtual void done()
     {
         unregisterFunction("void_selector");
         unregisterFunction("int_selector");
         unregisterFunction("void_selector_int");
         unregisterFunction("int_selector_int");
+        unregisterFunction("int_selector_int2");
+        unregisterFunction("int_selector_int3");
+        unregisterFunction("int_selector_int4");
     }
     void void_selector()
     {
@@ -168,13 +106,37 @@ public:
     int int_selector_int(int i)
     {
         printf("%s\n", __FUNCTION__);
-        _i += i;
-        return _i;
+        return _i + i;
+    }
+    int int_selector_int2(int i1, int& i2)
+    {
+        printf("%s\n", __FUNCTION__);
+        return _i + i1 + i2;
+    }
+    int int_selector_int3(int i1, int i2, int i3)
+    {
+        printf("%s\n", __FUNCTION__);
+        return _i + i1 + i2 + i3;
+    }
+    int int_selector_int4(int i1, int i2, int i3, int i4)
+    {
+        printf("%s\n", __FUNCTION__);
+        return _i + i1 + i2 + i3 + i4;
     }
 };
-#undef  IMPLEMENT_CLASS
 #define IMPLEMENT_CLASS     TestComponent
 CCCOMPONENT_REGISTER_CREATOR;
+bool TestComponent::init()
+{
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(void_selector, void);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(int_selector, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(void_selector_int, void, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int, int, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int2, int, int, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int3, int, int, int, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int4, int, int, int, int, int);
+    return true;
+}
 
 void CCComponentTest()
 {
@@ -190,7 +152,13 @@ void CCComponentTest()
     com->callFunction<void, int>("void_selector_int", 1);
     int i = com->callFunction<int>("int_selector");
     printf("int_selector return %d\n", i);
-    i = com->callFunction<int, int>("int_selector_int", 2);
+    i = com->callFunction<int, int>("int_selector_int", 1);
     printf("int_selector_int(1) return %d\n", i);
+    i = com->callFunction<int, int, int>("int_selector_int2", 1, 1);
+    printf("int_selector_int2(1,1) return %d\n", i);
+    i = com->callFunction<int, int, int, int>("int_selector_int3", 1, 1, 1);
+    printf("int_selector_int3(1,1,1) return %d\n", i);
+    i = com->callFunction<int, int, int, int, int>("int_selector_int4", 1, 1, 1, 1);
+    printf("int_selector_int4(1,1,1,1) return %d\n", i);
     com->done();
 }
