@@ -68,80 +68,79 @@ public:
     }
 };
 
-CCEvent1<void> event;
-CCDelegateHandler handler[4];
-void cf0()
+CCDelegateHandler handler[5];
+
+template <typename EventType>
+void removeAll(EventType& event)
 {
-    printf("%d %s\n", __LINE__, __FUNCTION__);
+    printf("removeAll\n");
+    for(int i = 0; i < 5; ++i) event.remove(handler[i]); 
 }
-void cf1()
-{
-    printf("%d %s\n", __LINE__, __FUNCTION__);
-}
-bool doRemove = false;
-int removeIdx = 0;
-void cf2()
-{
-    if (doRemove)
-    {
-        event.remove(handler[3+removeIdx]);
-    }
-    printf("%d %s\n", __LINE__, __FUNCTION__);
-}
-void cf3()
-{
-    printf("%d %s\n", __LINE__, __FUNCTION__);
-}
-void cf4()
-{
-    printf("%d %s\n", __LINE__, __FUNCTION__);
-}
-void removeAll()
-{
-    for(int i = 0; i < 5; ++i) event.remove(handler[i]);
-}
+
 void test1()
 {
     printf("%d %s\n", __LINE__, __FUNCTION__);
 
+    CCEvent1<void> event;
+    struct VoidFunction
+    {
+        VoidFunction(int i) : id(i){}
+        int id;
+
+        void operator () ()
+        {
+            printf("call VoidFunction %d\n", id);
+        }
+    };
+#define GLUE_VAR(n, var) var##n ( n )
+    VoidFunction CCFOR_EACH_NUM(GLUE_VAR, vf, vf, vf, vf, vf);
+
     printf("test forward call\n");
-    handler[0] = event.add(cf0);
-    handler[1] = event.add(cf1);
-    handler[2] = event.add(cf2);
-    handler[3] = event.add(cf3);
-    handler[4] = event.add(cf4);
+    handler[0] = event.add(vf1);
+    handler[1] = event.add(vf2);
+    handler[2] = event.add(vf3);
+    handler[3] = event.add(vf4);
+    handler[4] = event.add(vf5);
     event();
-    printf("test remove handler 2\n");
+    printf("test remove handler 3\n");
     event.remove(handler[2]);
     event();
-    removeAll();
+    removeAll(event);
 
     printf("test backward call\n");
-    handler[0] = event.add(&cf0, AT_FRONT); // vs2012 need add & first.
-    handler[1] = event.add(cf1, AT_FRONT);
-    handler[2] = event.add(cf2, AT_FRONT);
-    handler[3] = event.add(cf3, AT_FRONT);
-    handler[4] = event.add(cf4, AT_FRONT);
+    handler[0] = event.add(vf1, AT_FRONT); // vs2012 need add & first.
+    handler[1] = event.add(vf2, AT_FRONT);
+    handler[2] = event.add(vf3, AT_FRONT);
+    handler[3] = event.add(vf4, AT_FRONT);
+    handler[4] = event.add(vf5, AT_FRONT);
     event();
-    removeAll();
+    removeAll(event);
 
     printf("test forward grouped call\n");
-    handler[4] = event.add(0, cf0);
-    handler[0] = event.add(1, cf1);
-    handler[1] = event.add(1, cf2);
-    handler[2] = event.add(1, cf3);
-    handler[3] = event.add(2, cf4);
+    handler[4] = event.add(0, vf1);
+    handler[0] = event.add(1, vf2);
+    handler[1] = event.add(1, vf3);
+    handler[2] = event.add(1, vf4);
+    handler[3] = event.add(2, vf5);
     event();
-    removeAll();
+    removeAll(event);
 
     printf("test backward grouped call\n");
-    handler[4] = event.add(2, cf0, AT_FRONT);
-    handler[0] = event.add(1, cf1, AT_FRONT);
-    handler[1] = event.add(1, cf2, AT_FRONT);
-    handler[2] = event.add(1, cf3, AT_FRONT);
-    handler[3] = event.add(0, cf4, AT_FRONT);
+    handler[4] = event.add(2, vf1, AT_FRONT);
+    handler[0] = event.add(1, vf2, AT_FRONT);
+    handler[1] = event.add(1, vf3, AT_FRONT);
+    handler[2] = event.add(1, vf4, AT_FRONT);
+    handler[3] = event.add(0, vf5, AT_FRONT);
     event();
-    removeAll();
+    removeAll(event);
+
+    printf("test remove when raise event\n");
+    handler[0] = event.add(vf1);
+    handler[1] = event.add(vf2);
+    handler[2] = event.add(bind(removeAll<decltype(event)>, ref(event)));
+    handler[3] = event.add(vf4);
+    handler[4] = event.add(vf5);
+    event();
 
     printf("%d %s\n", __LINE__, __FUNCTION__);
 }

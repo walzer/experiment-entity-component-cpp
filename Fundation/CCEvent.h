@@ -10,8 +10,8 @@
 #include <tuple>
 #include <typeinfo>
 
+#include "CCFundationMacrosH.h"
 #include "CCString.h"
-
 
 enum CCDelegateAtPosition : char
 {
@@ -21,6 +21,9 @@ enum CCDelegateAtPosition : char
 
 class CCDelegateBase
 {
+    // Uncopyable
+    CCDelegateBase(const CCDelegateBase &);
+    CCDelegateBase &operator = (const CCDelegateBase &);
 public:
     typedef CCDelegateBase ThisType;
     typedef ::std::shared_ptr<CCDelegateBase> Ptr;
@@ -153,12 +156,20 @@ template <
 >
 class CCEvent1
 {
+    // Uncopyable
+    CCEvent1(const CCEvent1 &);
+    CCEvent1 &operator = (const CCEvent1 &);
 public:
     typedef CCEvent1<ReturnType> ThisType;
     typedef ReturnType (DelegateSignature)();
     typedef ::std::function<DelegateSignature> DelegateFunction;
     typedef ::std::list<::std::shared_ptr<CCDelegateBase>> DelegateList;
     typedef CCDelegate<DelegateFunction, GroupType, DelegateList::iterator> Delegate;
+    
+    CCEvent1()
+        : _raising(false)
+    {
+    }
 
     CCDelegateHandler add(::std::shared_ptr<Delegate>& delegate)
     {
@@ -210,26 +221,28 @@ public:
     template <>
     void raise<void>()
     {
+        _raising = true;
         auto end = _frontList.end();
-        for (auto it = _frontList.begin(); it != end; ++it)
+        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
         {
-            ((Delegate*)(*it).get())->function();
+            ((Delegate*)(*_raisingIter++).get())->function();
         }
         auto groupEnd = _groupedLists.end();
         for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
         {
             DelegateList& list = groupIt->second;
             end = list.end();
-            for (auto it = list.begin(); it != end; ++it)
+            for (_raisingIter = list.begin(); _raisingIter != end; )
             {
-                ((Delegate*)(*it).get())->function();
+                ((Delegate*)(*_raisingIter++).get())->function();
             }
         }
         end = _backList.end();
-        for (auto it = _backList.begin(); it != end; ++it)
+        for (_raisingIter = _backList.begin(); _raisingIter != end; )
         {
-            ((Delegate*)(*it).get())->function();
+            ((Delegate*)(*_raisingIter++).get())->function();
         }
+        _raising = false;
     }
     ReturnType operator () ()
     {
@@ -242,6 +255,10 @@ public:
         if (delegateBase)
         {
             Delegate* delegate = static_cast<Delegate*>(delegateBase.get());
+            if (_raising && delegate->iterator == _raisingIter)
+            {
+                ++_raisingIter;
+            }
             getDelegateList(delegate).erase(delegate->iterator);
         }
     }
@@ -256,6 +273,9 @@ protected:
     DelegateList _backList;
     DelegateList _frontList;
     ::std::map<GroupType, DelegateList> _groupedLists;
+
+    bool _raising;
+    DelegateList::iterator _raisingIter;
 };
 
 template <
