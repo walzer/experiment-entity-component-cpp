@@ -35,7 +35,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     FILE * console = nullptr;
     freopen_s(&console, "CONOUT$", "w", stdout);
 
-    //CCEventTest();
+    CCEventTest();
     pchTest();
     CCComponentTest();
 
