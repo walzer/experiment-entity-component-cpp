@@ -85,6 +85,78 @@ public:
     }
 };
 
+class _UseLastValue
+{
+public:
+    template <typename T>
+    T operator() (const T& , const T& last)
+    {
+        return last;
+    }
+};
+
+class _InvokeNoneInterrupt
+{
+public:
+    template <typename T>
+    bool operator() (const T& result)
+    {
+        return false;
+    }
+};
+
+template <
+    typename DelegateFunction,
+    typename ResultType, 
+    typename ResultCombiner = _UseLastValue,
+    typename InvokeInterrupter = _InvokeNoneInterrupt
+>
+class CCDelegateInvoke
+{
+public:
+    CCDelegateInvoke()
+        : _result()
+    {
+    }
+
+    bool invoke (const DelegateFunction& func)
+    {
+        ResultType value = func();
+        _result = _combiner(_result, value);
+        return _interrupter(value);
+    }
+
+    ResultType& getResult()
+    {
+        return _result;
+    }
+
+private:
+    ResultType _result;
+    ResultCombiner _combiner;
+    InvokeInterrupter _interrupter;
+};
+
+template <
+    typename DelegateFunction,
+    typename ResultCombiner,
+    typename InvokeInterrupter
+>
+class CCDelegateInvoke <DelegateFunction, void, ResultCombiner, InvokeInterrupter>
+{
+public:
+
+    bool invoke (const DelegateFunction& func)
+    {
+        func();
+        return false;
+    }
+
+    void getResult()
+    {
+    }
+};
+
 class CCDelegateHandler
 {
 public:
@@ -152,7 +224,9 @@ private:
 
 template <
     typename Signature,
-    typename GroupType = int
+    typename GroupType = int,
+    typename ResultCombiner = _UseLastValue,
+    typename InvokeInterrupter = _InvokeNoneInterrupt
 >
 class CCEvent1
 {
@@ -203,68 +277,33 @@ public:
         return add(delegate);
     }
 
-    template <
-        typename ReturnTypeT
-    >
-    ReturnTypeT raise()
-    {
-        ReturnTypeT ret = ReturnTypeT();
-        _raising = true;
-        auto end = _frontList.end();
-        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
-        {
-            ret = ((Delegate*)(*_raisingIter++).get())->function();
-        }
-        auto groupEnd = _groupedLists.end();
-        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
-        {
-            DelegateList& list = groupIt->second;
-            end = list.end();
-            for (_raisingIter = list.begin(); _raisingIter != end; )
-            {
-                ret = ((Delegate*)(*_raisingIter++).get())->function();
-            }
-        }
-        end = _backList.end();
-        for (_raisingIter = _backList.begin(); _raisingIter != end; )
-        {
-            ret = ((Delegate*)(*_raisingIter++).get())->function();
-        }
-        _raising = false;
-        return ret;
-    }
-
-
-    template <>
-    void raise<void>()
-    {
-        _raising = true;
-        auto end = _frontList.end();
-        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
-        {
-            ((Delegate*)(*_raisingIter++).get())->function();
-        }
-        auto groupEnd = _groupedLists.end();
-        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
-        {
-            DelegateList& list = groupIt->second;
-            end = list.end();
-            for (_raisingIter = list.begin(); _raisingIter != end; )
-            {
-                ((Delegate*)(*_raisingIter++).get())->function();
-            }
-        }
-        end = _backList.end();
-        for (_raisingIter = _backList.begin(); _raisingIter != end; )
-        {
-            ((Delegate*)(*_raisingIter++).get())->function();
-        }
-        _raising = false;
-    }
-
     ResultType operator () ()
     {
-        return raise<ResultType>();
+        CCDelegateInvoke<DelegateFunction, ResultType, ResultCombiner, InvokeInterrupter> invoker;
+        _raising = true;
+        bool interrupt = false;
+        auto end = _frontList.end();
+        for (_raisingIter = _frontList.begin(); !interrupt && _raisingIter != end; )
+        {
+            interrupt = invoker.invoke(((Delegate*)(*_raisingIter++).get())->function);
+        }
+        auto groupEnd = _groupedLists.end();
+        for (auto groupIt = _groupedLists.begin(); !interrupt &&  groupIt != groupEnd; ++groupIt)
+        {
+            DelegateList& list = groupIt->second;
+            end = list.end();
+            for (_raisingIter = list.begin(); !interrupt &&  _raisingIter != end; )
+            {
+                interrupt = invoker.invoke(((Delegate*)(*_raisingIter++).get())->function);
+            }
+        }
+        end = _backList.end();
+        for (_raisingIter = _backList.begin(); !interrupt && _raisingIter != end; )
+        {
+            interrupt = invoker.invoke(((Delegate*)(*_raisingIter++).get())->function);
+        }
+        _raising = false;
+        return invoker.getResult();
     }
 
     void remove(const CCDelegateHandler& handler)

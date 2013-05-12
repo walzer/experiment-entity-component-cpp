@@ -149,5 +149,34 @@ void test1()
     handler[4] = event1.add(intf5);
     int ret = event1();
     printf("event1 return %d\n", ret);
+    removeAll(event1);
+
+    CCEvent1<int(), int, std::plus<int>> event2;
+    printf("test combiner for int function call\n");
+    handler[0] = event2.add(intf1);
+    handler[1] = event2.add(intf2);
+    handler[2] = event2.add(intf3);
+    handler[3] = event2.add(intf4);
+    handler[4] = event2.add(intf5);
+    ret = event2();
+    printf("event2 return %d\n", ret);
+    removeAll(event2);
+
+    struct Equal3
+    {
+        bool operator()(int v) { return (v ==3) ?  true : false; }
+    };
+
+    CCEvent1<int(), int, std::plus<int>, Equal3> event3;
+    printf("test invoke interrupt for int function call\n");
+    handler[0] = event3.add(intf1);
+    handler[1] = event3.add(intf2);
+    handler[2] = event3.add(intf3);
+    handler[3] = event3.add(intf4);
+    handler[4] = event3.add(intf5);
+    ret = event3();
+    printf("event3 return %d\n", ret);
+    removeAll(event3);
+
     printf("%d %s\n", __LINE__, __FUNCTION__);
 }
