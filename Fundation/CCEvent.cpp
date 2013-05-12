@@ -1,5 +1,7 @@
 #include "CCEvent.h"
 
+#define GLUE_VAR(n, var) var##n ( n )
+
 using namespace std;
 
 class System
@@ -49,25 +51,6 @@ void CCEventTest()
     //printf("%d %s\n", __LINE__, __FUNCTION__);
 }
 
-class System1
-{
-public:
-    CCEvent1<void> event;
-
-    void run()
-    {
-        event();
-    }
-    static void scdf()
-    {
-        printf("%d %s\n", __LINE__, __FUNCTION__);
-    }
-    void cdf()
-    {
-        printf("%d %s\n", __LINE__, __FUNCTION__);
-    }
-};
-
 CCDelegateHandler handler[5];
 
 template <typename EventType>
@@ -79,9 +62,10 @@ void removeAll(EventType& event)
 
 void test1()
 {
+
     printf("%d %s\n", __LINE__, __FUNCTION__);
 
-    CCEvent1<void> event;
+    CCEvent1<void()> event;
     struct VoidFunction
     {
         VoidFunction(int i) : id(i){}
@@ -92,7 +76,6 @@ void test1()
             printf("call VoidFunction %d\n", id);
         }
     };
-#define GLUE_VAR(n, var) var##n ( n )
     VoidFunction CCFOR_EACH_NUM(GLUE_VAR, vf, vf, vf, vf, vf);
 
     printf("test forward call\n");
@@ -141,6 +124,30 @@ void test1()
     handler[3] = event.add(vf4);
     handler[4] = event.add(vf5);
     event();
+    removeAll(event);
 
+    ///////////////////////////////////////////////////////////////
+    CCEvent1<int()> event1;
+    struct IntFunction
+    {
+        IntFunction(int i) : id(i){}
+        int id;
+
+        int operator () ()
+        {
+            printf("call IntFunction %d\n", id);
+            return id;
+        }
+    };
+    IntFunction CCFOR_EACH_NUM(GLUE_VAR, intf, intf, intf, intf, intf);
+
+    printf("test int function call\n");
+    handler[0] = event1.add(intf1);
+    handler[1] = event1.add(intf2);
+    handler[2] = event1.add(intf3);
+    handler[3] = event1.add(intf4);
+    handler[4] = event1.add(intf5);
+    int ret = event1();
+    printf("event1 return %d\n", ret);
     printf("%d %s\n", __LINE__, __FUNCTION__);
 }

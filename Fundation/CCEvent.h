@@ -151,7 +151,7 @@ private:
 };
 
 template <
-    typename ReturnType,
+    typename Signature,
     typename GroupType = int
 >
 class CCEvent1
@@ -160,9 +160,9 @@ class CCEvent1
     CCEvent1(const CCEvent1 &);
     CCEvent1 &operator = (const CCEvent1 &);
 public:
-    typedef CCEvent1<ReturnType> ThisType;
-    typedef ReturnType (DelegateSignature)();
-    typedef ::std::function<DelegateSignature> DelegateFunction;
+    typedef CCEvent1<Signature, GroupType> ThisType;
+    typedef ::std::function<Signature> DelegateFunction;
+    typedef typename DelegateFunction::result_type  ResultType;
     typedef ::std::list<::std::shared_ptr<CCDelegateBase>> DelegateList;
     typedef CCDelegate<DelegateFunction, GroupType, DelegateList::iterator> Delegate;
     
@@ -209,11 +209,28 @@ public:
     ReturnTypeT raise()
     {
         ReturnTypeT ret = ReturnTypeT();
-        auto frontEnd = _frontList.end();
-        for (auto it = _frontList.begin(); it != frontEnd; ++it)
+        _raising = true;
+        auto end = _frontList.end();
+        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
         {
-            ret = (*it)->function();
+            ret = ((Delegate*)(*_raisingIter++).get())->function();
         }
+        auto groupEnd = _groupedLists.end();
+        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
+        {
+            DelegateList& list = groupIt->second;
+            end = list.end();
+            for (_raisingIter = list.begin(); _raisingIter != end; )
+            {
+                ret = ((Delegate*)(*_raisingIter++).get())->function();
+            }
+        }
+        end = _backList.end();
+        for (_raisingIter = _backList.begin(); _raisingIter != end; )
+        {
+            ret = ((Delegate*)(*_raisingIter++).get())->function();
+        }
+        _raising = false;
         return ret;
     }
 
@@ -244,9 +261,10 @@ public:
         }
         _raising = false;
     }
-    ReturnType operator () ()
+
+    ResultType operator () ()
     {
-        return raise<ReturnType>();
+        return raise<ResultType>();
     }
 
     void remove(const CCDelegateHandler& handler)
