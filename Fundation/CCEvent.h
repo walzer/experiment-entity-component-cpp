@@ -125,6 +125,16 @@ public:
         _result = _combiner(_result, value);
         return _interrupter(value);
     }
+    
+    template <
+        typename Arg1
+    >
+    bool invoke(const DelegateFunction& func, Arg1 arg1)
+    {
+        ResultType value = func(arg1);
+        _result = _combiner(_result, value);
+        return _interrupter(value);
+    }
 
     ResultType& getResult()
     {
@@ -146,9 +156,18 @@ class CCDelegateInvoke <DelegateFunction, void, ResultCombiner, InvokeInterrupte
 {
 public:
 
-    bool invoke (const DelegateFunction& func)
+    bool invoke(const DelegateFunction& func)
     {
         func();
+        return false;
+    }
+
+    template <
+        typename Arg1
+    >
+    bool invoke(const DelegateFunction& func, Arg1 arg1)
+    {
+        func(arg1);
         return false;
     }
 
@@ -178,6 +197,17 @@ public:
         {
             delegateBase->setEnabledStatus(false);
         }
+    }
+
+    bool enable()
+    {
+        CCDelegateBase::Ptr delegateBase = _delegateBase.lock();
+        if (delegateBase)
+        {
+            delegateBase->setEnabledStatus(true);
+            return true;
+        }
+        return false;
     }
 
     bool enabled() const
@@ -281,27 +311,104 @@ public:
     {
         CCDelegateInvoke<DelegateFunction, ResultType, ResultCombiner, InvokeInterrupter> invoker;
         _raising = true;
-        bool interrupt = false;
         auto end = _frontList.end();
-        for (_raisingIter = _frontList.begin(); !interrupt && _raisingIter != end; )
-        {
-            interrupt = invoker.invoke(((Delegate*)(*_raisingIter++).get())->function);
-        }
         auto groupEnd = _groupedLists.end();
-        for (auto groupIt = _groupedLists.begin(); !interrupt &&  groupIt != groupEnd; ++groupIt)
+        Delegate * delegate = nullptr;
+        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
+        {
+            delegate = (Delegate*)(*_raisingIter++).get();
+            if (delegate->getEnabledStatus())
+            {
+                if (invoker.invoke(delegate->function))
+                {
+                    goto EVENT_INTERRUPTED;
+                }
+            }
+        }
+        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
         {
             DelegateList& list = groupIt->second;
             end = list.end();
-            for (_raisingIter = list.begin(); !interrupt &&  _raisingIter != end; )
+            for (_raisingIter = list.begin(); _raisingIter != end; )
             {
-                interrupt = invoker.invoke(((Delegate*)(*_raisingIter++).get())->function);
+                delegate = (Delegate*)(*_raisingIter++).get();
+                if (delegate->getEnabledStatus())
+                {
+                    if (invoker.invoke(delegate->function))
+                    {
+                        goto EVENT_INTERRUPTED;
+                    }
+                }
             }
         }
         end = _backList.end();
-        for (_raisingIter = _backList.begin(); !interrupt && _raisingIter != end; )
+        for (_raisingIter = _backList.begin(); _raisingIter != end; )
         {
-            interrupt = invoker.invoke(((Delegate*)(*_raisingIter++).get())->function);
+            delegate = (Delegate*)(*_raisingIter++).get();
+            if (delegate->getEnabledStatus())
+            {
+                if (invoker.invoke(delegate->function))
+                {
+                    goto EVENT_INTERRUPTED;
+                }
+            }
         }
+        EVENT_INTERRUPTED:
+        _raising = false;
+        return invoker.getResult();
+    }
+
+    template<
+        typename Arg1
+    >
+    ResultType operator () (Arg1 arg1)
+    {
+        CCDelegateInvoke<DelegateFunction, ResultType, ResultCombiner, InvokeInterrupter> invoker;
+        _raising = true;
+        bool interrupt = false;
+        auto end = _frontList.end();
+        auto groupEnd = _groupedLists.end();
+        Delegate * delegate = nullptr;
+        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
+        {
+            delegate = (Delegate*)(*_raisingIter++).get();
+            if (delegate->getEnabledStatus())
+            {
+                if (invoker.invoke(delegate->function, arg1))
+                {
+                    goto EVENT_INTERRUPTED;
+                }
+            }
+        }
+        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
+        {
+            DelegateList& list = groupIt->second;
+            end = list.end();
+            for (_raisingIter = list.begin(); _raisingIter != end; )
+            {
+                delegate = (Delegate*)(*_raisingIter++).get();
+                if (delegate->getEnabledStatus())
+                {
+                    if (invoker.invoke(delegate->function, arg1))
+                    {
+                        goto EVENT_INTERRUPTED;
+                    }
+                }
+            }
+        }
+        end = _backList.end();
+        for (_raisingIter = _backList.begin(); _raisingIter != end; )
+        {
+            delegate = (Delegate*)(*_raisingIter++).get();
+            if (delegate->getEnabledStatus())
+            {
+                if (invoker.invoke(delegate->function, arg1))
+                {
+                    goto EVENT_INTERRUPTED;
+                }
+            }
+        }
+        EVENT_INTERRUPTED:
         _raising = false;
         return invoker.getResult();
     }

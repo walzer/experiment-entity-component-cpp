@@ -56,7 +56,7 @@ CCDelegateHandler handler[5];
 template <typename EventType>
 void removeAll(EventType& event)
 {
-    printf("removeAll\n");
+    printf("removeAll\n\n");
     for(int i = 0; i < 5; ++i) event.remove(handler[i]); 
 }
 
@@ -97,6 +97,13 @@ void test1()
     handler[3] = event.add(vf4, AT_FRONT);
     handler[4] = event.add(vf5, AT_FRONT);
     event();
+    printf("test disable handler 3\n");
+    handler[2].disable();
+    event();
+    printf("test enable handler 3\n");
+    handler[2].enable();
+    event();
+
     removeAll(event);
 
     printf("test forward grouped call\n");
@@ -177,6 +184,51 @@ void test1()
     ret = event3();
     printf("event3 return %d\n", ret);
     removeAll(event3);
+
+    CCEvent1<void(int)> event4;
+    struct VoidFunctionInt
+    {
+        VoidFunctionInt(int i) : id(i){}
+        int id;
+
+        void operator() (int i)
+        {
+            printf("call VoidFunctionInt %d with arg1 %d\n", id, i);
+        }
+    };
+    VoidFunctionInt CCFOR_EACH_NUM(GLUE_VAR, vintf, vintf, vintf, vintf, vintf);
+
+    printf("test call function with 1 arg\n");
+    handler[0] = event4.add(vintf1);
+    handler[1] = event4.add(vintf2);
+    handler[2] = event4.add(vintf3);
+    handler[3] = event4.add(vintf4);
+    handler[4] = event4.add(vintf5);
+    event4(100);
+    removeAll(event4);
+
+    CCEvent1<int(int)> event5;
+    struct IntFunctionInt
+    {
+        IntFunctionInt(int i) : id(i){}
+        int id;
+
+        int operator() (int i)
+        {
+            printf("call IntFunctionInt %d with arg1 %d\n", id, i);
+            return id * i;
+        }
+    };
+    IntFunctionInt CCFOR_EACH_NUM(GLUE_VAR, intfint, intfint, intfint, intfint, intfint);
+
+    printf("test call function with 1 arg\n");
+    handler[0] = event5.add(intfint1);
+    handler[1] = event5.add(intfint2);
+    handler[2] = event5.add(intfint3);
+    handler[3] = event5.add(intfint4);
+    handler[4] = event5.add(intfint5);
+    printf(" int(int) event return : %d\n", event5(100));
+    removeAll(event5);
 
     printf("%d %s\n", __LINE__, __FUNCTION__);
 }
