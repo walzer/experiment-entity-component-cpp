@@ -28,7 +28,7 @@ public:
     ThisType&   setTimeManager(::std::shared_ptr<CCTimeManager> tm);
     CCTimeManager* getTimeManager();
 
-    CCEvent<CCContext, float> updateEvent;
+    CCEvent<void (CCContext*, float)> updateEvent;
 
     void run();
 private:

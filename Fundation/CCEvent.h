@@ -13,18 +13,18 @@ class CCDelegateHandler
 public:
     typedef ::std::weak_ptr<CCDelegateBase> HandlerType;
 
-    CCDelegateHandler();
-    CCDelegateHandler(const HandlerType& handler);
+    inline CCDelegateHandler();
+    inline CCDelegateHandler(const HandlerType& handler);
 
-    void disable();
-    bool enable();
-    bool enabled() const;
-    CCDelegateBase::Ptr getDelegateBase() const;
+    inline void disable();
+    inline bool enable();
+    inline bool enabled() const;
+    inline CCDelegateBase::Ptr getDelegateBase() const;
 
-    bool operator==(const CCDelegateHandler& other) const;
-    bool operator!=(const CCDelegateHandler& other) const;
-    bool operator<(const CCDelegateHandler& other) const;
-    void swap(CCDelegateHandler &other);
+    inline bool operator==(const CCDelegateHandler& other) const;
+    inline bool operator!=(const CCDelegateHandler& other) const;
+    inline bool operator<(const CCDelegateHandler& other) const;
+    inline void swap(CCDelegateHandler &other);
 
 private:
     HandlerType _delegateBase;
@@ -61,60 +61,64 @@ public:
 
     ResultType operator () ();
 
-    template<
-        typename Arg1
-    >
-    ResultType operator () (Arg1 arg1)
-    {
-        CCDelegateInvoke<DelegateFunction, ResultType, Combiner, Interrupter> invoker;
-        _raising = true;
-        bool interrupt = false;
-        auto end = _frontList.end();
-        auto groupEnd = _groupedLists.end();
-        Delegate * delegate = nullptr;
-        for (_raisingIter = _frontList.begin(); _raisingIter != end; )
-        {
-            delegate = (Delegate*)(*_raisingIter++).get();
-            if (delegate->getEnabledStatus())
-            {
-                if (invoker.invoke(delegate->function, arg1))
-                {
-                    goto EVENT_INTERRUPTED;
-                }
-            }
-        }
-        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt)
-        {
-            DelegateList& list = groupIt->second;
-            end = list.end();
-            for (_raisingIter = list.begin(); _raisingIter != end; )
-            {
-                delegate = (Delegate*)(*_raisingIter++).get();
-                if (delegate->getEnabledStatus())
-                {
-                    if (invoker.invoke(delegate->function, arg1))
-                    {
-                        goto EVENT_INTERRUPTED;
-                    }
-                }
-            }
-        }
-        end = _backList.end();
-        for (_raisingIter = _backList.begin(); _raisingIter != end; )
-        {
-            delegate = (Delegate*)(*_raisingIter++).get();
-            if (delegate->getEnabledStatus())
-            {
-                if (invoker.invoke(delegate->function, arg1))
-                {
-                    goto EVENT_INTERRUPTED;
-                }
-            }
-        }
-        EVENT_INTERRUPTED:
-        _raising = false;
-        return invoker.getResult();
+#define CCEVENT_DEFINE_OPERATOR_ARGS(...) \
+    template< CCTYPES_WITH_TYPENAME(__VA_ARGS__) > \
+    ResultType operator () (CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
+    { \
+        CCDelegateInvoke<DelegateFunction, ResultType, Combiner, Interrupter> invoker; \
+        _raising = true; \
+        bool interrupt = false; \
+        auto end = _frontList.end(); \
+        auto groupEnd = _groupedLists.end(); \
+        Delegate * delegate = nullptr; \
+        for (_raisingIter = _frontList.begin(); _raisingIter != end; ) \
+        { \
+            delegate = (Delegate*)(*_raisingIter++).get(); \
+            if (delegate->getEnabledStatus()) \
+            { \
+                if (invoker.invoke(delegate->function, CCTYPES_TO_PARAS(__VA_ARGS__))) \
+                { \
+                    goto EVENT_INTERRUPTED; \
+                } \
+            } \
+        } \
+        for (auto groupIt = _groupedLists.begin(); groupIt != groupEnd; ++groupIt) \
+        { \
+            DelegateList& list = groupIt->second; \
+            end = list.end(); \
+            for (_raisingIter = list.begin(); _raisingIter != end; ) \
+            { \
+                delegate = (Delegate*)(*_raisingIter++).get(); \
+                if (delegate->getEnabledStatus()) \
+                { \
+                    if (invoker.invoke(delegate->function, CCTYPES_TO_PARAS(__VA_ARGS__))) \
+                    { \
+                        goto EVENT_INTERRUPTED; \
+                    } \
+                } \
+            } \
+        } \
+        end = _backList.end(); \
+        for (_raisingIter = _backList.begin(); _raisingIter != end; ) \
+        { \
+            delegate = (Delegate*)(*_raisingIter++).get(); \
+            if (delegate->getEnabledStatus()) \
+            { \
+                if (invoker.invoke(delegate->function, CCTYPES_TO_PARAS(__VA_ARGS__))) \
+                { \
+                    goto EVENT_INTERRUPTED; \
+                } \
+            } \
+        } \
+        EVENT_INTERRUPTED: \
+        _raising = false; \
+        return invoker.getResult(); \
     }
+    CCEVENT_DEFINE_OPERATOR_ARGS(Arg1);
+    CCEVENT_DEFINE_OPERATOR_ARGS(Arg1, Arg2);
+    CCEVENT_DEFINE_OPERATOR_ARGS(Arg1, Arg2, Arg3);
+    CCEVENT_DEFINE_OPERATOR_ARGS(Arg1, Arg2, Arg3, Arg4);
+#undef CCEVENT_DEFINE_OPERATOR_ARGS
 
 protected:
     DelegateList& getDelegateList(Delegate* delegate)

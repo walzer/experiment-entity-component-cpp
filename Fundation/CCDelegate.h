@@ -20,13 +20,13 @@ public:
     typedef CCDelegateBase ThisType;
     typedef ::std::shared_ptr<CCDelegateBase> Ptr;
 
-    CCDelegateBase();
-    virtual ~CCDelegateBase();
+    inline CCDelegateBase();
+    inline virtual ~CCDelegateBase();
 
-    bool getEnabledStatus() const;
-    void setEnabledStatus(bool enable);
-    bool isGrouped() const;
-    CCDelegateAtPosition atPosition() const;
+    inline bool getEnabledStatus() const;
+    inline void setEnabledStatus(bool enable);
+    inline bool isGrouped() const;
+    inline CCDelegateAtPosition atPosition() const;
 
 protected:
     bool _enabled;
@@ -84,15 +84,19 @@ public:
 
     bool invoke(const DelegateFunction& func);
     
-    template <
-        typename Arg1
-    >
-    bool invoke(const DelegateFunction& func, Arg1 arg1)
-    {
-        ResultType value = func(arg1);
-        _result = _combiner(_result, value);
-        return _interrupter(value);
+#define CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(...) \
+    template < CCTYPES_WITH_TYPENAME(__VA_ARGS__) > \
+    bool invoke(const DelegateFunction& func, CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
+    { \
+        ResultType value = func(CCTYPES_TO_PARAS(__VA_ARGS__)); \
+        _result = _combiner(_result, value); \
+        return _interrupter(value); \
     }
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1);
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1, Arg2);
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1, Arg2, Arg3);
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1, Arg2, Arg3, Arg4);
+#undef CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS
 
     ResultType& getResult();
 
@@ -206,14 +210,18 @@ public:
         return false;
     }
 
-    template <
-        typename Arg1
-    >
-    bool invoke(const DelegateFunction& func, Arg1 arg1)
-    {
-        func(arg1);
-        return false;
+#define CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(...) \
+    template < CCTYPES_WITH_TYPENAME(__VA_ARGS__) > \
+    bool invoke(const DelegateFunction& func, CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
+    { \
+        func(CCTYPES_TO_PARAS(__VA_ARGS__)); \
+        return false; \
     }
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1);
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1, Arg2);
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1, Arg2, Arg3);
+    CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1, Arg2, Arg3, Arg4);
+#undef CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS
 
     void getResult()
     {

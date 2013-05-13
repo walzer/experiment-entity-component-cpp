@@ -13,18 +13,19 @@ IMPLEMENT_FUNCTION(~CCEntityManager)
 
 }
 
+CCDelegateHandler updateHandler;
 bool IMPLEMENT_FUNCTION(init, CCContext * ctx)
     _context = ctx;
-    ctx->updateEvent.add(bind(
+    updateHandler = ctx->updateEvent.add(bind(
         &CCEntityManager::update, 
         this, 
         placeholders::_1, 
-        placeholders::_2), "CCEntityManager::update");
+        placeholders::_2));
     return true;
 }
 
 void IMPLEMENT_FUNCTION(done, CCContext * ctx)
-    ctx->updateEvent.remove("CCEntityManager::update");
+    ctx->updateEvent.remove(updateHandler);
     _entities.clear();
 }
 

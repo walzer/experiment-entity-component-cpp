@@ -148,14 +148,14 @@ void CCEventTest()
             printf("call VoidFunctionInt %d with arg1 %d\n", id, i);
         }
     };
-    VoidFunctionInt CCFOR_EACH_NUM(GLUE_VAR, vintf, vintf, vintf, vintf, vintf);
+    VoidFunctionInt CCFOR_EACH_NUM(GLUE_VAR, vfint, vfint, vfint, vfint, vfint);
 
-    printf("test call function with 1 arg\n");
-    handler[0] = event4.add(vintf1);
-    handler[1] = event4.add(vintf2);
-    handler[2] = event4.add(vintf3);
-    handler[3] = event4.add(vintf4);
-    handler[4] = event4.add(vintf5);
+    printf("test call VoidFunctionInt with 1 arg\n");
+    handler[0] = event4.add(vfint1);
+    handler[1] = event4.add(vfint2);
+    handler[2] = event4.add(vfint3);
+    handler[3] = event4.add(vfint4);
+    handler[4] = event4.add(vfint5);
     event4(100);
     removeAll(event4);
 
@@ -173,7 +173,7 @@ void CCEventTest()
     };
     IntFunctionInt CCFOR_EACH_NUM(GLUE_VAR, intfint, intfint, intfint, intfint, intfint);
 
-    printf("test call function with 1 arg\n");
+    printf("test call IntFunctionInt with 1 arg\n");
     handler[0] = event5.add(intfint1);
     handler[1] = event5.add(intfint2);
     handler[2] = event5.add(intfint3);
@@ -181,6 +181,51 @@ void CCEventTest()
     handler[4] = event5.add(intfint5);
     printf(" int(int) event return : %d\n", event5(100));
     removeAll(event5);
+
+    CCEvent<void(int, int)> event6;
+    struct VoidFunctionIntInt
+    {
+        VoidFunctionIntInt(int i) : id(i){}
+        int id;
+
+        void operator() (int i, int j)
+        {
+            printf("call VoidFunctionIntInt %d with arg1 %d, %d\n", id, i, j);
+        }
+    };
+    VoidFunctionIntInt CCFOR_EACH_NUM(GLUE_VAR, vfii, vfii, vfii, vfii, vfii);
+
+    printf("test call VoidFunctionIntInt with 2 arg\n");
+    handler[0] = event6.add(vfii1);
+    handler[1] = event6.add(vfii2);
+    handler[2] = event6.add(vfii3);
+    handler[3] = event6.add(vfii4);
+    handler[4] = event6.add(vfii5);
+    event6(100, 200);
+    removeAll(event6);
+
+    CCEvent<int(int, int)> event7;
+    struct IntFunctionIntInt
+    {
+        IntFunctionIntInt(int i) : id(i){}
+        int id;
+
+        int operator() (int i, int j)
+        {
+            printf("call IntFunctionIntInt %d with arg1 %d, %d\n", id, i, j);
+            return i + j;
+        }
+    };
+    IntFunctionIntInt CCFOR_EACH_NUM(GLUE_VAR, ifii, ifii, ifii, ifii, ifii);
+
+    printf("test call IntFunctionIntInt with 2 arg\n");
+    handler[0] = event7.add(ifii1);
+    handler[1] = event7.add(ifii2);
+    handler[2] = event7.add(ifii3);
+    handler[3] = event7.add(ifii4);
+    handler[4] = event7.add(ifii5);
+    printf(" int(int, int) event return : %d\n", event7(100, 200));
+    removeAll(event7);
 
     printf("%d %s\n", __LINE__, __FUNCTION__);
 }

@@ -66,5 +66,5 @@ CCTimeManager* IMPLEMENT_FUNCTION(getTimeManager)
 
 void IMPLEMENT_FUNCTION(run)
     float dt = _tm->getDeltaTime();
-    updateEvent.raise(this, dt);
+    updateEvent(this, dt);
 }
