@@ -84,6 +84,7 @@
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\stdafx.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h" />
+    <ClInclude Include="..\..\Fundation\CCDelegate.h" />
     <ClInclude Include="..\..\Fundation\CCEvent.h" />
     <ClInclude Include="..\..\Fundation\CCFundationMacrosH.h" />
     <ClInclude Include="..\..\Fundation\CCString.h" />

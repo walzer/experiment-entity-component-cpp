@@ -4,53 +4,6 @@
 
 using namespace std;
 
-class System
-{
-public:
-    CCEvent<System, int> event;
-
-    void run()
-    {
-        event.raise(this, 3);
-    }
-    static void scdf(System* sender, const int& arg)
-    {
-        printf("%d %s\n", __LINE__, __FUNCTION__);
-    }
-    void cdf(System* sender, const int& arg)
-    {
-        printf("%d %s\n", __LINE__, __FUNCTION__);
-    }
-};
-
-void cf(System* sender, const int& arg)
-{
-    printf("%d %s\n", __LINE__, __FUNCTION__);
-}
-
-void test1();
-
-void CCEventTest()
-{
-    //printf("%d %s\n", __LINE__, __FUNCTION__);
-    //System sys;
-    //sys.event.add(cf);
-
-    //sys.event.add(System::scdf, "f2");
-    //auto f3 = std::bind(&System::cdf, sys, std::placeholders::_1, std::placeholders::_2);
-    //sys.event.add(f3);
-    //sys.run();
-    //auto d = sys.event.get("f2");
-    //printf("%d %s\n", __LINE__,d->target_type().name());
-    //d = sys.event.get(typeid(f3).name());
-    //printf("%d %s\n", __LINE__,d->target_type().name());
-    //sys.event.remove("f2");
-    //sys.run();
-    //printf("-------------------------------------\n");
-    test1();
-    //printf("%d %s\n", __LINE__, __FUNCTION__);
-}
-
 CCDelegateHandler handler[5];
 
 template <typename EventType>
@@ -60,12 +13,11 @@ void removeAll(EventType& event)
     for(int i = 0; i < 5; ++i) event.remove(handler[i]); 
 }
 
-void test1()
+void CCEventTest()
 {
-
     printf("%d %s\n", __LINE__, __FUNCTION__);
 
-    CCEvent1<void()> event;
+    CCEvent<void()> event;
     struct VoidFunction
     {
         VoidFunction(int i) : id(i){}
@@ -134,7 +86,7 @@ void test1()
     removeAll(event);
 
     ///////////////////////////////////////////////////////////////
-    CCEvent1<int()> event1;
+    CCEvent<int()> event1;
     struct IntFunction
     {
         IntFunction(int i) : id(i){}
@@ -158,7 +110,7 @@ void test1()
     printf("event1 return %d\n", ret);
     removeAll(event1);
 
-    CCEvent1<int(), int, std::plus<int>> event2;
+    CCEvent<int(), int, std::plus<int>> event2;
     printf("test combiner for int function call\n");
     handler[0] = event2.add(intf1);
     handler[1] = event2.add(intf2);
@@ -174,7 +126,7 @@ void test1()
         bool operator()(int v) { return (v ==3) ?  true : false; }
     };
 
-    CCEvent1<int(), int, std::plus<int>, Equal3> event3;
+    CCEvent<int(), int, std::plus<int>, Equal3> event3;
     printf("test invoke interrupt for int function call\n");
     handler[0] = event3.add(intf1);
     handler[1] = event3.add(intf2);
@@ -185,7 +137,7 @@ void test1()
     printf("event3 return %d\n", ret);
     removeAll(event3);
 
-    CCEvent1<void(int)> event4;
+    CCEvent<void(int)> event4;
     struct VoidFunctionInt
     {
         VoidFunctionInt(int i) : id(i){}
@@ -207,7 +159,7 @@ void test1()
     event4(100);
     removeAll(event4);
 
-    CCEvent1<int(int)> event5;
+    CCEvent<int(int)> event5;
     struct IntFunctionInt
     {
         IntFunctionInt(int i) : id(i){}
