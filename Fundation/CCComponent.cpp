@@ -148,6 +148,17 @@ void CCComponentTest()
     printf("%s\n", typeid(b).name());
     printf("%s\n", typeid(f).name());
 
+    auto findf = com->findFunction<void()>("void_selector");
+    if (findf != nullptr)
+    {
+        findf();
+    }
+    auto findf2 = com->findFunction<void()>("void_selector2");
+    if (findf2 != nullptr)
+    {
+        // findf2 will not be called
+        findf2();
+    }
     com->callFunction<void>("void_selector");
     com->callFunction<void, int>("void_selector_int", 1);
     int i = com->callFunction<int>("int_selector");

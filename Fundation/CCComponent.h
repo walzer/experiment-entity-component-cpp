@@ -34,6 +34,11 @@ public:
     // Unregister function object with name funcName.
     ThisType* unregisterFunction(const CCString& funcName);
 
+    template <
+        typename Signature
+    >
+    ::std::function<typename Signature> findFunction(const CCString& funcName);
+
     // Call a registered function named funcName with none arguments.
     template <
         typename ReturnType
@@ -119,20 +124,42 @@ template <
 CCComponent* CCComponent::registerFunction(const CCString& funcName,
     const ::std::function<typename Signature>& func)
 {
-    auto fonctionType = make_shared<FunctionType<::std::function<typename Signature>>>();
+    auto fonctionType = ::std::make_shared<FunctionType<::std::function<typename Signature>>>();
     fonctionType->functor = func;
-    _functions.insert(make_pair(funcName, fonctionType));
+    _functions.insert(::std::make_pair(funcName, fonctionType));
     return this;
+}
+
+template <
+    typename Signature
+>
+::std::function<typename Signature>
+CCComponent::findFunction(const CCString& funcName)
+{
+    FunctionType<::std::function<typename Signature>>* pfn = nullptr;
+    auto it = _functions.find(funcName);
+    if (it != _functions.end())
+    {
+        pfn = (FunctionType<::std::function<typename Signature>>*)it->second.get();
+    }
+    if (pfn)
+    {
+        return pfn->functor;
+    }
+    else
+    {
+        return ::std::function<typename Signature>();
+    }
 }
 
 template <typename ReturnType>
 ReturnType CCComponent::callFunction(const CCString& funcName)
 {
-    FunctionType<function<ReturnType()>>* pfn = nullptr;
+    FunctionType<::std::function<ReturnType()>>* pfn = nullptr;
     auto it = _functions.find(funcName);
     if (it != _functions.end())
     {
-        pfn = (FunctionType<function<ReturnType()>>*)it->second.get();
+        pfn = (FunctionType<::std::function<ReturnType()>>*)it->second.get();
     }
     if (pfn)
     {
@@ -148,11 +175,11 @@ ReturnType CCComponent::callFunction(const CCString& funcName)
 template <typename ReturnType, CCTYPES_WITH_TYPENAME(__VA_ARGS__)> \
 ReturnType CCComponent::callFunction(const CCString& funcName, CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
 { \
-    FunctionType<function<ReturnType(__VA_ARGS__)>>* pfn = nullptr; \
+    FunctionType<::std::function<ReturnType(__VA_ARGS__)>>* pfn = nullptr; \
     auto it = _functions.find(funcName); \
     if (it != _functions.end()) \
     { \
-        pfn = (FunctionType<function<ReturnType(__VA_ARGS__)>>*)it->second.get(); \
+        pfn = (FunctionType<::std::function<ReturnType(__VA_ARGS__)>>*)it->second.get(); \
     } \
     if (pfn) \
     { \
