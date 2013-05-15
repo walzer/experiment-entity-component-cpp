@@ -26,10 +26,10 @@ public:
     
     // Register a std::function object with funcName.
     template <
-        typename FunctionTypeT
+        typename Signature
     >
     ThisType* registerFunction(const CCString& funcName,
-        FunctionTypeT func);
+        const ::std::function<typename Signature>& func);
 
     // Unregister function object with name funcName.
     ThisType* unregisterFunction(const CCString& funcName);
@@ -94,27 +94,32 @@ void CCComponentTest();
 // Define CCCOMPONENT_REGISTER_CREATOR macro.
 
 // Define CCCOMPONENT_REGISTER_MEMBER_FUNCTION macros.
-#define CCCOMPONENT_REGISTER_MEMBER_FUNCTION(funcName, ReturnType) \
-{ \
-    ::std::function<ReturnType()> func = \
-        ::std::bind(& IMPLEMENT_CLASS :: funcName, this); \
-    registerFunction(CCTO_STRING(funcName), func); \
-}
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_1(funcName, returnType) \
+    registerFunction<returnType()>(CCTO_STRING(funcName), \
+        ::std::bind(& IMPLEMENT_CLASS :: funcName, this))
 #define _TYPE_TO_HOLDER(n, type) ::std::placeholders::_##n
-#define CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, ReturnType, ...) \
-{ \
-    ::std::function<ReturnType(__VA_ARGS__)> func = \
-        ::std::bind(& IMPLEMENT_CLASS :: funcName, this, CCFOR_EACH_NUM(_TYPE_TO_HOLDER, __VA_ARGS__)); \
-    registerFunction(CCTO_STRING(funcName), func); \
-}
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, ...) \
+    registerFunction<returnType(__VA_ARGS__)>(CCTO_STRING(funcName), \
+        ::std::bind(&IMPLEMENT_CLASS::funcName, this, CCFOR_EACH_NUM(_TYPE_TO_HOLDER, __VA_ARGS__)))
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_3(funcName, returnType, ...) \
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, __VA_ARGS__)
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_4(funcName, returnType, ...) \
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, __VA_ARGS__)
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_5(funcName, returnType, ...) \
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, __VA_ARGS__)
+#define CCCOMPONENT_REGISTER_MEMBER_FUNCTION(funcName, ...) \
+    CCAPPEND_NARGS(_CCCOMPONENT_REGISTER_MEMBER_FUNCTION_, __VA_ARGS__) CCEXPEND((funcName, __VA_ARGS__ ))
 // Define CCCOMPONENT_REGISTER_MEMBER_FUNCTION macros.
 
 // #include "CCComponent.inl"
 
-template < typename FunctionTypeT >
-CCComponent* CCComponent::registerFunction(const CCString& funcName, FunctionTypeT func)
+template <
+    typename Signature
+>
+CCComponent* CCComponent::registerFunction(const CCString& funcName,
+    const ::std::function<typename Signature>& func)
 {
-    auto fonctionType = make_shared<FunctionType<FunctionTypeT>>();
+    auto fonctionType = make_shared<FunctionType<::std::function<typename Signature>>>();
     fonctionType->functor = func;
     _functions.insert(make_pair(funcName, fonctionType));
     return this;

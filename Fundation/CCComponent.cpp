@@ -128,13 +128,13 @@ public:
 CCCOMPONENT_REGISTER_CREATOR;
 bool TestComponent::init()
 {
-    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(void_selector, void);
+    registerFunction<void()>("void_selector", bind(&TestComponent::void_selector, this));
     CCCOMPONENT_REGISTER_MEMBER_FUNCTION(int_selector, int);
-    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(void_selector_int, void, int);
-    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int, int, int);
-    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int2, int, int, int);
-    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int3, int, int, int, int);
-    CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(int_selector_int4, int, int, int, int, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(void_selector_int, void, int);
+    registerFunction<int(int)>("int_selector_int", ::std::bind(&TestComponent::int_selector_int, this, ::std::placeholders::_1));
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(int_selector_int2, int, int, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(int_selector_int3, int, int, int, int);
+    CCCOMPONENT_REGISTER_MEMBER_FUNCTION(int_selector_int4, int, int, int, int, int);
     return true;
 }
 

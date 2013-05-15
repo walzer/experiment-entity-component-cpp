@@ -1,7 +1,5 @@
 #include "pch.h"
 
-int i = CCNARGS(a, b, c);
-
 class A
 {
     void func();
