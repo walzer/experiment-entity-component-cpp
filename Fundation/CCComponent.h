@@ -11,7 +11,7 @@
 class CCContext;
 class CCEntity;
 
-class CCComponent
+class CCComponent : public ::std::enable_shared_from_this<CCComponent>
 {
 public:
     typedef CCComponent     ThisType;
@@ -28,11 +28,11 @@ public:
     template <
         typename Signature
     >
-    ThisType* registerFunction(const CCString& funcName,
+    void registerFunction(const CCString& funcName,
         const ::std::function<typename Signature>& func);
 
     // Unregister function object with name funcName.
-    ThisType* unregisterFunction(const CCString& funcName);
+    void unregisterFunction(const CCString& funcName);
 
     template <
         typename Signature
@@ -86,7 +86,7 @@ private:
         FunctionTypeT functor;
     };
     ::std::map<CCString, ::std::shared_ptr<FunctionTypeBase>> _functions;
-    CCEntity* _owner;
+    ::std::shared_ptr<CCEntity> _owner;
 };
 
 void CCComponentTest();
@@ -121,13 +121,12 @@ void CCComponentTest();
 template <
     typename Signature
 >
-CCComponent* CCComponent::registerFunction(const CCString& funcName,
+void CCComponent::registerFunction(const CCString& funcName,
     const ::std::function<typename Signature>& func)
 {
     auto fonctionType = ::std::make_shared<FunctionType<::std::function<typename Signature>>>();
     fonctionType->functor = func;
     _functions.insert(::std::make_pair(funcName, fonctionType));
-    return this;
 }
 
 template <

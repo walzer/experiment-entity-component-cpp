@@ -10,13 +10,10 @@ using namespace std;
 
 CCCOMPONENT_REGISTER_CREATOR;
 
-CCComponent::CCComponent()
-    : _owner(nullptr)
-{
+IMPLEMENT_FUNCTION(CCComponent)
 }
 
-CCComponent::~CCComponent()
-{
+IMPLEMENT_FUNCTION(~CCComponent)
 }
 
 CCString CCComponent::getName()
@@ -24,10 +21,9 @@ CCString CCComponent::getName()
     return typeid(*this).name();
 }
 
-CCComponent* CCComponent::unregisterFunction(const CCString& funcName)
+void CCComponent::unregisterFunction(const CCString& funcName)
 {
     _functions.erase(funcName);
-    return this;
 }
 
 bool CCComponent::init()

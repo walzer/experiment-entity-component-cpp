@@ -2,7 +2,7 @@
 #define __FUNDATION__CCENTITY_H__
 
 #include <map>
-#include <memory>
+#include <vector>
 
 #include "CCComponent.h"
 #include "CCString.h"
@@ -11,15 +11,32 @@ class CCEntity : public CCComponent
 {
 public:
     typedef CCEntity ThisType;
+    typedef ::std::shared_ptr<CCEntity> Ptr;
+    static const Ptr NullPtr;
 
     virtual void update(float dt);
 
-    ThisType& add(::std::shared_ptr<CCComponent>& com);
-    CCComponent* get(CCString comName);
-    ThisType& remove(CCString comName);
+    void addComponent(const CCComponent::Ptr& com);
+    CCComponent::Ptr findComponent(const CCString& name);
+    void removeComponent(const CCString& name);
 
-private:
-    ::std::map<CCString, ::std::shared_ptr<CCComponent>> _components;
+    void addChild(const Ptr& child);
+    const Ptr& findChild(const CCString& name);
+    void removeChild(const Ptr& child);
+
+    inline const Ptr& getParent() const;
+    void setParent(const Ptr& parent);
+
+protected:
+    ::std::map<CCString, CCComponent::Ptr> _components;
+    ::std::vector<Ptr> _children;
+    Ptr _parent;
 };
+
+// include "CCEntity.inl"
+const CCEntity::Ptr& CCEntity::getParent() const
+{
+    return _parent;
+}
 
 #endif  // __FUNDATION__CCENTITY_H__
