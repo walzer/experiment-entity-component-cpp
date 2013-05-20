@@ -36,3 +36,29 @@ void IMPLEMENT_FUNCTION(update, CCContext* ctx, float dt)
         ptr->update(dt);
     });
 }
+
+void IMPLEMENT_FUNCTION(add, const EntityPtr& entity)
+    _entities.push_back(entity);
+}
+
+const CCEntityManager::EntityPtr& IMPLEMENT_FUNCTION(find, const CCString& name)
+    for (auto it = _entities.begin(); it != _entities.end(); ++it)
+    {
+        if ((*it)->getName() == name)
+        {
+            return *it;
+        }
+    }
+    return CCEntity::NullPtr;
+}
+
+void IMPLEMENT_FUNCTION(remove, const CCEntityManager::EntityPtr& entity)
+    for (auto it = _entities.begin(); it != _entities.end(); ++it)
+    {
+        if ((*it) == entity)
+        {
+            _entities.erase(it);
+            break;
+        }
+    }
+}
