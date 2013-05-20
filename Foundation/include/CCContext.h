@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __FOUNDATION__CCCONTEXT_H__
+#define __FOUNDATION__CCCONTEXT_H__
 
 #include <map>
 #include <memory>
@@ -36,3 +37,5 @@ private:
     ::std::map<CCString, CCManager*> _nameMap;
     ::std::vector<::std::shared_ptr<CCManager>> _managers;
 };
+
+#endif  // __FOUNDATION__CCCONTEXT_H__
