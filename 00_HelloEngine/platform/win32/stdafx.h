@@ -20,4 +20,6 @@
 // C++ Template Library
 #include <memory>
 
+#include "CCFoundation.h"
+
 // TODO: reference additional headers your program requires here

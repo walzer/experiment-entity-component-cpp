@@ -1,5 +1,5 @@
-#ifndef __FUNDATION__CCENTITY_MANAGER_H__
-#define __FUNDATION__CCENTITY_MANAGER_H__
+#ifndef __FOUNDATION__CCENTITY_MANAGER_H__
+#define __FOUNDATION__CCENTITY_MANAGER_H__
 
 #include <vector>
 
@@ -37,4 +37,4 @@ private:
     CCContext* _context;
 };
 
-#endif  // __FUNDATION__CCENTITY_MANAGER_H__
+#endif  // __FOUNDATION__CCENTITY_MANAGER_H__

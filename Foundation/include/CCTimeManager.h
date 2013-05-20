@@ -1,5 +1,5 @@
-#ifndef __FUNDATION__CCTIME_MANAGER_H__
-#define __FUNDATION__CCTIME_MANAGER_H__
+#ifndef __FOUNDATION__CCTIME_MANAGER_H__
+#define __FOUNDATION__CCTIME_MANAGER_H__
 
 #include "CCManager.h"
 
@@ -12,4 +12,4 @@ public:
     float getDeltaTime();
 };
 
-#endif  // __FUNDATION__CCTIME_MANAGER_H__
+#endif  // __FOUNDATION__CCTIME_MANAGER_H__

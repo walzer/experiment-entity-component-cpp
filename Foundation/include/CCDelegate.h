@@ -1,5 +1,5 @@
-#ifndef __FUNDATION__CCDELEGATE_H__
-#define __FUNDATION__CCDELEGATE_H__
+#ifndef __FOUNDATION__CCDELEGATE_H__
+#define __FOUNDATION__CCDELEGATE_H__
 
 #include <memory>
 
@@ -228,4 +228,4 @@ public:
     }
 };
 
-#endif  // __FUNDATION__CCDELEGATE_H__
+#endif  // __FOUNDATION__CCDELEGATE_H__

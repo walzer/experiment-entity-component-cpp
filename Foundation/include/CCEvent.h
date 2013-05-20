@@ -1,5 +1,5 @@
-#ifndef __FUNDATION__CCEVENT_H__
-#define __FUNDATION__CCEVENT_H__
+#ifndef __FOUNDATION__CCEVENT_H__
+#define __FOUNDATION__CCEVENT_H__
 
 #include <functional>
 #include <list>
@@ -352,4 +352,4 @@ CCEvent<Signature, GroupType, Combiner,Interrupter>::operator () ()
     return invoker.getResult();
 }
 
-#endif /* __FUNDATION__CCEVENT_H__ */
+#endif /* __FOUNDATION__CCEVENT_H__ */

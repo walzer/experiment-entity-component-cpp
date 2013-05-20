@@ -3,14 +3,8 @@
 
 #include "stdafx.h"
 
-#include <stdio.h>
-
-#include "CCContext.h"
-
 #include "GameView.h"
 #include "Resource.h"
-#include "CCEvent.h"
-#include "CCComponent.h"
 
 using namespace std;
 

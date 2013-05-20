@@ -1,5 +1,5 @@
-#ifndef __FUNCATION__FUNDATION_MACROS_CPP_H__
-#define __FUNCATION__FUNDATION_MACROS_CPP_H__
+#ifndef __FOUNDATION__FOUNDATION_MACROS_CPP_H__
+#define __FOUNDATION__FOUNDATION_MACROS_CPP_H__
 
 #include "CCFundationMacrosH.h"
 
@@ -31,4 +31,4 @@ private:
     const char * _funcSign;
 };
 
-#endif  // __FUNCATION__FUNDATION_MACROS_CPP_H__
+#endif  // __FOUNDATION__FOUNDATION_MACROS_CPP_H__

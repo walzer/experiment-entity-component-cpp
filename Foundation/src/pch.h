@@ -1,7 +1,5 @@
-#ifndef __FUNDATION_PCH_H__
-#define __FUNDATION_PCH_H__
-
-#include "stdafx.h"
+#ifndef __FOUNDATION_PCH_H__
+#define __FOUNDATION_PCH_H__
 
 // C RunTime Header Files
 #include <stdlib.h>
@@ -17,4 +15,4 @@
 
 void pchTest();
 
-#endif  // __FUNDATION_PCH_H__
+#endif  // __FOUNDATION_PCH_H__

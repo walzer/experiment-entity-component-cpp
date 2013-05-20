@@ -1,7 +1,8 @@
-#include "GameView.h"
-
 #include "stdafx.h"
+
 #include "Resource.h"
+
+#include "GameView.h"
 
 #define MAX_LOADSTRING 100
 

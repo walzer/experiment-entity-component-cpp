@@ -1,5 +1,5 @@
-#ifndef __FUNDATION__CCENTITY_H__
-#define __FUNDATION__CCENTITY_H__
+#ifndef __FOUNDATION__CCENTITY_H__
+#define __FOUNDATION__CCENTITY_H__
 
 #include <map>
 #include <vector>
@@ -39,4 +39,4 @@ const CCEntity::Ptr& CCEntity::getParent() const
     return _parent;
 }
 
-#endif  // __FUNDATION__CCENTITY_H__
+#endif  // __FOUNDATION__CCENTITY_H__

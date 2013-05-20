@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "CCEvent.h"
 
 #define GLUE_VAR(n, var) var##n ( n )

@@ -1,5 +1,5 @@
-#ifndef __FUNDATION__CCCOMPONENT_H__
-#define __FUNDATION__CCCOMPONENT_H__
+#ifndef __FOUNDATION__CCCOMPONENT_H__
+#define __FOUNDATION__CCCOMPONENT_H__
 
 #include <functional>
 #include <map>
@@ -209,4 +209,4 @@ CCComponent::Register<ComponentType>::Register(const CCString& typeName)
 }
 
 
-#endif  // __FUNDATION__CCCOMPONENT_H__
+#endif  // __FOUNDATION__CCCOMPONENT_H__
