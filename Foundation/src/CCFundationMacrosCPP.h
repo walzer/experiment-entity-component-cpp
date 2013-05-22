@@ -8,7 +8,7 @@
 
 // Need define IMPLEMENT_CLASS name first
 #define IMPLEMENT_FUNCTION(name, ...) \
-    IMPLEMENT_CLASS##::name(__VA_ARGS__) \
+    IMPLEMENT_CLASS :: name(__VA_ARGS__) \
 { \
     _IMPLEMENT_FUNCTION_GUARD;
 

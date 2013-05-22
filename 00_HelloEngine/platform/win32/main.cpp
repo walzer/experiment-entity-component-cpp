@@ -3,18 +3,16 @@
 
 #include "stdafx.h"
 
+#include "Game/GameApp.h"
 #include "GameView.h"
 #include "Resource.h"
+#include "CCRuntime_win32.h"
 
 using namespace std;
 
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HINSTANCE s_Instance;					        // current instance
-unique_ptr<CCContext> s_context(nullptr);
-void initContext();
-void doneContext();
 extern void pchTest();
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -33,18 +31,20 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     pchTest();
     CCComponentTest();
 
-    s_Instance = hInstance;
     MSG msg;
     HACCEL hAccelTable;
-    GameView view;
+    GameApp game;
+    game.init();
+    CCRuntime_win32 runtime;
 
     // Perform application initialization:
-    if (! view.init())
+    if (! runtime.init(hInstance))
     {
         return FALSE;
     }
-    ShowWindow(view.getHandle(), nCmdShow);
-    UpdateWindow(view.getHandle());
+    GameView * view = static_cast<GameView*>(runtime.getSurface());
+    ShowWindow(view->getHandle(), nCmdShow);
+    UpdateWindow(view->getHandle());
 
     hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MY00_HELLOENGINE));
 
@@ -56,8 +56,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     QueryPerformanceFrequency(&nFreq);
     QueryPerformanceCounter(&nLast);
     nInterval.QuadPart = (LONGLONG)(0.5f * nFreq.QuadPart);
-
-    initContext();
 
     // Main message loop:
     while (1)
@@ -71,7 +69,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
             if (nNow.QuadPart - nLast.QuadPart > nInterval.QuadPart)
             {
                 nLast.QuadPart = nNow.QuadPart;
-                s_context->run();
+                runtime.run();
             }
             else
             {
@@ -94,25 +92,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-    doneContext();
-    view.done();
+    runtime.done();
+    game.done();
 
     FreeConsole();
     fclose(console);
     return (int) msg.wParam;
-}
-
-#include "CCEntityManager.h"
-
-void initContext()
-{
-    s_context.reset(new CCContext());
-    s_context->add(make_shared<CCEntityManager>(), "entity_manager");
-    s_context->init();
-}
-
-void doneContext()
-{
-    s_context->done();
-    s_context.reset();
 }

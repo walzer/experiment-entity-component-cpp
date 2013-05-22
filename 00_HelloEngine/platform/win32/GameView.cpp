@@ -6,8 +6,6 @@
 
 #define MAX_LOADSTRING 100
 
-extern HINSTANCE s_Instance;
-
 // Global Variables:
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
@@ -20,32 +18,33 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 static ATOM s_gameViewClass;
 
 GameView::GameView()
-    : mHandle(NULL)
+    : _hwnd(NULL)
 {
 }
 
 GameView::~GameView()
 {
-    done();
 }
 
 bool GameView::init()
 {
+    BaseType::init();
+    HINSTANCE hInstance = (HINSTANCE)CCRuntime::getInstance()->getAppInstance();
     if (! s_gameViewClass)
     {
         // Initialize global strings
-        LoadString(s_Instance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-        LoadString(s_Instance, IDC_MY00_HELLOENGINE, szWindowClass, MAX_LOADSTRING);
-        s_gameViewClass = MyRegisterClass(s_Instance);
+        LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+        LoadString(hInstance, IDC_MY00_HELLOENGINE, szWindowClass, MAX_LOADSTRING);
+        s_gameViewClass = MyRegisterClass(hInstance);
     }
     bool ret = false;
     do
     {
         if (! s_gameViewClass) break;
-        mHandle = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, s_Instance, NULL);
+        _hwnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
 
-        if (! mHandle) break;
+        if (! _hwnd) break;
         ret = true;
     } while (false);
     return ret;
@@ -53,8 +52,16 @@ bool GameView::init()
 
 void GameView::done()
 {
-    if (! mHandle) return;
-    mHandle = NULL;
+    if (_hwnd)
+    {
+        _hwnd = NULL;
+    }
+    BaseType::done();
+}
+
+void GameView::show()
+{
+
 }
 
 //

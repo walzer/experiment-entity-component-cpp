@@ -7,6 +7,9 @@
     <Filter Include="platform\win32">
       <UniqueIdentifier>{7e181922-fea7-42f3-81bd-e01729ef4475}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{451645ba-f36e-4ab0-91b5-4bfc342f3936}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h">
@@ -21,6 +24,12 @@
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\GameView.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
@@ -31,6 +40,12 @@
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp">
       <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

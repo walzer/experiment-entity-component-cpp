@@ -50,6 +50,12 @@
     <ClInclude Include="..\..\Foundation\include\CCFoundation.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Foundation\include\CCRuntime.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Foundation\include\CCSurface.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Foundation\src\CCComponent.cpp">
@@ -74,6 +80,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Foundation\src\pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Foundation\src\CCRuntime.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Foundation\src\CCSurface.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

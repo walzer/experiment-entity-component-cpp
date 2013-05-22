@@ -10,4 +10,7 @@
 
 #include "CCEntity.h"
 
+#include "CCRuntime.h"
+#include "CCSurface.h"
+
 #endif  // __FOUNDATION__CCFOUNDATION_H__

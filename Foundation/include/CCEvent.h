@@ -67,7 +67,6 @@ public:
     { \
         CCDelegateInvoke<DelegateFunction, ResultType, Combiner, Interrupter> invoker; \
         _raising = true; \
-        bool interrupt = false; \
         auto end = _frontList.end(); \
         auto groupEnd = _groupedLists.end(); \
         Delegate * delegate = nullptr; \
@@ -253,7 +252,7 @@ template <
     typename Interrupter
 >
 CCDelegateHandler CCEvent<Signature, GroupType, Combiner,Interrupter>::add(const DelegateFunction& func,
-    CCDelegateAtPosition atPosition = AT_BACK)
+    CCDelegateAtPosition atPosition)
 {
     auto delegate = ::std::make_shared<Delegate>(func, false,  atPosition);
     return add(delegate);
@@ -267,7 +266,7 @@ template <
 >
 CCDelegateHandler CCEvent<Signature, GroupType, Combiner,Interrupter>::add(const GroupType& group,
     const DelegateFunction& func,
-    CCDelegateAtPosition atPosition = AT_BACK)
+    CCDelegateAtPosition atPosition)
 {
     auto delegate = ::std::make_shared<Delegate>(func, true,  atPosition);
     delegate->group = group;

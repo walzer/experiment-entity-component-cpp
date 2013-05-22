@@ -2,17 +2,23 @@
 
 #include "windows.h"
 
-class GameView
+#include "CCFoundation.h"
+
+class GameView : public CCSurface
 {
 public:
+    typedef CCSurface BaseType;
+
     GameView(void);
-    ~GameView(void);
+    virtual ~GameView(void);
 
-    bool init();
-    void done();
+    virtual bool init();
+    virtual void done();
 
-    HWND getHandle() const { return mHandle; }
+    void show();
+
+    HWND getHandle() const { return _hwnd; }
 private:
-    HWND mHandle;
+    HWND _hwnd;
 };
 

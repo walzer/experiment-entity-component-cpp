@@ -84,12 +84,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h" />
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\GameView.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\stdafx.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp" />
+    <ClCompile Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\stdafx.cpp">

@@ -29,7 +29,7 @@ public:
         typename Signature
     >
     void registerFunction(const CCString& funcName,
-        const ::std::function<typename Signature>& func);
+        const ::std::function<Signature>& func);
 
     // Unregister function object with name funcName.
     void unregisterFunction(const CCString& funcName);
@@ -37,7 +37,7 @@ public:
     template <
         typename Signature
     >
-    ::std::function<typename Signature> findFunction(const CCString& funcName);
+    ::std::function<Signature> findFunction(const CCString& funcName);
 
     // Call a registered function named funcName with none arguments.
     template <
@@ -122,9 +122,9 @@ template <
     typename Signature
 >
 void CCComponent::registerFunction(const CCString& funcName,
-    const ::std::function<typename Signature>& func)
+    const ::std::function<Signature>& func)
 {
-    auto fonctionType = ::std::make_shared<FunctionType<::std::function<typename Signature>>>();
+    auto fonctionType = ::std::make_shared<FunctionType<::std::function<Signature>>>();
     fonctionType->functor = func;
     _functions.insert(::std::make_pair(funcName, fonctionType));
 }
@@ -132,14 +132,14 @@ void CCComponent::registerFunction(const CCString& funcName,
 template <
     typename Signature
 >
-::std::function<typename Signature>
+::std::function<Signature>
 CCComponent::findFunction(const CCString& funcName)
 {
-    FunctionType<::std::function<typename Signature>>* pfn = nullptr;
+    FunctionType<::std::function<Signature>>* pfn = nullptr;
     auto it = _functions.find(funcName);
     if (it != _functions.end())
     {
-        pfn = (FunctionType<::std::function<typename Signature>>*)it->second.get();
+        pfn = (FunctionType<::std::function<Signature>>*)it->second.get();
     }
     if (pfn)
     {
@@ -147,7 +147,7 @@ CCComponent::findFunction(const CCString& funcName)
     }
     else
     {
-        return ::std::function<typename Signature>();
+        return ::std::function<Signature>();
     }
 }
 
@@ -203,7 +203,7 @@ CCComponent::Register<ComponentType>::Register(const CCString& typeName)
 {
     auto creator = []()->CCComponent::Ptr
     {
-        return ::std::make_shared<typename ComponentType>();
+        return ::std::make_shared<ComponentType>();
     };
     CCComponent::registerCreator(typeName, creator);
 }

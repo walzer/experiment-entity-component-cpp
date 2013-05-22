@@ -9,6 +9,7 @@
 #include "CCString.h"
 
 class CCManager;
+class CCSurface;
 class CCTimeManager;
 
 class CCContext
@@ -31,8 +32,17 @@ public:
 
     CCEvent<void (CCContext*, float)> updateEvent;
 
+    void setSurface(const ::std::shared_ptr<CCSurface>& surface)
+    {
+        _surface = surface;
+    }
+    const ::std::shared_ptr<CCSurface>& getSurface()
+    {
+        return _surface;
+    }
     void run();
 private:
+    ::std::shared_ptr<CCSurface> _surface;
     ::std::shared_ptr<CCTimeManager> _tm;
     ::std::map<CCString, CCManager*> _nameMap;
     ::std::vector<::std::shared_ptr<CCManager>> _managers;
