@@ -12,7 +12,6 @@ using namespace std;
 
 #define MAX_LOADSTRING 100
 
-// Global Variables:
 extern void pchTest();
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,

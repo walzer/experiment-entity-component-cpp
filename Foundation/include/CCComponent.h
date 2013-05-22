@@ -103,17 +103,19 @@ void CCComponentTest();
     registerFunction<returnType()>(CCTO_STRING(funcName), \
         ::std::bind(& IMPLEMENT_CLASS :: funcName, this))
 #define _TYPE_TO_HOLDER(n, type) ::std::placeholders::_##n
-#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, ...) \
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, ...) \
     registerFunction<returnType(__VA_ARGS__)>(CCTO_STRING(funcName), \
         ::std::bind(&IMPLEMENT_CLASS::funcName, this, CCFOR_EACH_NUM(_TYPE_TO_HOLDER, __VA_ARGS__)))
+#define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, ...) \
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, __VA_ARGS__)
 #define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_3(funcName, returnType, ...) \
-    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, __VA_ARGS__)
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, __VA_ARGS__)
 #define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_4(funcName, returnType, ...) \
-    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, __VA_ARGS__)
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, __VA_ARGS__)
 #define _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_5(funcName, returnType, ...) \
-    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, __VA_ARGS__)
+    _CCCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, __VA_ARGS__)
 #define CCCOMPONENT_REGISTER_MEMBER_FUNCTION(funcName, ...) \
-    CCAPPEND_NARGS(_CCCOMPONENT_REGISTER_MEMBER_FUNCTION_, __VA_ARGS__) CCEXPEND((funcName, __VA_ARGS__ ))
+    CCEXPEND(CCAPPEND_NARGS(_CCCOMPONENT_REGISTER_MEMBER_FUNCTION_, __VA_ARGS__)(funcName, __VA_ARGS__ ))
 // Define CCCOMPONENT_REGISTER_MEMBER_FUNCTION macros.
 
 // #include "CCComponent.inl"

@@ -5,6 +5,9 @@
 #include <stdio.h>
 #define CCLOGI printf
 #define CCLOGW printf
+#else  // WIN32
+#define CCLOGI(...)
+#define CCLOGW(...)
 #endif  // WIN32
 
 #define CCEXPEND(x) \
@@ -54,7 +57,7 @@
 #define _APPLY_MACRO_9(m, a1, a2, a3, a4, a5, a6, a7, a8, a9) \
     m(a1), _APPLY_MACRO_8(m, a2, a3, a4, a5, a6, a7, a8, a9)
 #define CCFOR_EACH(macro, ...) \
-    CCAPPEND_NARGS(_APPLY_MACRO_, __VA_ARGS__)CCEXPEND((macro, __VA_ARGS__))
+    CCEXPEND(CCAPPEND_NARGS(_APPLY_MACRO_, __VA_ARGS__)(macro, __VA_ARGS__))
 // Define CCFOR_EACH macro.
 
 // Define CCFOR_EACH_NUM macro.
@@ -77,7 +80,7 @@
 #define _APPLY_MACRO_NUM_9(m, a1, a2, a3, a4, a5, a6, a7, a8, a9) \
     _APPLY_MACRO_NUM_8(m, a1, a2, a3, a4, a5, a6, a7, a8), m(9, a9)
 #define CCFOR_EACH_NUM(macro, ...) \
-    CCAPPEND_NARGS(_APPLY_MACRO_NUM_, __VA_ARGS__)CCEXPEND((macro, __VA_ARGS__))
+    CCEXPEND(CCAPPEND_NARGS(_APPLY_MACRO_NUM_, __VA_ARGS__)(macro, __VA_ARGS__))
 // Define CCFOR_EACH_NUM macro.
 
 // Define CCTYPES_APPEND_PARAS, CCTYPES_TO_PARAS, CCTYPES_WITH_TYPENAME macro.
