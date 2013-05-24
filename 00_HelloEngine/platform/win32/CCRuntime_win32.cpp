@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 
 #include "CCRuntime_win32.h"
 #include "GameView.h"

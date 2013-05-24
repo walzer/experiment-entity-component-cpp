@@ -7,12 +7,18 @@
 #include "CCComponent.h"
 #include "CCString.h"
 
+class CCContext;
+
 class CCEntity : public CCComponent
 {
 public:
+    typedef CCComponent BaseType;
     typedef CCEntity ThisType;
     typedef ::std::shared_ptr<CCEntity> Ptr;
     static const Ptr NullPtr;
+
+    virtual bool init();
+    virtual void done();
 
     virtual void update(float dt);
 
@@ -27,10 +33,19 @@ public:
     inline const Ptr& getParent() const;
     void setParent(const Ptr& parent);
 
+    CCContext *getContext()
+    {
+        return _context;
+    }
+    void setContext(CCContext *context)
+    {
+        _context = context;
+    }
 protected:
     ::std::map<CCString, CCComponent::Ptr> _components;
     ::std::vector<Ptr> _children;
     Ptr _parent;
+    CCContext *_context;
 };
 
 // include "CCEntity.inl"

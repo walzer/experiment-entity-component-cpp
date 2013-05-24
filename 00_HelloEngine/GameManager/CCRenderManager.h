@@ -16,8 +16,10 @@ public:
 
 protected:
     void begin();
+    void draw();
     void end();
     CCDelegateHandler beginDelegate;
+    CCDelegateHandler drawDelegate;
     CCDelegateHandler endDelegate;
 };
 

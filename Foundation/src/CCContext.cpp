@@ -57,7 +57,8 @@ CCContext& IMPLEMENT_FUNCTION(add, ManagerPtr manager, const CCString& name)
 }
 
 CCManager* IMPLEMENT_FUNCTION(get, const CCString& name)
-    return nullptr;
+    auto iter = _nameMap.find(name);
+    return (iter != _nameMap.end()) ? iter->second : nullptr;
 }
 
 CCContext& IMPLEMENT_FUNCTION(setTimeManager, shared_ptr<CCTimeManager> tm)

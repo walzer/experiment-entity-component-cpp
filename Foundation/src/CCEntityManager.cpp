@@ -39,6 +39,8 @@ void IMPLEMENT_FUNCTION(update, CCContext* ctx, float dt)
 
 void IMPLEMENT_FUNCTION(add, const EntityPtr& entity)
     _entities.push_back(entity);
+    entity->setContext(_context);
+    entity->init();
 }
 
 const CCEntityManager::EntityPtr& IMPLEMENT_FUNCTION(find, const CCString& name)

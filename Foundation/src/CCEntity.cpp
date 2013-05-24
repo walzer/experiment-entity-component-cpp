@@ -6,6 +6,20 @@ using namespace std;
 
 #define IMPLEMENT_CLASS     CCEntity
 
+bool CCEntity::init()
+{
+    BaseType::init();
+    for_each(_components.begin(), _components.end(), [](const pair<CCString, CCComponent::Ptr> &pair)
+    {
+            pair.second->init();
+    });
+    return true;
+}
+
+void CCEntity::done()
+{
+}
+
 void IMPLEMENT_FUNCTION(update, float dt)
 
 }

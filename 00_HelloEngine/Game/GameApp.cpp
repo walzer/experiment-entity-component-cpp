@@ -1,7 +1,9 @@
-#include "stdafx.h"
+#include "pch.h"
+
+#include "GameApp.h"
 
 #include "GameManager/CCRenderManager.h"
-#include "GameApp.h"
+#include "GameEntityFactory.h"
 
 using namespace std;
 
@@ -24,4 +26,6 @@ void GameApp::onSurfaceCreated(CCSurface *surface)
     context->add(make_shared<CCEntityManager>(), "entity_manager");
     context->add(make_shared<CCRenderManager>(), "render_manager");
     surface->setContext(context);
+
+    createScene(context.get(), "GameScene");
 }

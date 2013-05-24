@@ -13,12 +13,12 @@
     <Filter Include="GameManager">
       <UniqueIdentifier>{d4c72563-e926-4108-bdf0-476c56db36e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameComponent">
+      <UniqueIdentifier>{f6bfae7d-e7e4-49c0-9f48-b0d312555e7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h">
-      <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\platform\win32\stdafx.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h">
@@ -36,12 +36,18 @@
     <ClInclude Include="..\..\00_HelloEngine\GameManager\CCRenderManager.h">
       <Filter>GameManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.h">
+      <Filter>GameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\platform\win32\pch.h">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\Game\GameEntityFactory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
-      <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\platform\win32\stdafx.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp">
@@ -55,6 +61,15 @@
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\GameManager\CCRenderManager.cpp">
       <Filter>GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.cpp">
+      <Filter>GameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\platform\win32\pch.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\Game\GameEntityFactory.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
