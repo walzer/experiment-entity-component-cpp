@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "GameManager/CCRenderManager.h"
 #include "GameApp.h"
 
 using namespace std;
@@ -21,5 +22,6 @@ void GameApp::onSurfaceCreated(CCSurface *surface)
 {
     auto context = make_shared<CCContext>();
     context->add(make_shared<CCEntityManager>(), "entity_manager");
+    context->add(make_shared<CCRenderManager>(), "render_manager");
     surface->setContext(context);
 }

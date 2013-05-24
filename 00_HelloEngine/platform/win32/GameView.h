@@ -15,6 +15,8 @@ public:
     virtual bool init();
     virtual void done();
 
+    virtual void swapBuffer();
+
     void show();
 
     HWND getHandle() const { return _hwnd; }

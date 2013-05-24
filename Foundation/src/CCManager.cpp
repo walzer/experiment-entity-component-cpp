@@ -2,6 +2,10 @@
 
 #include "CCManager.h"
 
+CCManager::CCManager()
+{
+}
+
 CCManager::~CCManager()
 {
 }

@@ -5,7 +5,11 @@ class CCContext;
 
 class CCManager
 {
+    // Uncopyable
+    CCManager(const CCManager &);
+    CCManager &operator = (const CCManager &);
 public:
+    CCManager();
     virtual ~CCManager();
 
     virtual bool init(CCContext *) = 0;

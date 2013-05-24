@@ -33,9 +33,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
     HACCEL hAccelTable;
     GameApp game;
-    game.init();
     CCRuntime_win32 runtime;
 
+    game.init();
     // Perform application initialization:
     if (! runtime.init(hInstance))
     {

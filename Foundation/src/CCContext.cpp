@@ -3,11 +3,16 @@
 #include "CCContext.h"
 
 #include "CCManager.h"
+#include "CCSurface.h"
 #include "CCTimeManager.h"
 
 using namespace std;
 
 #define IMPLEMENT_CLASS     CCContext
+
+CCContext::CCContext()
+{
+}
 
 IMPLEMENT_FUNCTION(~CCContext)
 
@@ -67,4 +72,8 @@ CCTimeManager* IMPLEMENT_FUNCTION(getTimeManager)
 void IMPLEMENT_FUNCTION(run)
     float dt = _tm->getDeltaTime();
     updateEvent(this, dt);
+    preDrawEvent();
+    drawEvent();
+    _surface->swapBuffer();
+    postDrawEvent();
 }

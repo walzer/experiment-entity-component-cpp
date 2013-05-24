@@ -14,6 +14,8 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+int                 InitGLView(HWND);
+void                SwapBuffer();
 
 static ATOM s_gameViewClass;
 
@@ -41,9 +43,11 @@ bool GameView::init()
     do
     {
         if (! s_gameViewClass) break;
-        _hwnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
 
+        _hwnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, 0, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
+
+        InitGLView(_hwnd);
         if (! _hwnd) break;
         ret = true;
     } while (false);
@@ -57,6 +61,11 @@ void GameView::done()
         _hwnd = NULL;
     }
     BaseType::done();
+}
+
+void GameView::swapBuffer()
+{
+    SwapBuffer();
 }
 
 void GameView::show()
@@ -75,19 +84,19 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style			= CS_HREDRAW | CS_VREDRAW;
+    wcex.style			= CS_HREDRAW | CS_VREDRAW/* | CS_OWNDC*/;
     wcex.lpfnWndProc	= WndProc;
     wcex.cbClsExtra		= 0;
     wcex.cbWndExtra		= 0;
     wcex.hInstance		= hInstance;
     wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MY00_HELLOENGINE));
     wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-    wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
+    wcex.hbrBackground	= NULL;
     wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_MY00_HELLOENGINE);
     wcex.lpszClassName	= szWindowClass;
     wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassEx(&wcex);
+    return (RegisterClassEx(&wcex) || 1410 == GetLastError()) ? true : false;
 }
 
 //
@@ -156,4 +165,98 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+#include <EGL/egl.h>
+#include <GLES2/gl2.h>
+
+EGLDisplay eglDisplay;
+EGLContext eglContext;
+EGLSurface eglSurface;
+
+int InitGLView(HWND hWnd)
+{
+    EGLint configAttribList[] =
+    {
+        //EGL_RED_SIZE,       8,
+        //EGL_GREEN_SIZE,     8,
+        //EGL_BLUE_SIZE,      8,
+        //EGL_ALPHA_SIZE,     8,
+        EGL_SURFACE_TYPE,		EGL_WINDOW_BIT,
+        EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES2_BIT,
+        EGL_DEPTH_SIZE,     EGL_DONT_CARE,
+        EGL_STENCIL_SIZE,   EGL_DONT_CARE,
+//        EGL_SAMPLE_BUFFERS, 1,
+        EGL_NONE
+    };
+    EGLint surfaceAttribList[] =
+    {
+        EGL_NONE, EGL_NONE
+    };
+
+    EGLint numConfigs;
+    EGLint majorVersion;
+    EGLint minorVersion;
+    EGLDisplay display;
+    EGLContext context;
+    EGLSurface surface;
+    EGLConfig config;
+    EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE, EGL_NONE };
+   
+    // Get Display
+    display = eglGetDisplay(GetDC(hWnd));
+    if ( display == EGL_NO_DISPLAY )
+    {
+        return EGL_FALSE;
+    }
+
+    // Initialize EGL
+    if ( !eglInitialize(display, &majorVersion, &minorVersion) )
+    {
+        return EGL_FALSE;
+    }
+
+    eglBindAPI(EGL_OPENGL_ES_API);
+
+    // Get configs
+    if ( !eglGetConfigs(display, NULL, 0, &numConfigs) )
+    {
+        return EGL_FALSE;
+    }
+
+    // Choose config
+    if ( !eglChooseConfig(display, configAttribList, &config, 1, &numConfigs) )
+    {
+        return EGL_FALSE;
+    }
+
+    // Create a surface
+    surface = eglCreateWindowSurface(display, config, (EGLNativeWindowType)hWnd, surfaceAttribList);
+    if ( surface == EGL_NO_SURFACE )
+    {
+        return EGL_FALSE;
+    }
+
+    // Create a GL context
+    context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs );
+    if ( context == EGL_NO_CONTEXT )
+    {
+        return EGL_FALSE;
+    }   
+   
+    // Make the context current
+    if ( !eglMakeCurrent(display, surface, surface, context) )
+    {
+        return EGL_FALSE;
+    }
+
+    eglDisplay = display;
+    eglSurface = surface;
+    eglContext = context;
+    return EGL_TRUE;
+}
+
+void SwapBuffer()
+{
+    eglSwapBuffers(eglDisplay, eglSurface);
 }

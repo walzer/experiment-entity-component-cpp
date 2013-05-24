@@ -14,11 +14,15 @@ class CCTimeManager;
 
 class CCContext
 {
+    // Uncopyable
+    CCContext(const CCContext &);
+    CCContext &operator = (const CCContext &);
 public:
     typedef CCContext                       ThisType;
     typedef ::std::shared_ptr<ThisType>     Ptr;
     typedef ::std::shared_ptr<CCManager>    ManagerPtr;
 
+    CCContext();
     virtual ~CCContext();
 
     virtual bool init();
@@ -31,6 +35,9 @@ public:
     CCTimeManager* getTimeManager();
 
     CCEvent<void (CCContext*, float)> updateEvent;
+    CCEvent<void()> preDrawEvent;
+    CCEvent<void()> drawEvent;
+    CCEvent<void()> postDrawEvent;
 
     void setSurface(const ::std::shared_ptr<CCSurface>& surface)
     {

@@ -10,6 +10,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{451645ba-f36e-4ab0-91b5-4bfc342f3936}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameManager">
+      <UniqueIdentifier>{d4c72563-e926-4108-bdf0-476c56db36e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h">
@@ -30,6 +33,9 @@
     <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\GameManager\CCRenderManager.h">
+      <Filter>GameManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
@@ -46,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\GameManager\CCRenderManager.cpp">
+      <Filter>GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

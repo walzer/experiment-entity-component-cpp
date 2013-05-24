@@ -9,6 +9,9 @@ class CCSurface;
 
 class CCRuntime
 {
+    // Uncopyable
+    CCRuntime(const CCRuntime &);
+    CCRuntime &operator = (const CCRuntime &);
 public:
     virtual ~CCRuntime();
 

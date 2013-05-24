@@ -44,6 +44,8 @@ public:
     CCEvent<void (CCSurface *, int, int)> onSurfaceChanged;
     //EventQueue<PointerData, 10> pointerQueue;
 
+    virtual void swapBuffer() = 0;
+
     int getWidth();
     int getHeight();
 protected:
