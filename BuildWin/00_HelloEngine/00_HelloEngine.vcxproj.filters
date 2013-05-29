@@ -45,6 +45,15 @@
     <ClInclude Include="..\..\00_HelloEngine\Game\GameEntityFactory.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.h">
+      <Filter>GameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.h">
+      <Filter>GameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.h">
+      <Filter>GameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
@@ -70,6 +79,15 @@
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\Game\GameEntityFactory.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.cpp">
+      <Filter>GameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.cpp">
+      <Filter>GameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.cpp">
+      <Filter>GameComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

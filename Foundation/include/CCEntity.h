@@ -24,6 +24,12 @@ public:
 
     void addComponent(const CCComponent::Ptr& com);
     CCComponent::Ptr findComponent(const CCString& name);
+
+    template <typename ComponentType>
+    ::std::shared_ptr<ComponentType> findComponent(const CCString& name)
+    {
+        return ::std::static_pointer_cast<ComponentType>(findComponent(name));
+    }
     void removeComponent(const CCString& name);
 
     void addChild(const Ptr& child);

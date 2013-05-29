@@ -23,8 +23,8 @@ void GameApp::done()
 void GameApp::onSurfaceCreated(CCSurface *surface)
 {
     auto context = make_shared<CCContext>();
-    context->add(make_shared<CCEntityManager>(), "entity_manager");
-    context->add(make_shared<CCRenderManager>(), "render_manager");
+    context->add(make_shared<CCEntityManager>(), "CCEntityManager");
+    context->add(make_shared<CCRenderManager>(), "CCRenderManager");
     surface->setContext(context);
 
     createScene(context.get(), "GameScene");

@@ -26,7 +26,7 @@ void CCComponent::unregisterFunction(const CCString& funcName)
     _functions.erase(funcName);
 }
 
-bool CCComponent::init()
+bool CCComponent::init(CCContext * /*context*/)
 {
     return true;
 }
@@ -74,7 +74,7 @@ public:
     {
         return "TestComponent";
     }
-    virtual bool init();
+    virtual bool init(CCContext* context);
     virtual void done()
     {
         unregisterFunction("void_selector");
@@ -122,7 +122,7 @@ public:
 };
 #define IMPLEMENT_CLASS     TestComponent
 CCCOMPONENT_REGISTER_CREATOR;
-bool TestComponent::init()
+bool TestComponent::init(CCContext * /*context*/)
 {
     registerFunction<void()>("void_selector", bind(&TestComponent::void_selector, this));
     CCCOMPONENT_REGISTER_MEMBER_FUNCTION(int_selector, int);
@@ -138,7 +138,7 @@ void CCComponentTest()
 {
     CCComponent::Ptr com = CCComponent::create("TestComponent");
     printf("%s\n",com->getName().c_str());
-    com->init();
+    com->init(nullptr);
     auto b = bind(&TestComponent::void_selector, (TestComponent*)com.get());
     function<void ()> f = b;
     printf("%s\n", typeid(b).name());

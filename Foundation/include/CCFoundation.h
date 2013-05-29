@@ -3,6 +3,10 @@
 
 #include "CCFundationMacrosH.h"
 
+#include "CCString.h"
+#include "CCVector.h"
+#include "CCVertices.h"
+
 #include "CCContext.h"
 
 #include "CCEntityManager.h"

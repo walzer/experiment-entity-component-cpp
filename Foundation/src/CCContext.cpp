@@ -72,9 +72,9 @@ CCTimeManager* IMPLEMENT_FUNCTION(getTimeManager)
 
 void IMPLEMENT_FUNCTION(run)
     float dt = _tm->getDeltaTime();
-    updateEvent(this, dt);
+    updateEvent(dt);
     preDrawEvent();
     drawEvent();
-    _surface->swapBuffer();
     postDrawEvent();
+    _surface->swapBuffer();
 }

@@ -91,6 +91,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.h" />
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.h" />
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.h" />
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.h" />
     <ClInclude Include="..\..\00_HelloEngine\GameManager\CCRenderManager.h" />
     <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h" />
     <ClInclude Include="..\..\00_HelloEngine\Game\GameEntityFactory.h" />
@@ -102,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.cpp" />
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.cpp" />
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.cpp" />
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\GameManager\CCRenderManager.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\Game\GameEntityFactory.cpp" />

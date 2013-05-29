@@ -30,11 +30,15 @@ public:
 
     ThisType&   add(ManagerPtr manager, const CCString& name);
     CCManager*  get(const CCString& name);
-
+    template <typename ManagerType>
+    ManagerType *get(const CCString& name)
+    {
+        return static_cast<ManagerType *>(get(name));
+    }
     ThisType&   setTimeManager(::std::shared_ptr<CCTimeManager> tm);
     CCTimeManager* getTimeManager();
 
-    CCEvent<void (CCContext*, float)> updateEvent;
+    CCEvent<void (float)> updateEvent;
     CCEvent<void()> preDrawEvent;
     CCEvent<void()> drawEvent;
     CCEvent<void()> postDrawEvent;

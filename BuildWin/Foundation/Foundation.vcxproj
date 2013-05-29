@@ -24,6 +24,8 @@
     <ClInclude Include="..\..\Foundation\include\CCString.h" />
     <ClInclude Include="..\..\Foundation\include\CCSurface.h" />
     <ClInclude Include="..\..\Foundation\include\CCTimeManager.h" />
+    <ClInclude Include="..\..\Foundation\include\CCVector.h" />
+    <ClInclude Include="..\..\Foundation\include\CCVertices.h" />
     <ClInclude Include="..\..\Foundation\src\CCFundationMacrosCPP.h" />
     <ClInclude Include="..\..\Foundation\src\pch.h" />
   </ItemGroup>
@@ -37,6 +39,8 @@
     <ClCompile Include="..\..\Foundation\src\CCRuntime.cpp" />
     <ClCompile Include="..\..\Foundation\src\CCSurface.cpp" />
     <ClCompile Include="..\..\Foundation\src\CCTimeManager.cpp" />
+    <ClCompile Include="..\..\Foundation\src\CCVector.cpp" />
+    <ClCompile Include="..\..\Foundation\src\CCVertices.cpp" />
     <ClCompile Include="..\..\Foundation\src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

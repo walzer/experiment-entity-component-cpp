@@ -24,7 +24,7 @@ public:
     const EntityPtr& find(const CCString& name);
     void remove(const EntityPtr& entity);
 
-    void update(CCContext * context, float dt);
+    void update(float dt);
 
 public:
     //static EntityPtr create(const CCString& name)

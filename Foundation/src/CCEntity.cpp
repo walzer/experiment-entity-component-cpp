@@ -8,10 +8,10 @@ using namespace std;
 
 bool CCEntity::init()
 {
-    BaseType::init();
-    for_each(_components.begin(), _components.end(), [](const pair<CCString, CCComponent::Ptr> &pair)
+    BaseType::init(_context);
+    for_each(_components.begin(), _components.end(), [this](const pair<CCString, CCComponent::Ptr> &pair)
     {
-            pair.second->init();
+            pair.second->init(_context);
     });
     return true;
 }

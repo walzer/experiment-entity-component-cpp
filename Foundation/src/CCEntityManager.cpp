@@ -19,8 +19,7 @@ bool IMPLEMENT_FUNCTION(init, CCContext * ctx)
     updateHandler = ctx->updateEvent.add(bind(
         &CCEntityManager::update, 
         this, 
-        placeholders::_1, 
-        placeholders::_2));
+        placeholders::_1));
     return true;
 }
 
@@ -29,7 +28,7 @@ void IMPLEMENT_FUNCTION(done, CCContext * ctx)
     _entities.clear();
 }
 
-void IMPLEMENT_FUNCTION(update, CCContext* ctx, float dt)
+void IMPLEMENT_FUNCTION(update, float dt)
     for_each(_entities.begin(), _entities.end(),
     [dt](const shared_ptr<CCEntity>& ptr)
     {

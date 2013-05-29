@@ -20,10 +20,14 @@ public:
     CCComponent();
     virtual ~CCComponent();
 
-    virtual bool init();
+    virtual bool init(CCContext* context);
     virtual void done();
     virtual CCString getName();
     
+    const ::std::shared_ptr<CCEntity>& getOwner() const
+    {
+        return _owner;
+    }
     // Register a std::function object with funcName.
     template <
         typename Signature

@@ -56,6 +56,12 @@
     <ClInclude Include="..\..\Foundation\include\CCSurface.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Foundation\include\CCVector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Foundation\include\CCVertices.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Foundation\src\CCComponent.cpp">
@@ -86,6 +92,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Foundation\src\CCSurface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Foundation\src\CCVector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Foundation\src\CCVertices.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
