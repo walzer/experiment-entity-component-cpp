@@ -27,5 +27,6 @@ void GameApp::onSurfaceCreated(CCSurface *surface)
     context->add(make_shared<CCRenderManager>(), "CCRenderManager");
     surface->setContext(context);
 
-    createScene(context.get(), "GameScene");
+    auto gameScene = createScene(context.get(), "GameScene");
+    createPlayer(context.get(), "Player1", gameScene);
 }

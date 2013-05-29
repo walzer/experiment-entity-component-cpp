@@ -6,6 +6,24 @@
 
 using namespace std;
 
+shared_ptr<CCEntity> createSprite(CCContext *context, CCEntity *parent)
+{
+    shared_ptr<CCEntity> ret = make_shared<CCEntity>();
+
+    ret->addComponent(CCComponent::create("CCTransformComponent"));
+    ret->addComponent(CCComponent::create("CCRenderComponent"));
+
+    auto entityManager = static_cast<CCEntityManager*>(context->get("CCEntityManager"));
+    entityManager->add(ret);
+
+    if (parent)
+    {
+        parent->addChild(ret);
+    }
+
+    return ret;
+}
+
 shared_ptr<CCEntity> createScene(CCContext *context, const CCString &def)
 {
     shared_ptr<CCEntity> ret;
@@ -44,19 +62,24 @@ shared_ptr<CCEntity> createScene(CCContext *context, const CCString &def)
     return ret;
 }
 
-shared_ptr<CCEntity> createSprite(CCContext *context, CCEntity *parent)
+::std::shared_ptr<CCEntity> createPlayer(CCContext *context, const CCString &def, const ::std::shared_ptr<CCEntity> &parent)
 {
-    shared_ptr<CCEntity> ret = make_shared<CCEntity>();
-
-    ret->addComponent(CCComponent::create("CCTransformComponent"));
-    ret->addComponent(CCComponent::create("CCRenderComponent"));
-
-    auto entityManager = static_cast<CCEntityManager*>(context->get("CCEntityManager"));
-    entityManager->add(ret);
-
-    if (parent)
+    shared_ptr<CCEntity> ret;
+    if (def == "Player1")
     {
-        parent->addChild(ret);
+        ret = createSprite(context, parent.get());
+
+        auto renderCom = ret->findComponent<CCRenderComponent>("class CCRenderComponent");
+        float verticesData[] = 
+        {
+            -0.1f, -0.1f,  0.0f,     0.0f, 1.0f, 0.0f,
+             0.1f,  0.0f,  0.0f,     0.0f, 1.0f, 0.0f,
+            -0.1f,  0.1f,  0.0f,     0.0f, 1.0f, 0.0f,
+        };
+        auto vertices = make_shared<CCVertices>();
+        vertices->init(verticesData, sizeof(verticesData) / sizeof(float), 3);
+
+        renderCom->setVertices(vertices);
     }
 
     return ret;
