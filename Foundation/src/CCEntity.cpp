@@ -26,6 +26,7 @@ void IMPLEMENT_FUNCTION(update, float dt)
 
 void IMPLEMENT_FUNCTION(addComponent, const CCComponent::Ptr& com)
     _components.insert(make_pair(com->getName(), com));
+    com->setOwner(this->asShared<CCEntity>());
 }
 
 CCComponent::Ptr IMPLEMENT_FUNCTION(findComponent, const CCString& name)

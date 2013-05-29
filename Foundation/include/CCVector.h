@@ -3,8 +3,24 @@
 
 #include <array>
 
-class CCVec2 : public ::std::array<float, 2>
+class CCVec3
 {
+public:
+    union
+    {
+        ::std::array<float, 3> array;
+        struct
+        {
+            float x;
+            float y;
+            float z;
+        };
+    };
+
+    float & operator [] (size_t pos)
+    {
+        return array[pos];
+    }
 };
 
 #endif  // __FOUNDATION__CCVECTOR_H__

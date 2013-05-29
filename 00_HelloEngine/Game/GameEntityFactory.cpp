@@ -67,7 +67,19 @@ shared_ptr<CCEntity> createScene(CCContext *context, const CCString &def)
     shared_ptr<CCEntity> ret;
     if (def == "Player1")
     {
-        ret = createSprite(context, parent.get());
+        shared_ptr<CCEntity> ret = make_shared<CCEntity>();
+
+        ret->addComponent(CCComponent::create("CCTransformComponent"));
+        ret->addComponent(CCComponent::create("CCRenderComponent"));
+        ret->addComponent(CCComponent::create("MoveComponent"));
+
+        auto entityManager = static_cast<CCEntityManager*>(context->get("CCEntityManager"));
+        entityManager->add(ret);
+
+        if (parent)
+        {
+            parent->addChild(ret);
+        }
 
         auto renderCom = ret->findComponent<CCRenderComponent>("class CCRenderComponent");
         float verticesData[] = 

@@ -28,6 +28,10 @@ public:
     {
         return _owner;
     }
+    void setOwner(const ::std::shared_ptr<CCEntity>& owner)
+    {
+        _owner = owner;
+    }
     // Register a std::function object with funcName.
     template <
         typename Signature
@@ -37,6 +41,19 @@ public:
 
     // Unregister function object with name funcName.
     void unregisterFunction(const CCString& funcName);
+
+    template <typename DerivedType>
+    typename ::std::remove_reference<typename ::std::remove_pointer<DerivedType>::type>::type *
+        as()
+    {
+        return static_cast<typename ::std::remove_reference <typename ::std::remove_pointer<DerivedType>::type>::type *>(this);
+    }
+    template <typename DerivedType>
+    ::std::shared_ptr<typename ::std::remove_reference<typename ::std::remove_pointer<DerivedType>::type>::type>
+        asShared()
+    {
+        return ::std::static_pointer_cast<typename ::std::remove_reference<typename ::std::remove_pointer<DerivedType>::type>::type>(this->shared_from_this());
+    }
 
     template <
         typename Signature
