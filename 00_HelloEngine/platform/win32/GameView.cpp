@@ -47,6 +47,7 @@ bool GameView::init()
         _hwnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, 0, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
 
+        SetWindowLong(_hwnd, GWL_USERDATA, (LONG)this);
         InitGLView(_hwnd);
         if (! _hwnd) break;
         ret = true;
@@ -114,7 +115,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     int wmId, wmEvent;
     PAINTSTRUCT ps;
     HDC hdc;
-
+    CCLOGI("WndProc message: %d(%x)\n", message, message);
     switch (message)
     {
     case WM_COMMAND:
@@ -131,6 +132,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
+        }
+        break;
+    case WM_SIZE:
+        {
+            GameView *surface = (GameView *)GetWindowLong(hWnd, GWL_USERDATA);
+            int w = LOWORD(lParam);
+            int h = HIWORD(lParam);
+            surface->setWidth(w);
+            surface->setHeight(h);
+        }
+        break;
+    case WM_LBUTTONDOWN:
+        {
+            if (wParam == MK_LBUTTON)
+            {
+                GameView *surface = (GameView *)GetWindowLong(hWnd, GWL_USERDATA);
+                int x = LOWORD(lParam);
+                int y = HIWORD(lParam);
+                int halfW = surface->getWidth() / 2;
+                int halfH = surface->getHeight() / 2;
+                PointerArgs pointer = 
+                {
+                    0, 
+                    (float)(x - halfW) / halfW,
+                    (float)(halfH - y) / halfH,
+                };
+                surface->onPointerDownEvent(::std::cref(pointer));
+            }
         }
         break;
     case WM_PAINT:

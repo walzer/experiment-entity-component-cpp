@@ -72,6 +72,7 @@ shared_ptr<CCEntity> createScene(CCContext *context, const CCString &def)
         ret->addComponent(CCComponent::create("CCTransformComponent"));
         ret->addComponent(CCComponent::create("CCRenderComponent"));
         ret->addComponent(CCComponent::create("MoveComponent"));
+        ret->addComponent(CCComponent::create("PlayerUpdateComponent"));
 
         auto entityManager = static_cast<CCEntityManager*>(context->get("CCEntityManager"));
         entityManager->add(ret);

@@ -54,7 +54,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
     QueryPerformanceFrequency(&nFreq);
     QueryPerformanceCounter(&nLast);
-    nInterval.QuadPart = (LONGLONG)(0.5f * nFreq.QuadPart);
+    nInterval.QuadPart = (LONGLONG)(0.05f * nFreq.QuadPart);
 
     // Main message loop:
     while (1)

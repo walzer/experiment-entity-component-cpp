@@ -7,6 +7,7 @@ CCCOMPONENT_REGISTER_CREATOR;
 
 bool CCTransformComponent::init(CCContext *context)
 {
+    _position.array.fill(0);
     BaseType::init(context);
     CCCOMPONENT_REGISTER_MEMBER_FUNCTION(getPosition, const CCVec3 &);
     CCCOMPONENT_REGISTER_MEMBER_FUNCTION(setPosition, void, const CCVec3 &pos);

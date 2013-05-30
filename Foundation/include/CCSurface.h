@@ -32,6 +32,10 @@ struct PointerData
 
 class CCSurface : public ::std::enable_shared_from_this<CCSurface>
 {
+    struct PointerInterrupter
+    {
+        bool operator()(bool ret) { return ret; }
+    };
 public:
     virtual ~CCSurface();
 
@@ -42,12 +46,22 @@ public:
     void setContext(const ::std::shared_ptr<CCContext>& context);
 
     CCEvent<void (CCSurface *, int, int)> onSurfaceChanged;
+    CCEvent<bool (const PointerArgs &pointer), int, _UseLastValue, PointerInterrupter> onPointerDownEvent;
+
     //EventQueue<PointerData, 10> pointerQueue;
 
     virtual void swapBuffer() = 0;
 
     int getWidth();
+    void setWidth(int w)
+    {
+        _width = w;
+    }
     int getHeight();
+    void setHeight(int h)
+    {
+        _height = h;
+    }
 protected:
     CCSurface();
 

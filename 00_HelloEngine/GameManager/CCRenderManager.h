@@ -17,7 +17,7 @@ public:
     virtual bool init(CCContext *context);
     virtual void done(CCContext *context);
 
-    void addBatch(CCRenderComponent * com);
+    void addBatch(CCRenderComponent * com, const CCVec3 &pos);
 
 protected:
     void begin();
@@ -30,7 +30,7 @@ protected:
     CCDelegateHandler postDrawDelegate;
     CCDelegateHandler endDelegate;
 
-    ::std::vector<CCRenderComponent *> _batchVertices;
+    ::std::vector<::std::tuple<CCRenderComponent *, CCVec3>> _batchVertices;
 };
 
 #endif  // __MANAGER__CCRENDER_MANAGER_H__

@@ -4,6 +4,7 @@
 #include "CCFoundation.h"
 
 class CCRenderManager;
+class CCTransformComponent;
 class CCVertices;
 
 class CCRenderComponent : public CCComponent
@@ -28,6 +29,7 @@ public:
 protected:
     CCDelegateHandler drawEventHandler;
     CCRenderManager *_manager;
+    CCTransformComponent *_transformComponent;
     ::std::shared_ptr<CCVertices> _vertices;
 };
 

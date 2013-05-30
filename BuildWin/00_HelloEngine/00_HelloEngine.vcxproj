@@ -94,6 +94,7 @@
     <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.h" />
     <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.h" />
     <ClInclude Include="..\..\00_HelloEngine\GameComponent\MoveComponent.h" />
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.h" />
     <ClInclude Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.h" />
     <ClInclude Include="..\..\00_HelloEngine\GameManager\CCRenderManager.h" />
     <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\GameComponent\MoveComponent.cpp" />
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\GameManager\CCRenderManager.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp" />

@@ -139,9 +139,9 @@ void CCRenderManager::done(CCContext * context)
     context->postDrawEvent.remove(endDelegate);
 }
 
-void CCRenderManager::addBatch(CCRenderComponent * com)
+void CCRenderManager::addBatch(CCRenderComponent * com, const CCVec3 &pos)
 {
-    _batchVertices.push_back(com);
+    _batchVertices.emplace_back(com, pos);
 }
 
 void CCRenderManager::begin()
@@ -165,9 +165,23 @@ void CCRenderManager::batchDraw()
 
     // Create vertices list.
     CCVertices vertices;
+    auto &data = vertices.getData();
+    CCRenderComponent *renderCom;
     for (auto com : _batchVertices)
     {
-        vertices.append(*com->getVertices());
+        size_t i = data.size();
+        renderCom = get<0>(com);
+        vertices.append(*(renderCom->getVertices()));
+        const CCVec3 &position = get<1>(com);
+        if (position.x == 0 && position.y == 0 && position.z == 0)
+        {
+            continue;
+        }
+        for (auto end = data.size(); i < end; i += 6)
+        {
+            data[i] += position.x;
+            data[i + 1] += position.y;
+        }
     }
 
     // Begin draw.

@@ -57,6 +57,9 @@
     <ClInclude Include="..\..\00_HelloEngine\GameComponent\MoveComponent.h">
       <Filter>GameComponent</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.h">
+      <Filter>GameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
@@ -93,6 +96,9 @@
       <Filter>GameComponent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\GameComponent\MoveComponent.cpp">
+      <Filter>GameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.cpp">
       <Filter>GameComponent</Filter>
     </ClCompile>
   </ItemGroup>

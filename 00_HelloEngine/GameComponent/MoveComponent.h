@@ -12,9 +12,12 @@ public:
     virtual bool init(CCContext *context);
     virtual void done();
 
+    void setDestPosition(const CCVec3 &dest);
 protected:
     void doMove(float dt);
-
+    
+    bool _moving;
+    CCVec3 _step;
     CCVec3 _destPosition;
     CCDelegateHandler _updateEventHandler;
     ::std::function<const CCVec3& ()> _getPosition;
