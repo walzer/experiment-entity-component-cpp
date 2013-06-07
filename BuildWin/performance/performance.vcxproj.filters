@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="project_win32">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\performance\Performace.cpp" />
+    <ClCompile Include="..\..\performance\project_win32\pch.cpp">
+      <Filter>project_win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\performance\profile.cpp" />
+    <ClCompile Include="..\..\performance\project_win32\main.cpp">
+      <Filter>project_win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\performance\Performace.h" />
+    <ClInclude Include="..\..\performance\project_win32\pch.h">
+      <Filter>project_win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\performance\project_win32\targetver.h">
+      <Filter>project_win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\performance\profile.h" />
+  </ItemGroup>
+</Project>
