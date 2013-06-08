@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\foundation\include\CCComponent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCDelegate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCEntity.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCEntityManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCEvent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCFoundation.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCFundationMacrosH.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCRuntime.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCString.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCSurface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCTimeManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCVector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CCVertices.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\src\CCFundationMacrosCPP.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\src\pch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\foundation\src\CCComponent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCEntity.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCEntityManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCEvent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCRuntime.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCSurface.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCTimeManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCVector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\CCVertices.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
