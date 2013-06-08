@@ -1,10 +1,10 @@
-#ifndef __FOUNDATION__CCENTITY_MANAGER_H__
-#define __FOUNDATION__CCENTITY_MANAGER_H__
+#ifndef __FOUNDATION_CC__TO_STRINGENTITY_MANAGER_H__
+#define __FOUNDATION_CC__TO_STRINGENTITY_MANAGER_H__
 
 #include <vector>
 
 #include "CCManager.h"
-#include "CCString.h"
+#include "String.h"
 
 class CCEntity;
 class CCContext;
@@ -21,13 +21,13 @@ public:
     virtual void done(CCContext * ctx);
 
     void add(const EntityPtr& entity);
-    const EntityPtr& find(const CCString& name);
+    const EntityPtr& find(const String& name);
     void remove(const EntityPtr& entity);
 
     void update(float dt);
 
 public:
-    //static EntityPtr create(const CCString& name)
+    //static EntityPtr create(const String& name)
     //{
     //    return ::std::static_pointer_cast<CCEntity>(CCComponent::create(name));
     //}
@@ -37,4 +37,4 @@ private:
     CCContext* _context;
 };
 
-#endif  // __FOUNDATION__CCENTITY_MANAGER_H__
+#endif  // __FOUNDATION_CC__TO_STRINGENTITY_MANAGER_H__

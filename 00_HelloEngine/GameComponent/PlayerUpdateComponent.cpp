@@ -6,7 +6,7 @@
 #endif
 using namespace std;
 
-#define IMPLEMENT_CLASS PlayerUpdateComponent
+#define IMPL_CLASS PlayerUpdateComponent
 CCCOMPONENT_REGISTER_CREATOR;
 
 bool PlayerUpdateComponent::init(CCContext *context)
@@ -34,7 +34,7 @@ void PlayerUpdateComponent::update(float dt)
 
 bool PlayerUpdateComponent::onPointerDown(const PointerArgs &pointer)
 {
-    CCLOGI("PlayerUpdateComponent::onPointerDown(%f, %f)\n", pointer.x, pointer.y);
+    CC_LOGI("PlayerUpdateComponent::onPointerDown(%f, %f)\n", pointer.x, pointer.y);
     CCVec3 dest = { pointer.x, pointer.y, 0};
 #if (DEMO_NO_CALL_FUNC)
     _moveComponent->setDestPosition(dest);
@@ -44,4 +44,4 @@ bool PlayerUpdateComponent::onPointerDown(const PointerArgs &pointer)
     return true;
 }
 
-#undef IMPLEMENT_CLASS
+#undef IMPL_CLASS

@@ -1,5 +1,5 @@
-#ifndef __CCRUNTIME_WIN32_H__
-#define __CCRUNTIME_WIN32_H__
+#ifndef _CC__TO_STRINGRUNTIME_WIN32_H__
+#define _CC__TO_STRINGRUNTIME_WIN32_H__
 
 #include "CCFoundation.h"
 
@@ -13,4 +13,4 @@ public:
     virtual bool init(void * appInstance);
 };
 
-#endif  // __CCRUNTIME_WIN32_H__
+#endif  // _CC__TO_STRINGRUNTIME_WIN32_H__

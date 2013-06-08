@@ -1,5 +1,5 @@
-#ifndef __FOUNDATION__CCVECTOR_H__
-#define __FOUNDATION__CCVECTOR_H__
+#ifndef __FOUNDATION_CC__TO_STRINGVECTOR_H__
+#define __FOUNDATION_CC__TO_STRINGVECTOR_H__
 
 #include <array>
 
@@ -23,4 +23,4 @@ public:
     }
 };
 
-#endif  // __FOUNDATION__CCVECTOR_H__
+#endif  // __FOUNDATION_CC__TO_STRINGVECTOR_H__

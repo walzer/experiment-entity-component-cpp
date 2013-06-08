@@ -1,7 +1,7 @@
-#ifndef __CCSURFACE_H__
-#define __CCSURFACE_H__
+#ifndef __CC_SURFACE_H__
+#define __CC_SURFACE_H__
 
-#include "CCEvent.h"
+#include "Event.h"
 
 class CCContext;
 
@@ -45,8 +45,8 @@ public:
     CCContext * getContext();
     void setContext(const ::std::shared_ptr<CCContext>& context);
 
-    CCEvent<void (CCSurface *, int, int)> onSurfaceChanged;
-    CCEvent<bool (const PointerArgs &pointer), int, _UseLastValue, PointerInterrupter> onPointerDownEvent;
+    Event<void (CCSurface *, int, int)> onSurfaceChanged;
+    Event<bool (const PointerArgs &pointer), int, _UseLastValue, PointerInterrupter> onPointerDownEvent;
 
     //EventQueue<PointerData, 10> pointerQueue;
 
@@ -70,4 +70,4 @@ protected:
     int _height;
 };
 
-#endif /* __CCSURFACE_H__ */
+#endif /* __CC_SURFACE_H__ */

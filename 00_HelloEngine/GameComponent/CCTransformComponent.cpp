@@ -2,7 +2,7 @@
 
 #include "CCTransformComponent.h"
 
-#define IMPLEMENT_CLASS CCTransformComponent
+#define IMPL_CLASS CCTransformComponent
 CCCOMPONENT_REGISTER_CREATOR;
 
 bool CCTransformComponent::init(CCContext *context)
@@ -20,4 +20,4 @@ void CCTransformComponent::done()
     unregisterFunction("setPosition");
 }
 
-#undef IMPLEMENT_CLASS
+#undef IMPL_CLASS

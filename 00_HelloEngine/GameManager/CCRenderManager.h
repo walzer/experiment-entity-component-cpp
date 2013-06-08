@@ -1,5 +1,5 @@
-#ifndef __MANAGER__CCRENDER_MANAGER_H__
-#define __MANAGER__CCRENDER_MANAGER_H__
+#ifndef __MANAGER_CC__TO_STRINGRENDER_MANAGER_H__
+#define __MANAGER_CC__TO_STRINGRENDER_MANAGER_H__
 
 #include "CCFoundation.h"
 
@@ -33,4 +33,4 @@ protected:
     ::std::vector<::std::tuple<CCRenderComponent *, CCVec3>> _batchVertices;
 };
 
-#endif  // __MANAGER__CCRENDER_MANAGER_H__
+#endif  // __MANAGER_CC__TO_STRINGRENDER_MANAGER_H__

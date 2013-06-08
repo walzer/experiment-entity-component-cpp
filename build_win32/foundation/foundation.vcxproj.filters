@@ -17,31 +17,19 @@
     <ClInclude Include="..\..\foundation\include\CCContext.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCDelegate.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\foundation\include\CCEntity.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\foundation\include\CCEntityManager.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCEvent.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\foundation\include\CCFoundation.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCFundationMacrosH.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\foundation\include\CCManager.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\foundation\include\CCRuntime.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCString.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\foundation\include\CCSurface.h">
@@ -56,11 +44,29 @@
     <ClInclude Include="..\..\foundation\include\CCVertices.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\foundation\src\CCFundationMacrosCPP.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\foundation\src\pch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\CppStl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\Uncopyable.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\FundationMacrosH.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\Delegate.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\Event.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\src\FundationMacrosCPP.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\String.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +80,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\foundation\src\CCEntityManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\foundation\src\CCManager.cpp">
@@ -98,6 +101,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\foundation\src\pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\Event.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

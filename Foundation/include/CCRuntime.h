@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "CCEvent.h"
+#include "Event.h"
 
 class CCSurface;
 
@@ -25,7 +25,7 @@ public:
 
     static CCRuntime *getInstance();
 
-    CCEvent<void(CCSurface *)> onSurfaceCreated;
+    Event<void(CCSurface *)> onSurfaceCreated;
 
 protected:
     CCRuntime();

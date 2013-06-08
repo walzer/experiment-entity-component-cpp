@@ -8,17 +8,17 @@
 
 using namespace std;
 
-#define IMPLEMENT_CLASS     CCContext
+#define IMPL_CLASS     CCContext
 
 CCContext::CCContext()
 {
 }
 
-IMPLEMENT_FUNCTION(~CCContext)
+IMPL_FUNCTION(~CCContext)
 
 }
 
-bool IMPLEMENT_FUNCTION(init)
+bool IMPL_FUNCTION(init)
     bool ret = false;
     do
     {
@@ -40,7 +40,7 @@ bool IMPLEMENT_FUNCTION(init)
     return true;
 }
 
-void IMPLEMENT_FUNCTION(done)
+void IMPL_FUNCTION(done)
    for_each(_managers.begin(), _managers.end(), [this](ManagerPtr& manager)
     {      
         manager->done(this);
@@ -50,27 +50,27 @@ void IMPLEMENT_FUNCTION(done)
     _tm.reset();
 }
 
-CCContext& IMPLEMENT_FUNCTION(add, ManagerPtr manager, const CCString& name)
+CCContext& IMPL_FUNCTION(add, ManagerPtr manager, const String& name)
     _nameMap.insert(make_pair(name, manager.get()));
     _managers.push_back(manager);
     return *this;
 }
 
-CCManager* IMPLEMENT_FUNCTION(get, const CCString& name)
+CCManager* IMPL_FUNCTION(get, const String& name)
     auto iter = _nameMap.find(name);
     return (iter != _nameMap.end()) ? iter->second : nullptr;
 }
 
-CCContext& IMPLEMENT_FUNCTION(setTimeManager, shared_ptr<CCTimeManager> tm)
+CCContext& IMPL_FUNCTION(setTimeManager, shared_ptr<CCTimeManager> tm)
     _tm = tm;
     return *this;
 }
 
-CCTimeManager* IMPLEMENT_FUNCTION(getTimeManager)
+CCTimeManager* IMPL_FUNCTION(getTimeManager)
     return _tm.get();
 }
 
-void IMPLEMENT_FUNCTION(run)
+void IMPL_FUNCTION(run)
     float dt = _tm->getDeltaTime();
     updateEvent(dt);
     preDrawEvent();

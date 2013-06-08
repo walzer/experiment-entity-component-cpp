@@ -2,7 +2,7 @@
 
 #include "CCUpdateComponent.h"
 
-//#define IMPLEMENT_CLASS CCUpdateComponent
+//#define IMPL_CLASS CCUpdateComponent
 using namespace std;
 
 bool CCUpdateComponent::init(CCContext* context)

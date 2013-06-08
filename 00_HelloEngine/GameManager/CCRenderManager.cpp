@@ -77,7 +77,7 @@ bool CCRenderManager::init(CCContext * context)
         glGetShaderInfoLog(uiFragShader, i32InfoLogLength, &i32CharsWritten, pszInfoLog);
 
         // Displays the error in a dialog box
-        CCLOGW("FragmentShader error: %s\n", pszInfoLog);
+        CC_LOGW("FragmentShader error: %s\n", pszInfoLog);
         delete[] pszInfoLog;
     }
 
@@ -94,7 +94,7 @@ bool CCRenderManager::init(CCContext * context)
         char* pszInfoLog = new char[i32InfoLogLength];
         glGetShaderInfoLog(uiVertShader, i32InfoLogLength, &i32CharsWritten, pszInfoLog);
 
-        CCLOGW("VertexShader error: %s\n", pszInfoLog);
+        CC_LOGW("VertexShader error: %s\n", pszInfoLog);
 
         delete[] pszInfoLog;
     }
@@ -123,7 +123,7 @@ bool CCRenderManager::init(CCContext * context)
         char* pszInfoLog = new char[i32InfoLogLength];
         glGetProgramInfoLog(uiProgramObject, i32InfoLogLength, &i32CharsWritten, pszInfoLog);
 
-        CCLOGW("LinkProgram error: %s\n", pszInfoLog);
+        CC_LOGW("LinkProgram error: %s\n", pszInfoLog);
 
         delete[] pszInfoLog;
     }

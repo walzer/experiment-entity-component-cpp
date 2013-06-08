@@ -1,9 +1,9 @@
-#ifndef __FOUNDATION__CCFOUNDATION_H__
-#define __FOUNDATION__CCFOUNDATION_H__
+#ifndef __FOUNDATION__CC_FOUNDATION_H__
+#define __FOUNDATION__CC_FOUNDATION_H__
 
-#include "CCFundationMacrosH.h"
+#include "FundationMacrosH.h"
 
-#include "CCString.h"
+#include "String.h"
 #include "CCVector.h"
 #include "CCVertices.h"
 
@@ -17,4 +17,4 @@
 #include "CCRuntime.h"
 #include "CCSurface.h"
 
-#endif  // __FOUNDATION__CCFOUNDATION_H__
+#endif  // __FOUNDATION__CC_FOUNDATION_H__

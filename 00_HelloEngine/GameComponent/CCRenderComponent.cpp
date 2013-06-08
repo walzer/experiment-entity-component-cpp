@@ -5,7 +5,7 @@
 #include "CCTransformComponent.h"
 #include "GameManager/CCRenderManager.h"
 
-#define IMPLEMENT_CLASS CCRenderComponent
+#define IMPL_CLASS CCRenderComponent
 CCCOMPONENT_REGISTER_CREATOR;
 
 bool CCRenderComponent::init(CCContext* context)
@@ -28,4 +28,4 @@ void CCRenderComponent::done()
     BaseType::done();
 }
 
-#undef IMPLEMENT_CLASS
+#undef IMPL_CLASS

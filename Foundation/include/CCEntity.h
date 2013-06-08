@@ -1,11 +1,11 @@
-#ifndef __FOUNDATION__CCENTITY_H__
-#define __FOUNDATION__CCENTITY_H__
+#ifndef __FOUNDATION_CC__TO_STRINGENTITY_H__
+#define __FOUNDATION_CC__TO_STRINGENTITY_H__
 
 #include <map>
 #include <vector>
 
 #include "CCComponent.h"
-#include "CCString.h"
+#include "String.h"
 
 class CCContext;
 
@@ -23,17 +23,17 @@ public:
     virtual void update(float dt);
 
     void addComponent(const CCComponent::Ptr& com);
-    CCComponent::Ptr findComponent(const CCString& name);
+    CCComponent::Ptr findComponent(const String& name);
 
     template <typename ComponentType>
-    ::std::shared_ptr<ComponentType> findComponent(const CCString& name)
+    ::std::shared_ptr<ComponentType> findComponent(const String& name)
     {
         return ::std::static_pointer_cast<ComponentType>(findComponent(name));
     }
-    void removeComponent(const CCString& name);
+    void removeComponent(const String& name);
 
     void addChild(const Ptr& child);
-    const Ptr& findChild(const CCString& name);
+    const Ptr& findChild(const String& name);
     void removeChild(const Ptr& child);
 
     inline const Ptr& getParent() const;
@@ -48,7 +48,7 @@ public:
         _context = context;
     }
 protected:
-    ::std::map<CCString, CCComponent::Ptr> _components;
+    ::std::map<String, CCComponent::Ptr> _components;
     ::std::vector<Ptr> _children;
     Ptr _parent;
     CCContext *_context;
@@ -60,4 +60,4 @@ const CCEntity::Ptr& CCEntity::getParent() const
     return _parent;
 }
 
-#endif  // __FOUNDATION__CCENTITY_H__
+#endif  // __FOUNDATION_CC__TO_STRINGENTITY_H__

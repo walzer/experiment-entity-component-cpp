@@ -1,9 +1,12 @@
-#ifndef __FOUNDATION__CCDELEGATE_H__
-#define __FOUNDATION__CCDELEGATE_H__
+#ifndef __FOUNDATION__CC_DELEGATE_H__
+#define __FOUNDATION__CC_DELEGATE_H__
 
-#include <memory>
+#include "CppStl.h"
 
-#include "CCFundationMacrosH.h"
+#include "FundationMacrosH.h"
+#include "Uncopyable.h"
+
+namespace cc {;
 
 enum CCDelegateAtPosition : char
 {
@@ -13,9 +16,7 @@ enum CCDelegateAtPosition : char
 
 class CCDelegateBase
 {
-    // Uncopyable
-    CCDelegateBase(const CCDelegateBase &);
-    CCDelegateBase &operator = (const CCDelegateBase &);
+    Uncopyable uncopyable;
 public:
     typedef CCDelegateBase ThisType;
     typedef ::std::shared_ptr<CCDelegateBase> Ptr;
@@ -85,10 +86,10 @@ public:
     bool invoke(const DelegateFunction& func);
     
 #define CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(...) \
-    template < CCTYPES_WITH_TYPENAME(__VA_ARGS__) > \
-    bool invoke(const DelegateFunction& func, CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
+    template < CC_TYPES_WITH_TYPENAME(__VA_ARGS__) > \
+    bool invoke(const DelegateFunction& func, CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
     { \
-        ResultType value = func(CCTYPES_TO_PARAS(__VA_ARGS__)); \
+        ResultType value = func(CC_TYPES_TO_PARAS(__VA_ARGS__)); \
         _result = _combiner(_result, value); \
         return _interrupter(value); \
     }
@@ -106,7 +107,11 @@ private:
     InvokeInterrupter _interrupter;
 };
 
+}   // namespace cc
+
 // #include "CCDelegate.inl"
+
+namespace cc {;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Implement CCDelegateBase
@@ -211,10 +216,10 @@ public:
     }
 
 #define CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(...) \
-    template < CCTYPES_WITH_TYPENAME(__VA_ARGS__) > \
-    bool invoke(const DelegateFunction& func, CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
+    template < CC_TYPES_WITH_TYPENAME(__VA_ARGS__) > \
+    bool invoke(const DelegateFunction& func, CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
     { \
-        func(CCTYPES_TO_PARAS(__VA_ARGS__)); \
+        func(CC_TYPES_TO_PARAS(__VA_ARGS__)); \
         return false; \
     }
     CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1);
@@ -228,4 +233,6 @@ public:
     }
 };
 
-#endif  // __FOUNDATION__CCDELEGATE_H__
+}   // namespace cc
+
+#endif  // __FOUNDATION__CC_DELEGATE_H__

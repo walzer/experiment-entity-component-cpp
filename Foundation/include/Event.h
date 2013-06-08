@@ -1,12 +1,14 @@
-#ifndef __FOUNDATION__CCEVENT_H__
-#define __FOUNDATION__CCEVENT_H__
+#ifndef __FOUNDATION__CC_EVENT_H__
+#define __FOUNDATION__CC_EVENT_H__
 
-#include <functional>
-#include <list>
-#include <map>
+//#include <functional>
+//#include <list>
+//#include <map>
 
-#include "CCDelegate.h"
-#include "CCString.h"
+#include "Delegate.h"
+#include "String.h"
+
+namespace cc {;
 
 class CCDelegateHandler
 {
@@ -36,19 +38,19 @@ template <
     typename Combiner = _UseLastValue,
     typename Interrupter = _InvokeNoneInterrupt
 >
-class CCEvent
+class Event
 {
     // Uncopyable
-    CCEvent(const CCEvent &);
-    CCEvent &operator = (const CCEvent &);
+    Event(const Event &);
+    Event &operator = (const Event &);
 public:
-    typedef CCEvent<Signature, GroupType> ThisType;
+    typedef Event<Signature, GroupType> ThisType;
     typedef ::std::function<Signature> DelegateFunction;
     typedef typename DelegateFunction::result_type  ResultType;
     typedef ::std::list<::std::shared_ptr<CCDelegateBase>> DelegateList;
     typedef CCDelegate<DelegateFunction, GroupType, DelegateList::iterator> Delegate;
     
-    CCEvent();
+    Event();
 
     CCDelegateHandler add(::std::shared_ptr<Delegate>& delegate);
     CCDelegateHandler add(const DelegateFunction& func,
@@ -62,8 +64,8 @@ public:
     ResultType operator () ();
 
 #define CCEVENT_DEFINE_OPERATOR_ARGS(...) \
-    template< CCTYPES_WITH_TYPENAME(__VA_ARGS__) > \
-    ResultType operator () (CCTYPES_APPEND_PARAS(__VA_ARGS__)) \
+    template< CC_TYPES_WITH_TYPENAME(__VA_ARGS__) > \
+    ResultType operator () (CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
     { \
         CCDelegateInvoke<DelegateFunction, ResultType, Combiner, Interrupter> invoker; \
         _raising = true; \
@@ -75,7 +77,7 @@ public:
             delegate = (Delegate*)(*_raisingIter++).get(); \
             if (delegate->getEnabledStatus()) \
             { \
-                if (invoker.invoke(delegate->function, CCTYPES_TO_PARAS(__VA_ARGS__))) \
+                if (invoker.invoke(delegate->function, CC_TYPES_TO_PARAS(__VA_ARGS__))) \
                 { \
                     goto EVENT_INTERRUPTED; \
                 } \
@@ -90,7 +92,7 @@ public:
                 delegate = (Delegate*)(*_raisingIter++).get(); \
                 if (delegate->getEnabledStatus()) \
                 { \
-                    if (invoker.invoke(delegate->function, CCTYPES_TO_PARAS(__VA_ARGS__))) \
+                    if (invoker.invoke(delegate->function, CC_TYPES_TO_PARAS(__VA_ARGS__))) \
                     { \
                         goto EVENT_INTERRUPTED; \
                     } \
@@ -103,7 +105,7 @@ public:
             delegate = (Delegate*)(*_raisingIter++).get(); \
             if (delegate->getEnabledStatus()) \
             { \
-                if (invoker.invoke(delegate->function, CCTYPES_TO_PARAS(__VA_ARGS__))) \
+                if (invoker.invoke(delegate->function, CC_TYPES_TO_PARAS(__VA_ARGS__))) \
                 { \
                     goto EVENT_INTERRUPTED; \
                 } \
@@ -134,9 +136,13 @@ protected:
     DelegateList::iterator _raisingIter;
 };
 
+}   // namespace cc
+
 void CCEventTest();
 
-// #include "CCEvent.inl"
+// #include "Event.inl"
+
+namespace cc {;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Implement CCDelegateHandler
@@ -210,7 +216,7 @@ void CCDelegateHandler::swap(CCDelegateHandler &other)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Implement CCEvent
+// Implement Event
 
 template <
     typename Signature,
@@ -218,7 +224,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-CCEvent<Signature, GroupType, Combiner,Interrupter>::CCEvent()
+Event<Signature, GroupType, Combiner,Interrupter>::Event()
     : _raising(false)
 {
 }
@@ -229,7 +235,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-CCDelegateHandler CCEvent<Signature, GroupType, Combiner,Interrupter>::add(::std::shared_ptr<Delegate>& delegate)
+CCDelegateHandler Event<Signature, GroupType, Combiner,Interrupter>::add(::std::shared_ptr<Delegate>& delegate)
 {
     DelegateList& list = getDelegateList(delegate.get());
     if (delegate->atPosition() == AT_BACK)
@@ -251,7 +257,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-CCDelegateHandler CCEvent<Signature, GroupType, Combiner,Interrupter>::add(const DelegateFunction& func,
+CCDelegateHandler Event<Signature, GroupType, Combiner,Interrupter>::add(const DelegateFunction& func,
     CCDelegateAtPosition atPosition)
 {
     auto delegate = ::std::make_shared<Delegate>(func, false,  atPosition);
@@ -264,7 +270,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-CCDelegateHandler CCEvent<Signature, GroupType, Combiner,Interrupter>::add(const GroupType& group,
+CCDelegateHandler Event<Signature, GroupType, Combiner,Interrupter>::add(const GroupType& group,
     const DelegateFunction& func,
     CCDelegateAtPosition atPosition)
 {
@@ -279,7 +285,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-void CCEvent<Signature, GroupType, Combiner,Interrupter>::remove(const CCDelegateHandler& handler)
+void Event<Signature, GroupType, Combiner,Interrupter>::remove(const CCDelegateHandler& handler)
 {
     CCDelegateBase::Ptr delegateBase = handler.getDelegateBase();
     if (delegateBase)
@@ -300,7 +306,7 @@ template <
     typename Interrupter
 >
 typename ::std::function<Signature>::result_type
-CCEvent<Signature, GroupType, Combiner,Interrupter>::operator () ()
+Event<Signature, GroupType, Combiner,Interrupter>::operator () ()
 {
     CCDelegateInvoke<DelegateFunction, ResultType, Combiner, Interrupter> invoker;
     _raising = true;
@@ -351,4 +357,6 @@ CCEvent<Signature, GroupType, Combiner,Interrupter>::operator () ()
     return invoker.getResult();
 }
 
-#endif /* __FOUNDATION__CCEVENT_H__ */
+}   // namespace cc
+
+#endif /* __FOUNDATION__CC_EVENT_H__ */

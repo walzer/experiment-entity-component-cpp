@@ -6,22 +6,22 @@
 
 using namespace std;
 
-#define IMPLEMENT_CLASS     CCComponent
+#define IMPL_CLASS     CCComponent
 
 CCCOMPONENT_REGISTER_CREATOR;
 
-IMPLEMENT_FUNCTION(CCComponent)
+IMPL_FUNCTION(CCComponent)
 }
 
-IMPLEMENT_FUNCTION(~CCComponent)
+IMPL_FUNCTION(~CCComponent)
 }
 
-CCString CCComponent::getName()
+String CCComponent::getName()
 {
     return typeid(*this).name();
 }
 
-void CCComponent::unregisterFunction(const CCString& funcName)
+void CCComponent::unregisterFunction(const String& funcName)
 {
     _functions.erase(funcName);
 }
@@ -35,7 +35,7 @@ void CCComponent::done()
 {
 }
 
-CCComponent::Ptr CCComponent::create(const CCString& typeName)
+CCComponent::Ptr CCComponent::create(const String& typeName)
 {
     CCComponent::Ptr ret;
     auto it = getCreatorEntry().find(typeName);
@@ -52,12 +52,12 @@ CCComponent::CreatorEntry& CCComponent::getCreatorEntry()
     return s_entry;
 }
 
-void CCComponent::registerCreator(const CCString& comName, const Creator& creator)
+void CCComponent::registerCreator(const String& comName, const Creator& creator)
 {
     getCreatorEntry().insert(make_pair(comName, creator));
 }
 
-#undef  IMPLEMENT_CLASS
+#undef  IMPL_CLASS
 ////////////////////////////////////////////////////////////////////////////////
 class TestComponent : public CCComponent
 {
@@ -70,7 +70,7 @@ public:
     {
     }
 
-    virtual CCString getName()
+    virtual String getName()
     {
         return "TestComponent";
     }
@@ -120,7 +120,7 @@ public:
         return _i + i1 + i2 + i3 + i4;
     }
 };
-#define IMPLEMENT_CLASS     TestComponent
+#define IMPL_CLASS     TestComponent
 CCCOMPONENT_REGISTER_CREATOR;
 bool TestComponent::init(CCContext * /*context*/)
 {

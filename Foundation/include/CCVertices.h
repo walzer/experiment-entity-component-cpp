@@ -1,5 +1,5 @@
-#ifndef __FOUNDATION__CCVERTICES_H__
-#define __FOUNDATION__CCVERTICES_H__
+#ifndef __FOUNDATION_CC__TO_STRINGVERTICES_H__
+#define __FOUNDATION_CC__TO_STRINGVERTICES_H__
 
 #include <array>
 #include <vector>
@@ -66,4 +66,4 @@ private:
     unsigned _count;
 };
 
-#endif  // __FOUNDATION__CCVERTICES_H__
+#endif  // __FOUNDATION_CC__TO_STRINGVERTICES_H__

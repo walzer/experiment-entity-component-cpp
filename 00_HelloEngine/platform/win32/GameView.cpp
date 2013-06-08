@@ -115,7 +115,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     int wmId, wmEvent;
     PAINTSTRUCT ps;
     HDC hdc;
-    CCLOGI("WndProc message: %d(%x)\n", message, message);
+    CC_LOGI("WndProc message: %d(%x)\n", message, message);
     switch (message)
     {
     case WM_COMMAND:

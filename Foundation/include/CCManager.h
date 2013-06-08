@@ -1,5 +1,5 @@
-#ifndef __FOUNDATION__CCMANAGER_H__
-#define __FOUNDATION__CCMANAGER_H__
+#ifndef __FOUNDATION_CC__TO_STRINGMANAGER_H__
+#define __FOUNDATION_CC__TO_STRINGMANAGER_H__
 
 class CCContext;
 
@@ -16,4 +16,4 @@ public:
     virtual void done(CCContext *) = 0;
 };
 
-#endif  // __FOUNDATION__CCMANAGER_H__
+#endif  // __FOUNDATION_CC__TO_STRINGMANAGER_H__

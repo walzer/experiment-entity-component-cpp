@@ -7,14 +7,14 @@
 
 using namespace std;
 
-#define IMPLEMENT_CLASS     CCEntityManager
+#define IMPL_CLASS     CCEntityManager
 
-IMPLEMENT_FUNCTION(~CCEntityManager)
+IMPL_FUNCTION(~CCEntityManager)
 
 }
 
 CCDelegateHandler updateHandler;
-bool IMPLEMENT_FUNCTION(init, CCContext * ctx)
+bool IMPL_FUNCTION(init, CCContext * ctx)
     _context = ctx;
     updateHandler = ctx->updateEvent.add(bind(
         &CCEntityManager::update, 
@@ -23,12 +23,12 @@ bool IMPLEMENT_FUNCTION(init, CCContext * ctx)
     return true;
 }
 
-void IMPLEMENT_FUNCTION(done, CCContext * ctx)
+void IMPL_FUNCTION(done, CCContext * ctx)
     ctx->updateEvent.remove(updateHandler);
     _entities.clear();
 }
 
-void IMPLEMENT_FUNCTION(update, float dt)
+void IMPL_FUNCTION(update, float dt)
     for_each(_entities.begin(), _entities.end(),
     [dt](const shared_ptr<CCEntity>& ptr)
     {
@@ -36,13 +36,13 @@ void IMPLEMENT_FUNCTION(update, float dt)
     });
 }
 
-void IMPLEMENT_FUNCTION(add, const EntityPtr& entity)
+void IMPL_FUNCTION(add, const EntityPtr& entity)
     _entities.push_back(entity);
     entity->setContext(_context);
     entity->init();
 }
 
-const CCEntityManager::EntityPtr& IMPLEMENT_FUNCTION(find, const CCString& name)
+const CCEntityManager::EntityPtr& IMPL_FUNCTION(find, const String& name)
     for (auto it = _entities.begin(); it != _entities.end(); ++it)
     {
         if ((*it)->getName() == name)
@@ -53,7 +53,7 @@ const CCEntityManager::EntityPtr& IMPLEMENT_FUNCTION(find, const CCString& name)
     return CCEntity::NullPtr;
 }
 
-void IMPLEMENT_FUNCTION(remove, const CCEntityManager::EntityPtr& entity)
+void IMPL_FUNCTION(remove, const CCEntityManager::EntityPtr& entity)
     for (auto it = _entities.begin(); it != _entities.end(); ++it)
     {
         if ((*it) == entity)

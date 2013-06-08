@@ -24,7 +24,7 @@ shared_ptr<CCEntity> createSprite(CCContext *context, CCEntity *parent)
     return ret;
 }
 
-shared_ptr<CCEntity> createScene(CCContext *context, const CCString &def)
+shared_ptr<CCEntity> createScene(CCContext *context, const String &def)
 {
     shared_ptr<CCEntity> ret;
     if (def == "GameScene")
@@ -62,7 +62,7 @@ shared_ptr<CCEntity> createScene(CCContext *context, const CCString &def)
     return ret;
 }
 
-::std::shared_ptr<CCEntity> createPlayer(CCContext *context, const CCString &def, const ::std::shared_ptr<CCEntity> &parent)
+::std::shared_ptr<CCEntity> createPlayer(CCContext *context, const String &def, const ::std::shared_ptr<CCEntity> &parent)
 {
     shared_ptr<CCEntity> ret;
     if (def == "Player1")

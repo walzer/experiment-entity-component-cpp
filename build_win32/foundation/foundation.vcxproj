@@ -13,20 +13,22 @@
   <ItemGroup>
     <ClInclude Include="..\..\foundation\include\CCComponent.h" />
     <ClInclude Include="..\..\foundation\include\CCContext.h" />
-    <ClInclude Include="..\..\foundation\include\CCDelegate.h" />
+    <ClInclude Include="..\..\foundation\include\Delegate.h" />
     <ClInclude Include="..\..\foundation\include\CCEntity.h" />
     <ClInclude Include="..\..\foundation\include\CCEntityManager.h" />
-    <ClInclude Include="..\..\foundation\include\CCEvent.h" />
+    <ClInclude Include="..\..\foundation\include\Event.h" />
     <ClInclude Include="..\..\foundation\include\CCFoundation.h" />
-    <ClInclude Include="..\..\foundation\include\CCFundationMacrosH.h" />
+    <ClInclude Include="..\..\foundation\include\FundationMacrosH.h" />
     <ClInclude Include="..\..\foundation\include\CCManager.h" />
     <ClInclude Include="..\..\foundation\include\CCRuntime.h" />
-    <ClInclude Include="..\..\foundation\include\CCString.h" />
+    <ClInclude Include="..\..\foundation\include\String.h" />
     <ClInclude Include="..\..\foundation\include\CCSurface.h" />
     <ClInclude Include="..\..\foundation\include\CCTimeManager.h" />
     <ClInclude Include="..\..\foundation\include\CCVector.h" />
     <ClInclude Include="..\..\foundation\include\CCVertices.h" />
-    <ClInclude Include="..\..\foundation\src\CCFundationMacrosCPP.h" />
+    <ClInclude Include="..\..\foundation\include\CppStl.h" />
+    <ClInclude Include="..\..\foundation\include\Uncopyable.h" />
+    <ClInclude Include="..\..\foundation\src\FundationMacrosCPP.h" />
     <ClInclude Include="..\..\foundation\src\pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -34,7 +36,7 @@
     <ClCompile Include="..\..\foundation\src\CCContext.cpp" />
     <ClCompile Include="..\..\foundation\src\CCEntity.cpp" />
     <ClCompile Include="..\..\foundation\src\CCEntityManager.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCEvent.cpp" />
+    <ClCompile Include="..\..\foundation\src\Event.cpp" />
     <ClCompile Include="..\..\foundation\src\CCManager.cpp" />
     <ClCompile Include="..\..\foundation\src\CCRuntime.cpp" />
     <ClCompile Include="..\..\foundation\src\CCSurface.cpp" />

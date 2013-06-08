@@ -1,5 +1,5 @@
-#ifndef __FOUNDATION__CCUPDATE_COMPONENT_H__
-#define __FOUNDATION__CCUPDATE_COMPONENT_H__
+#ifndef __FOUNDATION_CC__TO_STRINGUPDATE_COMPONENT_H__
+#define __FOUNDATION_CC__TO_STRINGUPDATE_COMPONENT_H__
 
 #include "CCComponent.h"
 
@@ -18,4 +18,4 @@ protected:
     CCDelegateHandler updateEventHandler;
 };
 
-#endif  // __FOUNDATION__CCUPDATE_COMPONENT_H__
+#endif  // __FOUNDATION_CC__TO_STRINGUPDATE_COMPONENT_H__

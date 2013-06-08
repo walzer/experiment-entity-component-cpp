@@ -2,8 +2,8 @@
 
 #include "CCTimeManager.h"
 
-#define IMPLEMENT_CLASS     CCTimeManager
+#define IMPL_CLASS     CCTimeManager
 
-float IMPLEMENT_FUNCTION(getDeltaTime)
+float IMPL_FUNCTION(getDeltaTime)
     return 0.1f;
 }

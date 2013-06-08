@@ -1,5 +1,5 @@
-#ifndef __FOUNDATION__CCRENDER_COMPONENT_H__
-#define __FOUNDATION__CCRENDER_COMPONENT_H__
+#ifndef __FOUNDATION_CC__TO_STRINGRENDER_COMPONENT_H__
+#define __FOUNDATION_CC__TO_STRINGRENDER_COMPONENT_H__
 
 #include "CCFoundation.h"
 
@@ -33,4 +33,4 @@ protected:
     ::std::shared_ptr<CCVertices> _vertices;
 };
 
-#endif  // __FOUNDATION__CCRENDER_COMPONENT_H__
+#endif  // __FOUNDATION_CC__TO_STRINGRENDER_COMPONENT_H__

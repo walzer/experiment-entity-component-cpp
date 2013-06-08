@@ -4,7 +4,7 @@
 
 using namespace std;
 
-#define IMPLEMENT_CLASS MoveComponent
+#define IMPL_CLASS MoveComponent
 CCCOMPONENT_REGISTER_CREATOR;
 
 bool MoveComponent::init(CCContext *context)
@@ -56,7 +56,7 @@ void MoveComponent::doMove(float dt)
     {
         _step.y = distanceY;
     }
-    CCLOGI("step(%f, %f)\n", _step.x, _step.y);
+    CC_LOGI("step(%f, %f)\n", _step.x, _step.y);
     position.x += _step.x;
     position.y += _step.y;
     _setPosition(position);
@@ -66,4 +66,4 @@ void MoveComponent::doMove(float dt)
     }
 }
 
-#undef IMPLEMENT_CLASS
+#undef IMPL_CLASS

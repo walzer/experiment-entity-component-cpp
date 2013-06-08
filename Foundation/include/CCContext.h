@@ -1,12 +1,10 @@
-#ifndef __FOUNDATION__CCCONTEXT_H__
-#define __FOUNDATION__CCCONTEXT_H__
+#ifndef __FOUNDATION__CC_CONTEXT_H__
+#define __FOUNDATION__CC_CONTEXT_H__
 
-#include <map>
-#include <memory>
-#include <vector>
+#include "CppStl.h"
 
-#include "CCEvent.h"
-#include "CCString.h"
+#include "Event.h"
+#include "String.h"
 
 class CCManager;
 class CCSurface;
@@ -28,20 +26,20 @@ public:
     virtual bool init();
     virtual void done();
 
-    ThisType&   add(ManagerPtr manager, const CCString& name);
-    CCManager*  get(const CCString& name);
+    ThisType&   add(ManagerPtr manager, const String& name);
+    CCManager*  get(const String& name);
     template <typename ManagerType>
-    ManagerType *get(const CCString& name)
+    ManagerType *get(const String& name)
     {
         return static_cast<ManagerType *>(get(name));
     }
     ThisType&   setTimeManager(::std::shared_ptr<CCTimeManager> tm);
     CCTimeManager* getTimeManager();
 
-    CCEvent<void (float)> updateEvent;
-    CCEvent<void()> preDrawEvent;
-    CCEvent<void()> drawEvent;
-    CCEvent<void()> postDrawEvent;
+    Event<void (float)> updateEvent;
+    Event<void()> preDrawEvent;
+    Event<void()> drawEvent;
+    Event<void()> postDrawEvent;
 
     void setSurface(const ::std::shared_ptr<CCSurface>& surface)
     {
@@ -55,8 +53,8 @@ public:
 private:
     ::std::shared_ptr<CCSurface> _surface;
     ::std::shared_ptr<CCTimeManager> _tm;
-    ::std::map<CCString, CCManager*> _nameMap;
+    ::std::map<String, CCManager*> _nameMap;
     ::std::vector<::std::shared_ptr<CCManager>> _managers;
 };
 
-#endif  // __FOUNDATION__CCCONTEXT_H__
+#endif  // __FOUNDATION__CC_CONTEXT_H__
