@@ -98,33 +98,11 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.h" />
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.h" />
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.h" />
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\MoveComponent.h" />
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.h" />
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.h" />
-    <ClInclude Include="..\..\00_HelloEngine\GameManager\CCRenderManager.h" />
-    <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h" />
-    <ClInclude Include="..\..\00_HelloEngine\Game\GameEntityFactory.h" />
-    <ClInclude Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.h" />
-    <ClInclude Include="..\..\00_HelloEngine\platform\win32\GameView.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\Resource.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\pch.h" />
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\MoveComponent.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\GameManager\CCRenderManager.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\Game\GameEntityFactory.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.cpp" />
-    <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp" />
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

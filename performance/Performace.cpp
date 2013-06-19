@@ -55,9 +55,10 @@ void profileFunction()
     static unsigned perfVertualMemFun;
     perfVertualMemFun = ProfileStart(perfVertualMemFun, "VertualMemFunction");
     TestVirtualMemberFunction test;
+    TestVirtualMemberFunctionBase * pTestBase = &test;
     for (unsigned i = 0; i < maxTimes; ++i)
     {
-        test.virtualMemberFunction();
+        pTestBase->virtualMemberFunction();
     }
     ProfileStop(perfVertualMemFun);
 

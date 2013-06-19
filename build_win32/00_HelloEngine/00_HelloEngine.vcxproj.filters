@@ -24,82 +24,16 @@
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\targetver.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\platform\win32\GameView.h">
-      <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.h">
-      <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\Game\GameApp.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameManager\CCRenderManager.h">
-      <Filter>GameManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.h">
-      <Filter>GameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\00_HelloEngine\platform\win32\pch.h">
       <Filter>platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\Game\GameEntityFactory.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.h">
-      <Filter>GameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.h">
-      <Filter>GameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.h">
-      <Filter>GameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\MoveComponent.h">
-      <Filter>GameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.h">
-      <Filter>GameComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\main.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\platform\win32\GameView.cpp">
-      <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\platform\win32\CCRuntime_win32.cpp">
-      <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\Game\GameApp.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameManager\CCRenderManager.cpp">
-      <Filter>GameManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCRenderComponent.cpp">
-      <Filter>GameComponent</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\00_HelloEngine\platform\win32\pch.cpp">
       <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\Game\GameEntityFactory.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCTransformComponent.cpp">
-      <Filter>GameComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\CCUpdateComponent.cpp">
-      <Filter>GameComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\SceneUpdateComponent.cpp">
-      <Filter>GameComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\MoveComponent.cpp">
-      <Filter>GameComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\00_HelloEngine\GameComponent\PlayerUpdateComponent.cpp">
-      <Filter>GameComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

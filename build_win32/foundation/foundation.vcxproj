@@ -21,7 +21,7 @@
     <ClInclude Include="..\..\foundation\include\FundationMacrosH.h" />
     <ClInclude Include="..\..\foundation\include\CCManager.h" />
     <ClInclude Include="..\..\foundation\include\CCRuntime.h" />
-    <ClInclude Include="..\..\foundation\include\String.h" />
+    <ClInclude Include="..\..\foundation\include\String.hpp" />
     <ClInclude Include="..\..\foundation\include\CCSurface.h" />
     <ClInclude Include="..\..\foundation\include\CCTimeManager.h" />
     <ClInclude Include="..\..\foundation\include\CCVector.h" />
@@ -32,17 +32,7 @@
     <ClInclude Include="..\..\foundation\src\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\foundation\src\CCComponent.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCContext.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCEntity.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCEntityManager.cpp" />
     <ClCompile Include="..\..\foundation\src\Event.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCManager.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCRuntime.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCSurface.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCTimeManager.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCVector.cpp" />
-    <ClCompile Include="..\..\foundation\src\CCVertices.cpp" />
     <ClCompile Include="..\..\foundation\src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>

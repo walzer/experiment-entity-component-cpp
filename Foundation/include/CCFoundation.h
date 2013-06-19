@@ -3,18 +3,19 @@
 
 #include "FundationMacrosH.h"
 
-#include "String.h"
-#include "CCVector.h"
-#include "CCVertices.h"
-
-#include "CCContext.h"
-
-#include "CCEntityManager.h"
-#include "CCTimeManager.h"
-
-#include "CCEntity.h"
-
-#include "CCRuntime.h"
-#include "CCSurface.h"
+//#include "String.hpp"
+#include "Event.h"
+//#include "CCVector.h"
+//#include "CCVertices.h"
+//
+//#include "CCContext.h"
+//
+//#include "CCEntityManager.h"
+//#include "CCTimeManager.h"
+//
+//#include "CCEntity.h"
+//
+//#include "CCRuntime.h"
+//#include "CCSurface.h"
 
 #endif  // __FOUNDATION__CC_FOUNDATION_H__

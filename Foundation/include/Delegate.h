@@ -8,6 +8,53 @@
 
 namespace cc {;
 
+class DelegateBase : public enable_shared_from_this<DelegateBase> {
+public:
+    void disable() {
+        _disabled = true;
+    }
+
+    bool disabled() const {
+        if (_disabled) {
+            return true;
+        }
+        if (any_of(_trackObjs.begin(), _trackObjs.end(), [](const weak_ptr<void> &o) { return o.expired(); })) {
+            _disabled = true;
+        }
+        return _disabled;
+    }
+
+    void track(const weak_ptr<void> &obj) {
+        _trackObjs.push_back(obj);
+    }
+
+    const void *getAddress() const {
+        return (_address) ? _address : this;
+    }
+protected:
+    DelegateBase() : _disabled(false), _address(nullptr) {}
+    DelegateBase(const void *addr) : _disabled(false), _address(addr) {}
+
+private:
+    mutable bool _disabled;
+    const void *_address;
+    vector<weak_ptr<void>> _trackObjs;
+};
+
+template <
+    typename FunctionType
+>
+class Delegate : public DelegateBase {
+public:
+    Delegate(const FunctionType &fun) : function(fun) {}
+    Delegate(const FunctionType &fun, const void *addr) : function(fun), DelegateBase(addr) {}
+
+    FunctionType function;
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 enum CCDelegateAtPosition : char
 {
     AT_BACK,

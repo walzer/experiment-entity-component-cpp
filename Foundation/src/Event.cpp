@@ -2,26 +2,80 @@
 
 #include "Event.h"
 
-namespace cc {;
-
 #define GLUE_VAR(n, var) var##n ( n )
+
+namespace cc {;
 
 using namespace std;
 
-CCDelegateHandler handler[5];
+struct EventFunctions {
+    EventFunctions(int i) : id(i){}
+    int id;
 
-template <typename EventType>
-void removeAll(EventType& event)
+    // void member functions
+    void vf() {
+        printf("call(%d) vf()\n", id);
+    }
+    void vfi(int i1) {
+        printf("call(%d) vfi(%d)\n", id, i1);
+    }
+    void vfii(int i1, int i2) {
+        printf("call(%d) vfii(%d, %d)\n", id, i1, i2);
+    }
+    void vfiii(int i1, int i2, int i3) {
+        printf("call(%d) vfiii(%d, %d, %d)\n", id, i1, i2, i3);
+    }
+    void vfiiii(int i1, int i2, int i3, int i4) {
+        printf("call(%d) vfiiii(%d, %d, %d, %d)\n", id, i1, i2, i3, i4);
+    }
+
+    // void functors
+    void operator () () {
+        printf("call(%d) operator()()\n", id);
+    }
+
+    // void static functions
+    static void svf() {
+        printf("call static svf()\n");
+    }
+
+    // bind functions
+    static function<void()> bindvf;
+} efs(1);
+
+function<void()> EventFunctions::bindvf = bind(&EventFunctions::vf, &efs);
+
+void eventTest()
+{
+    printf("\nTest event begin:\n\n");
+
+    Event<void()> ev;
+    printf("test forward call\n");
+    ev.pushBack(EventFunctions::bindvf);
+    ev.pushBack(EventFunctions::svf);
+    //ev.pushBack(&vf1, vf1);
+    //ev.pushBack(&VoidFunction::func, &vf1);
+    //ev.pushBack(&VoidFunction::func, make_shared<VoidFunction>(6));
+
+    printf("\nTest event end!\n\n");
+}
+
+DelegateHandler handler[5];
+
+template <typename Event2Type>
+void removeAll(Event2Type& event)
 {
     printf("removeAll\n\n");
     for(int i = 0; i < 5; ++i) event.remove(handler[i]); 
 }
 
-void CCEventTest()
+void CCEvent2Test()
 {
+    eventTest();
+
     printf("%d %s\n", __LINE__, __FUNCTION__);
 
-    Event<void()> event;
+    Event2<void()> event;
     struct VoidFunction
     {
         VoidFunction(int i) : id(i){}
@@ -90,7 +144,7 @@ void CCEventTest()
     removeAll(event);
 
     ///////////////////////////////////////////////////////////////
-    Event<int()> event1;
+    Event2<int()> event1;
     struct IntFunction
     {
         IntFunction(int i) : id(i){}
@@ -114,7 +168,7 @@ void CCEventTest()
     printf("event1 return %d\n", ret);
     removeAll(event1);
 
-    Event<int(), int, std::plus<int>> event2;
+    Event2<int(), int, std::plus<int>> event2;
     printf("test combiner for int function call\n");
     handler[0] = event2.add(intf1);
     handler[1] = event2.add(intf2);
@@ -130,7 +184,7 @@ void CCEventTest()
         bool operator()(int v) { return (v ==3) ?  true : false; }
     };
 
-    Event<int(), int, std::plus<int>, Equal3> event3;
+    Event2<int(), int, std::plus<int>, Equal3> event3;
     printf("test invoke interrupt for int function call\n");
     handler[0] = event3.add(intf1);
     handler[1] = event3.add(intf2);
@@ -141,7 +195,7 @@ void CCEventTest()
     printf("event3 return %d\n", ret);
     removeAll(event3);
 
-    Event<void(int)> event4;
+    Event2<void(int)> event4;
     struct VoidFunctionInt
     {
         VoidFunctionInt(int i) : id(i){}
@@ -163,7 +217,7 @@ void CCEventTest()
     event4(100);
     removeAll(event4);
 
-    Event<int(int)> event5;
+    Event2<int(int)> event5;
     struct IntFunctionInt
     {
         IntFunctionInt(int i) : id(i){}
@@ -186,7 +240,7 @@ void CCEventTest()
     printf(" int(int) event return : %d\n", event5(100));
     removeAll(event5);
 
-    Event<void(int, int)> event6;
+    Event2<void(int, int)> event6;
     struct VoidFunctionIntInt
     {
         VoidFunctionIntInt(int i) : id(i){}
@@ -208,7 +262,7 @@ void CCEventTest()
     event6(100, 200);
     removeAll(event6);
 
-    Event<int(int, int)> event7;
+    Event2<int(int, int)> event7;
     struct IntFunctionIntInt
     {
         IntFunctionIntInt(int i) : id(i){}

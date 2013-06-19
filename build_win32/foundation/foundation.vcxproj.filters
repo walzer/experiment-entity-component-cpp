@@ -65,41 +65,11 @@
     <ClInclude Include="..\..\foundation\src\FundationMacrosCPP.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\foundation\include\String.h">
+    <ClInclude Include="..\..\foundation\include\String.hpp">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\foundation\src\CCComponent.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCContext.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCEntity.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCEntityManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCRuntime.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCSurface.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCTimeManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCVector.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\CCVertices.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\foundation\src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
