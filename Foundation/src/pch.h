@@ -5,4 +5,6 @@
 
 #include "FundationMacrosCPP.h"
 
+#include "profile.h"
+
 #endif  // __FOUNDATION_PCH_H__

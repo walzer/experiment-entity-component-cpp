@@ -25,7 +25,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     FILE * console = nullptr;
     freopen_s(&console, "CONOUT$", "w", stdout);
 
+    ProfileInit();
     eventTest();
+    event2Test();
     //CCComponentTest();
 
     //MSG msg;
@@ -92,6 +94,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     //runtime.done();
     //game.done();
 
+    ProfileUnInit();
     FreeConsole();
     fclose(console);
     //return (int) msg.wParam;

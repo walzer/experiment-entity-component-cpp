@@ -68,12 +68,24 @@
     <ClInclude Include="..\..\foundation\include\String.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Foundation\include\Event2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\Delegate2.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\foundation\src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\foundation\src\Event.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Foundation\src\profile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\Event2.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,12 +15,6 @@
 #include <type_traits>      // (since C++11)	Compile-time type information
 #include <bitset>           // std::bitset class template
 #include <functional>       // Function objects, designed for use with the standard algorithms
-namespace cc {;
-using ::std::bind;
-using ::std::function;
-using ::std::mem_fn;
-using namespace ::std::placeholders;
-}   // namespace cc
 #include <utility>          // Various utility components
 #include <ctime>            // C-style time/date utilites
 #include <chrono>           // (since C++11)	 C++ time utilites
@@ -32,18 +26,6 @@ using namespace ::std::placeholders;
 /*  Dynamic memory management   */
 #include <new>              // Low-level memory management utilities
 #include <memory>           // Higher level memory management utilities
-namespace cc {;
-using ::std::shared_ptr;
-using ::std::unique_ptr;
-using ::std::weak_ptr;
-using ::std::make_shared;
-using ::std::allocate_shared;
-using ::std::static_pointer_cast;
-using ::std::dynamic_pointer_cast;
-using ::std::const_pointer_cast;
-using ::std::owner_less;
-using ::std::enable_shared_from_this;
-}   // namespace cc
 
 /*  Numeric limits  */
 #include <climits>          // limits of integral types
@@ -72,34 +54,18 @@ using ::std::enable_shared_from_this;
 /*  Containers library  */
 #include <array>            // (since C++11)	std::array container
 #include <vector>           // std::vector container
-namespace cc {;
-using ::std::vector;
-}   // namespace cc
 #include <deque>            // std::deque container
 #include <list>             // std::list container
-namespace cc {;
-using ::std::list;
-}   // namespace cc
 #include <forward_list>     // (since C++11)	std::forward_list container
-namespace cc {;
-using ::std::forward_list;
-}   // namespace cc
 #include <set>              // std::set and std::multiset associative containers
 #include <map>              // std::map and std::multimap associative containers
 #include <unordered_set>    // (since C++11)	std::unordered_set and std::unordered_multiset unordered associative containers
 #include <unordered_map>    // (since C++11)	std::unordered_map and std::unordered_multimap unordered associative containers
-namespace cc {;
-using ::std::unordered_map;
-using ::std::unordered_multimap;
-}   // namespace cc
 #include <stack>            // std::stack container adaptor
 #include <queue>            // std::queue and std::priority_queue container adaptors
 
 /*  Algorithms library  */
 #include <algorithm>        // Algorithms that operate on containers
-namespace cc {;
-using ::std::any_of;
-}   // namespace cc
 /*  Iterators library   */
 #include <iterator>         // Container iterators
 
@@ -142,5 +108,9 @@ using ::std::any_of;
 #include <mutex>            // (since C++11)	 mutual exclusion primitives
 #include <future>           // (since C++11)	 primitives for asynchronous computations
 #include <condition_variable>   // (since C++11)	thread waiting conditions
+
+namespace cc {;
+using namespace std;
+}   // namespace cc
 
 #endif  // __CPP_STL_H__

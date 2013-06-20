@@ -5,6 +5,7 @@
 
 //#include "String.hpp"
 #include "Event.h"
+#include "Event2.h"
 //#include "CCVector.h"
 //#include "CCVertices.h"
 //
@@ -17,5 +18,7 @@
 //
 //#include "CCRuntime.h"
 //#include "CCSurface.h"
+
+#include "profile.h"
 
 #endif  // __FOUNDATION__CC_FOUNDATION_H__
