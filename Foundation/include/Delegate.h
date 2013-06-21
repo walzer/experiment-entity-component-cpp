@@ -33,11 +33,10 @@ public:
     }
 protected:
     DelegateBase() : _disabled(false), _address(nullptr) {}
-    DelegateBase(const void *addr) : _disabled(false), _address(addr) {}
 
+    const void *_address;
 private:
     mutable bool _disabled;
-    const void *_address;
     vector<weak_ptr<void>> _trackObjs;
 };
 
@@ -46,9 +45,9 @@ template <
 >
 class Delegate : public DelegateBase {
 public:
-    Delegate(const FunctionType &fun) : function(fun) {}
-    Delegate(const FunctionType &fun, const void *addr) : function(fun), DelegateBase(addr) {}
-
+    void setAddress(const void *address) {
+        _address = address;
+    }
     FunctionType function;
 };
 

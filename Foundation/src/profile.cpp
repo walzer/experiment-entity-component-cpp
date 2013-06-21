@@ -314,7 +314,6 @@ void ProfileUnInit()
     FILE * pf = fopen(LOG_FILE_PATH, "a+");
     if (! pf)
     {
-        perfLog("Can't open file(%s)", LOG_FILE_PATH);
         return;
     }
 

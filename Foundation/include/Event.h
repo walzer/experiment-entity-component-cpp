@@ -28,34 +28,46 @@ public:
     //}
 
     void pushBack(const FunctionType &function) {
-        _delegates.emplace_back(function);
-        return _afterInsert((++_delegates.rbegin()).base());
+        _delegates.push_back(DelegateType());
+        auto iter = (++_delegates.rbegin()).base();
+        iter->function = function;
+        return _afterInsert(iter);
     }
 
     void pushBack(const FunctionType &function, const void *pUniqueAddress) {
         assert(pUniqueAddress);
-        _delegates.emplace_back(function, pUniqueAddress);
-        return _afterInsert((++_delegates.rbegin()).base());
+        _delegates.push_back(DelegateType());
+        auto iter = (++_delegates.rbegin()).base();
+        iter->function = function;
+        iter->setAddress(pUniqueAddress);
+        return _afterInsert(iter);
     }
 
     void pushBack(Signature *pfn) {
         assert(pfn);
-        _delegates.emplace_back(FunctionType(pfn), pfn);
-        return _afterInsert((++_delegates.rbegin()).base());
+        _delegates.push_back(DelegateType());
+        auto iter = (++_delegates.rbegin()).base();
+        iter->function = FunctionType(pfn);
+        iter->setAddress((const void *)pfn);
+        return _afterInsert(iter);
     }
 
     template <
         typename TargetType
     >
     void pushBack(ResultType (TargetType:: *pmemfn)(), TargetType *target) {
-        _delegates.emplace_back(bind(pmemfn, target), target);
-        return _afterInsert((++_delegates.rbegin()).base());
+        assert(pmemfn && target);
+        _delegates.push_back(DelegateType());
+        auto iter = (++_delegates.rbegin()).base();
+        iter->function = bind(pmemfn, target);
+        iter->setAddress(target);
+        return _afterInsert(iter);
     }
 
-    template <
-        typename TargetType
-    >
-    void pushBack(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target);
+    //template <
+    //    typename TargetType
+    //>
+    //void pushBack(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target);
 
     //DelegateHandler pushFront(void *pfn, const FunctionType &function);
     void find(void *address);
@@ -83,7 +95,7 @@ private:
     friend class TestEvent<Signature, Combiner>;
 
     void _afterInsert(const DelegateIteratorType &iter) {
-        _address.emplace(iter->getAddress(), iter);
+        _address.insert(make_pair(iter->getAddress(), iter));
     }
 
     void _removeDelegate(const DelegateIteratorType &iter) {

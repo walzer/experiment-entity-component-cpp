@@ -15,21 +15,22 @@ template <
 class TestEvent {
 public:
     typedef typename function<Signature>::result_type ResultType;
+    typedef typename Event<Signature>::DelegateType DelegateType;
 
     ResultType raiseWithoutCheck(const Event<Signature> &e) {
-        for_each(e._delegates.begin(), e._delegates.end(), [](const Event<Signature>::DelegateType &delegate) {
+        for_each(e._delegates.begin(), e._delegates.end(), [](const DelegateType &delegate) {
             delegate.function();
         });
         return ResultType();
     }
     ResultType raiseWithCheck(Event<Signature> &e) {
-        for_each(e._delegates.begin(), e._delegates.end(), [](const Event<Signature>::DelegateType &delegate) {
+        for_each(e._delegates.begin(), e._delegates.end(), [](const DelegateType &delegate) {
             if (delegate.disabled()) {
                 return;
             }
             delegate.function();
         });
-        remove_if(e._delegates.begin(), e._delegates.end(), [&e](const Event<Signature>::DelegateType &delegate) {
+        remove_if(e._delegates.begin(), e._delegates.end(), [&e](const DelegateType &delegate) {
             if (delegate.disabled()) {
                 e._address.erase(delegate.getAddress());
                 return true;
@@ -50,6 +51,10 @@ public:
             delegate.function();
             ++iter;
         }
+        struct Result {
+            ResultType getValue() { return ResultType(); }
+        } result;
+        return result.getValue();
     }
 };
 
