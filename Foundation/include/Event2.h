@@ -41,7 +41,7 @@ public:
     typedef Event2<Signature, GroupType> ThisType;
     typedef ::std::function<Signature> DelegateFunction;
     typedef typename DelegateFunction::result_type  ResultType;
-    typedef ::std::list<::std::shared_ptr<CCDelegateBase>> DelegateList;
+    typedef ::std::list< ::std::shared_ptr<CCDelegateBase> > DelegateList;
     typedef CCDelegate<DelegateFunction, GroupType, DelegateList::iterator> Delegate;
     
     Event2();

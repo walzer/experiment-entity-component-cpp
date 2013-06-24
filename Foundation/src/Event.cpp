@@ -8,64 +8,13 @@ namespace cc {;
 
 using namespace std;
 
-template <
-    typename Signature,
-    typename Combiner = _UseLastValue
->
-class TestEvent {
-public:
-    typedef typename function<Signature>::result_type ResultType;
-    typedef typename Event<Signature>::DelegateType DelegateType;
-
-    ResultType raiseWithoutCheck(const Event<Signature> &e) {
-        for_each(e._delegates.begin(), e._delegates.end(), [](const DelegateType &delegate) {
-            delegate.function();
-        });
-        return ResultType();
-    }
-    ResultType raiseWithCheck(Event<Signature> &e) {
-        for_each(e._delegates.begin(), e._delegates.end(), [](const DelegateType &delegate) {
-            if (delegate.disabled()) {
-                return;
-            }
-            delegate.function();
-        });
-        remove_if(e._delegates.begin(), e._delegates.end(), [&e](const DelegateType &delegate) {
-            if (delegate.disabled()) {
-                e._address.erase(delegate.getAddress());
-                return true;
-            }
-            return false;
-        });
-        return ResultType();
-    }
-    ResultType raiseWithCheck2(Event<Signature> &e) {
-        auto end = e._delegates.end();
-        for (auto iter = e._delegates.begin(); iter != end; ) {
-            typename Event<Signature>::DelegateType &delegate=*iter;
-            if (delegate.disabled()) {
-                e._address.erase(iter->getAddress());
-                e._delegates.erase(iter++);
-                continue;
-            }
-            delegate.function();
-            ++iter;
-        }
-        struct Result {
-            ResultType getValue() { return ResultType(); }
-        } result;
-        return result.getValue();
-    }
-};
-
 void eventProfile() {
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
 
     static const int MAX_NUM = 10000;
     unique_ptr<char[]> address(new char[MAX_NUM]);
 
-    Event<void()> ve;
-    TestEvent<void()> tve;
+    Event<void(), _UseLastValue, int, less<int>> ve;
     function<void()> vDoSomeThing = [](){
         static unsigned profileId;
         profileId = ProfileStart(profileId, "vDoSomeThing");
@@ -77,20 +26,9 @@ void eventProfile() {
     REPEAT{
         ProfileFunction(ve.raise(), "ve::raise()");
     }
-    REPEAT{
-        ProfileFunction(tve.raiseWithoutCheck(ve), "tve::raiseWithoutCheck");
-    }
-    REPEAT{
-        ProfileFunction(tve.raiseWithCheck(ve), "tve::raiseWithCheck");
-    }
-    REPEAT{
-        ProfileFunction(tve.raiseWithCheck2(ve), "tve::raiseWithCheck2");
-    }
-
     ve.clear();
     ////////////////////////////////////////////////////////////////////////////
-    Event<int()> ie;
-    TestEvent<int()> tie;
+    Event<int(), _UseLastValue, int, less<int>> ie;
     function<int()> iDoSomeThing = [](){
         static unsigned profileId;
         profileId = ProfileStart(profileId, "iDoSomeThing");
@@ -105,18 +43,6 @@ void eventProfile() {
         ProfileFunction(reti = ie.raise(), "ie::raise()");
     }
     cout << "ie::raise() return: " << reti << endl;
-    REPEAT{
-        ProfileFunction(reti = tie.raiseWithoutCheck(ie), "tie::raiseWithoutCheck");
-    }
-    cout << "tie::raiseWithoutCheck() return: " << reti << endl;
-    REPEAT{
-        ProfileFunction(reti = tie.raiseWithCheck(ie), "tie::raiseWithCheck");
-    }
-    cout << "tie::raiseWithCheck() return: " << reti << endl;
-    REPEAT{
-        ProfileFunction(reti = tie.raiseWithCheck2(ie), "tie::raiseWithCheck2");
-    }
-    cout << "tie::raiseWithCheck2() return: " << reti << endl;
 
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
 }
@@ -155,24 +81,82 @@ struct EventFunctions {
 
     // bind functions
     static function<void()> bindvf;
-} efs(1);
+} efs1(1), efs2(2), efs3(3), efs4(4), efs5(5), efs6(6), efs7(7), efs8(8), efs9(9), efs10(10);
 
-function<void()> EventFunctions::bindvf = bind(&EventFunctions::vf, &efs);
+function<void()> EventFunctions::bindvf = bind(&EventFunctions::vf, &efs1);
 
 void eventTest()
 {
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
 
-    Event<void()> ev;
-    printf("test forward call\n");
+    Event<void(), _UseLastValue, int, less<int>> ev;
+    printf("test varing insert delegate\n");
     ev.pushBack(EventFunctions::bindvf);
     ev.pushBack(EventFunctions::bindvf, &EventFunctions::bindvf);
     ev.pushBack(EventFunctions::svf);
-    ev.pushBack(&EventFunctions::vf, &efs);
+    ev.pushBack(&EventFunctions::vf, &efs1);
     //ev.pushBack(&VoidFunction::func, make_shared<VoidFunction>(6));
 
     ev.raise();
+    ev.clear();
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
+
+    printf("test pushback order(8-1):\n");
+    ev.pushBack(&EventFunctions::vf, &efs8);
+    ev.pushBack(&EventFunctions::vf, &efs7);
+    //ev.pushBack(&EventFunctions::vf, &efs1);
+
+    ev.pushBack(3, &EventFunctions::vf, &efs6);
+    ev.pushBack(3, &EventFunctions::vf, &efs5);
+    ev.pushBack(2, &EventFunctions::vf, &efs4);
+    ev.pushBack(2, &EventFunctions::vf, &efs3);
+    ev.pushBack(1, &EventFunctions::vf, &efs2);
+    ev.pushBack(1, &EventFunctions::vf, &efs1);
+
+    ev.raise(); // should output 2 1 4 3 6 5 8 7
+    ev.clear();
+
+    printf("test pushfront order(1-8):\n");
+    ev.pushFront(&EventFunctions::vf, &efs1);
+    ev.pushFront(&EventFunctions::vf, &efs2);
+    //ev.pushBack(&EventFunctions::vf, &efs1);
+
+    ev.pushFront(1, &EventFunctions::vf, &efs3);
+    ev.pushFront(1, &EventFunctions::vf, &efs4);
+    ev.pushFront(2, &EventFunctions::vf, &efs5);
+    ev.pushFront(2, &EventFunctions::vf, &efs6);
+    ev.pushFront(3, &EventFunctions::vf, &efs7);
+    ev.pushFront(3, &EventFunctions::vf, &efs8);
+
+    ev.raise(); // shoud output 2 1 4 3 6 5 8 7
+    ev.clear();
+
+    printf("test pushback and front(GbUbUb GfUfUf Gb:123 456 7):\n");
+    ev.pushBack(0, &EventFunctions::vf, &efs1);
+    ev.pushBack(&EventFunctions::vf, &efs2);
+    ev.pushBack(&EventFunctions::vf, &efs3);
+
+    ev.pushFront(0, &EventFunctions::vf, &efs4);
+    ev.pushFront(&EventFunctions::vf, &efs5);
+    ev.pushFront(&EventFunctions::vf, &efs6);
+
+    ev.pushBack(0, &EventFunctions::vf, &efs7);
+
+    ev.raise(); // should output 6 5 4 1 7 2 3
+    ev.clear();
+
+    {
+        Event<void(), _UseLastValue, int, greater<int>> ev;
+        printf("test group compare by greater (1-5):\n");
+        ev.pushFront(&EventFunctions::vf, &efs1);
+        ev.pushFront(2, &EventFunctions::vf, &efs2);
+        ev.pushBack(2, &EventFunctions::vf, &efs3);
+        ev.pushBack(1, &EventFunctions::vf, &efs4);
+        ev.pushBack(&EventFunctions::vf, &efs5);
+
+        ev.raise(); // should output 1 2 3 4 5
+        ev.clear();
+    }
     eventProfile();
 }
 

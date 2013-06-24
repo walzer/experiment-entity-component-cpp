@@ -40,8 +40,42 @@ private:
     vector<weak_ptr<void>> _trackObjs;
 };
 
+enum class _DelegateCategory {
+    AT_FRONT,
+    GROUPED,
+    AT_BACK
+};
+
+template <typename Group>
+struct _DelegateGroupKey {
+    typedef pair<_DelegateCategory, Group> type;
+};
+
 template <
-    typename FunctionType
+    typename Group, 
+    typename GroupCompare
+>
+class _DelegateGroupKeyLess {
+public:
+    _DelegateGroupKeyLess() {}
+
+    _DelegateGroupKeyLess(const GroupCompare &compare)
+        : _compare(compare) {}
+
+    bool operator ()(
+        const typename _DelegateGroupKey<Group>::type &key1,
+        const typename _DelegateGroupKey<Group>::type &key2
+    ) {
+        if (key1.first != key2.first ) return key1.first < key2.first;
+        return _compare(key1.second, key2.second);
+    }
+private:
+    GroupCompare _compare;
+};
+
+template <
+    typename FunctionType,
+    typename GroupKey
 >
 class Delegate : public DelegateBase {
 public:
@@ -49,6 +83,7 @@ public:
         _address = address;
     }
     FunctionType function;
+    GroupKey groupKey;
 };
 
 class _UseLastValue
