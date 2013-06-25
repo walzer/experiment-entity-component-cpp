@@ -21,12 +21,12 @@ void eventProfile() {
         ProfileStop(profileId);
     };
     for (int i = 0; i < MAX_NUM; ++i) {
-        ve.pushBack(vDoSomeThing, address.get() + i);
+        ve.push(vDoSomeThing, address.get() + i);
     }
     REPEAT{
         ProfileFunction(ve.raise(), "ve::raise()");
     }
-    ve.clear();
+    ve.removeAll();
     ////////////////////////////////////////////////////////////////////////////
     Event<int(), _UseLastValue, int, less<int>> ie;
     function<int()> iDoSomeThing = [](){
@@ -37,7 +37,7 @@ void eventProfile() {
     };
     int reti;
     for (int i = 0; i < MAX_NUM; ++i) {
-        ie.pushBack(iDoSomeThing, address.get() + i);
+        ie.push(iDoSomeThing, address.get() + i);
     }
     REPEAT{
         ProfileFunction(reti = ie.raise(), "ie::raise()");
@@ -73,7 +73,7 @@ struct EventFunctions {
     STATIC_FN(int, sifn)
 
     // bind functions
-    static void tobindvfn() { printf("call(%d) bindvfn()\n"); }
+    static void tobindvfn() { printf("call bindvfn()\n"); }
     static function<void()> bindvfn;
 } efs1(1), efs2(2), efs3(3), efs4(4), efs5(5), efs6(6), efs7(7), efs8(8), efs9(9), efs10(10);
 
@@ -85,81 +85,81 @@ void eventTest()
 
     Event<void(), _UseLastValue, int, less<int>> ev;
     printf("test varing insert delegate\n");
-    ev.pushBack(EventFunctions::bindvfn);
-    ev.pushBack(EventFunctions::bindvfn, &EventFunctions::bindvfn);
-    ev.pushBack(EventFunctions::svfn);
-    ev.pushBack(&EventFunctions::vfn, &efs1);
-    //ev.pushBack(&VoidFunction::func, make_shared<VoidFunction>(6));
+    ev.push(EventFunctions::bindvfn);
+    ev.push(EventFunctions::bindvfn, &EventFunctions::bindvfn);
+    ev.push(EventFunctions::svfn);
+    ev.push(&EventFunctions::vfn, &efs1);
+    //ev.push(&VoidFunction::func, make_shared<VoidFunction>(6));
 
     ev.raise();
-    ev.clear();
+    ev.removeAll();
 
-    printf("test pushback order(8-1):\n");
-    ev.pushBack(&EventFunctions::vfn, &efs8);
-    ev.pushBack(&EventFunctions::vfn, &efs7);
-    //ev.pushBack(&EventFunctions::vfn, &efs1);
+    printf("test push order(8-1):\n");
+    ev.push(&EventFunctions::vfn, &efs8);
+    ev.push(&EventFunctions::vfn, &efs7);
+    //ev.push(&EventFunctions::vfn, &efs1);
 
-    ev.pushBack(3, &EventFunctions::vfn, &efs6);
-    ev.pushBack(3, &EventFunctions::vfn, &efs5);
-    ev.pushBack(2, &EventFunctions::vfn, &efs4);
-    ev.pushBack(2, &EventFunctions::vfn, &efs3);
-    ev.pushBack(1, &EventFunctions::vfn, &efs2);
-    ev.pushBack(1, &EventFunctions::vfn, &efs1);
+    ev.push(3, &EventFunctions::vfn, &efs6);
+    ev.push(3, &EventFunctions::vfn, &efs5);
+    ev.push(2, &EventFunctions::vfn, &efs4);
+    ev.push(2, &EventFunctions::vfn, &efs3);
+    ev.push(1, &EventFunctions::vfn, &efs2);
+    ev.push(1, &EventFunctions::vfn, &efs1);
 
     ev.raise(); // should output 2 1 4 3 6 5 8 7
-    ev.clear();
+    ev.removeAll();
 
-    printf("test pushfront order(1-8):\n");
-    ev.pushFront(&EventFunctions::vfn, &efs1);
-    ev.pushFront(&EventFunctions::vfn, &efs2);
-    //ev.pushBack(&EventFunctions::vfn, &efs1);
+    printf("test push order(1-8):\n");
+    ev.push(&EventFunctions::vfn, &efs1, DelegatePosition::AT_FRONT);
+    ev.push(&EventFunctions::vfn, &efs2, DelegatePosition::AT_FRONT);
+    //ev.push(&EventFunctions::vfn, &efs1);
 
-    ev.pushFront(1, &EventFunctions::vfn, &efs3);
-    ev.pushFront(1, &EventFunctions::vfn, &efs4);
-    ev.pushFront(2, &EventFunctions::vfn, &efs5);
-    ev.pushFront(2, &EventFunctions::vfn, &efs6);
-    ev.pushFront(3, &EventFunctions::vfn, &efs7);
-    ev.pushFront(3, &EventFunctions::vfn, &efs8);
+    ev.push(1, &EventFunctions::vfn, &efs3, DelegatePosition::AT_FRONT);
+    ev.push(1, &EventFunctions::vfn, &efs4, DelegatePosition::AT_FRONT);
+    ev.push(2, &EventFunctions::vfn, &efs5, DelegatePosition::AT_FRONT);
+    ev.push(2, &EventFunctions::vfn, &efs6, DelegatePosition::AT_FRONT);
+    ev.push(3, &EventFunctions::vfn, &efs7, DelegatePosition::AT_FRONT);
+    ev.push(3, &EventFunctions::vfn, &efs8, DelegatePosition::AT_FRONT);
 
     ev.raise(); // shoud output 2 1 4 3 6 5 8 7
-    ev.clear();
+    ev.removeAll();
 
-    printf("test pushback and front(GbUbUb GfUfUf Gb:123 456 7):\n");
-    ev.pushBack(0, &EventFunctions::vfn, &efs1);
-    ev.pushBack(&EventFunctions::vfn, &efs2);
-    ev.pushBack(&EventFunctions::vfn, &efs3);
+    printf("test push and front(GbUbUb GfUfUf Gb:123 456 7):\n");
+    ev.push(0, &EventFunctions::vfn, &efs1);
+    ev.push(&EventFunctions::vfn, &efs2);
+    ev.push(&EventFunctions::vfn, &efs3);
 
-    ev.pushFront(0, &EventFunctions::vfn, &efs4);
-    ev.pushFront(&EventFunctions::vfn, &efs5);
-    ev.pushFront(&EventFunctions::vfn, &efs6);
+    ev.push(0, &EventFunctions::vfn, &efs4, DelegatePosition::AT_FRONT);
+    ev.push(&EventFunctions::vfn, &efs5, DelegatePosition::AT_FRONT);
+    ev.push(&EventFunctions::vfn, &efs6, DelegatePosition::AT_FRONT);
 
-    ev.pushBack(0, &EventFunctions::vfn, &efs7);
+    ev.push(0, &EventFunctions::vfn, &efs7);
 
     ev.raise(); // should output 6 5 4 1 7 2 3
-    ev.clear();
+    ev.removeAll();
 
     {
         Event<void(), _UseLastValue, int, greater<int>> ev;
         printf("test group compare by greater (1-5):\n");
-        ev.pushFront(&EventFunctions::vfn, &efs1);
-        ev.pushFront(2, &EventFunctions::vfn, &efs2);
-        ev.pushBack(2, &EventFunctions::vfn, &efs3);
-        ev.pushBack(1, &EventFunctions::vfn, &efs4);
-        ev.pushBack(&EventFunctions::vfn, &efs5);
+        ev.push(&EventFunctions::vfn, &efs1, DelegatePosition::AT_FRONT);
+        ev.push(2, &EventFunctions::vfn, &efs2, DelegatePosition::AT_FRONT);
+        ev.push(2, &EventFunctions::vfn, &efs3);
+        ev.push(1, &EventFunctions::vfn, &efs4);
+        ev.push(&EventFunctions::vfn, &efs5);
 
         ev.raise(); // should output 1 2 3 4 5
-        ev.clear();
+        ev.removeAll();
     }
 
     printf("test varing deletion:\n");
-    DelegateHandler hBindvfn = ev.pushBack(EventFunctions::bindvfn);
-    ev.pushBack(EventFunctions::bindvfn, &EventFunctions::bindvfn);
-    ev.pushFront(EventFunctions::svfn);
-    ev.pushFront(&EventFunctions::vfn, &efs1);
-    ev.pushBack(1, &EventFunctions::vfn, &efs2);
-    ev.pushBack(1, &EventFunctions::vfn, &efs3);
-    ev.pushBack(2, &EventFunctions::vfn, &efs4);
-    ev.pushBack(2, &EventFunctions::vfn, &efs5);
+    DelegateHandler hBindvfn = ev.push(EventFunctions::bindvfn);
+    ev.push(EventFunctions::bindvfn, &EventFunctions::bindvfn);
+    ev.push(EventFunctions::svfn, DelegatePosition::AT_FRONT);
+    ev.push(&EventFunctions::vfn, &efs1, DelegatePosition::AT_FRONT);
+    ev.push(1, &EventFunctions::vfn, &efs2);
+    ev.push(1, &EventFunctions::vfn, &efs3);
+    ev.push(2, &EventFunctions::vfn, &efs4);
+    ev.push(2, &EventFunctions::vfn, &efs5);
 
     ev.raise();
     printf("remove EventFunctions::bindvfn:\n");
@@ -173,15 +173,15 @@ void eventTest()
     ev.remove(&efs2);
     ev.raise();
     printf("remove front ungrouped:\n");
-    ev.removeFrontUngrouped();
+    ev.remove(DelegatePosition::AT_FRONT);
     ev.raise();
     printf("remove group 2:\n");
-    ev.removeGroup(2);
+    ev.remove(2);
     ev.raise();
 
     Event<int(int), _UseLastValue, int, less<int>> eii;
-    eii.pushBack(EventFunctions::sifni);
-    eii.pushBack(&EventFunctions::ifni, &efs1);
+    eii.push(EventFunctions::sifni);
+    eii.push(&EventFunctions::ifni, &efs1);
 //    eii.raise(1);
     eventProfile();
 }

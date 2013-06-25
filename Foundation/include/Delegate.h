@@ -8,6 +8,11 @@
 
 namespace cc {;
 
+enum class DelegatePosition {
+    AT_BACK,
+    AT_FRONT
+};
+
 class DelegateBase {
 public:
     void disable() {
