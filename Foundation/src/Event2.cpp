@@ -12,7 +12,7 @@ using namespace std;
 void event2Profile() {
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
     static const int MAX_NUM = 10000;
-    unique_ptr<DelegateHandler[]> handlers(new DelegateHandler[MAX_NUM]);
+    unique_ptr<DelegateHandler2[]> handlers(new DelegateHandler2[MAX_NUM]);
 
     Event2<void()> ve2;
     function<void()> vDoSomeThing2 = [](){
@@ -47,7 +47,7 @@ void event2Profile() {
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
 }
 
-DelegateHandler handler[5];
+DelegateHandler2 handler[5];
 
 template <typename Event2Type>
 void removeAll(Event2Type& event)

@@ -5,6 +5,54 @@
 
 namespace cc {;
 
+class DelegateHandler {
+public:
+    typedef weak_ptr<DelegateBase> HandlerType;
+
+    DelegateHandler() {}
+
+    DelegateHandler(const HandlerType& handler)
+        : _handler(handler){}
+
+    void disable() {
+        shared_ptr<DelegateBase> delegateBase = _handler.lock();
+        if (delegateBase) {
+            delegateBase->disable();
+        }
+    }
+
+    bool disabled() const {
+        if (_handler.expired())
+        {
+            return true;
+        }
+        return _handler.lock()->disabled();
+    }
+
+    bool operator ==(const DelegateHandler& other) const {
+        shared_ptr<DelegateBase> l(_handler.lock());
+        shared_ptr<DelegateBase> r(other._handler.lock());
+        return l == r;
+    }
+
+    bool operator !=(const DelegateHandler& other) const {
+        return !(*this == other);
+    }
+
+    bool operator <(const DelegateHandler& other) const {
+        shared_ptr<DelegateBase> l(_handler.lock());
+        shared_ptr<DelegateBase> r(other._handler.lock());
+        return l < r;
+    }
+
+    void swap(DelegateHandler &other) {
+        ::cc::swap(_handler, other._handler);
+    }
+
+private:
+    HandlerType _handler;
+};
+
 template <
     typename Signature,
     typename Combiner,// = _UseLastValue,
@@ -19,39 +67,85 @@ public:
     typedef typename _DelegateGroupKey<Group>::type GroupKey;
     typedef _DelegateGroupKeyLess<Group, GroupCompare> GroupKeyLess;
     typedef Delegate<FunctionType, GroupKey> DelegateType;
-    typedef list<DelegateType> DelegateListType;
+    typedef list<shared_ptr<DelegateType>> DelegateListType;
     typedef typename DelegateListType::iterator DelegateIteratorType;
 
     //Event()
     //    : _raising(false) {
     //}
 
-    void pushBack(const FunctionType &function) {
+    DelegateHandler pushBack(const FunctionType &function) {
+        assert(function);
         GroupKey key(_DelegateCategory::AT_BACK, Group());
-        return _afterInsert(_pushBackDelegate(key), nullptr, key, function);
+        return _pushBack(nullptr, key, function);
     }
 
-    void pushBack(const FunctionType &function, const void *pUniqueAddress) {
-        assert(pUniqueAddress);
+    DelegateHandler pushBack(const FunctionType &function, const void *address) {
+        assert(function && address);
         GroupKey key(_DelegateCategory::AT_BACK, Group());
-        return _afterInsert(_pushBackDelegate(key), pUniqueAddress, key, function);
+        return _pushBack(address, key, function);
     }
 
-    void pushBack(Signature *pfn) {
+    DelegateHandler pushBack(Signature *pfn) {
         assert(pfn);
         GroupKey key(_DelegateCategory::AT_BACK, Group());
         function<Signature> function(pfn);
-        return _afterInsert(_pushBackDelegate(key), (const void *)pfn, key, function);
+        return _pushBack((const void *)pfn, key, function);
     }
 
     template <
         typename TargetType
     >
-    void pushBack(ResultType (TargetType:: *pmemfn)(), TargetType *target) {
+    DelegateHandler pushBack(ResultType (TargetType:: *pmemfn)(), TargetType *target) {
         assert(pmemfn && target);
         GroupKey key(_DelegateCategory::AT_BACK, Group());
         function<Signature> function = bind(pmemfn, target);
-        return _afterInsert(_pushBackDelegate(key), target, key, function);
+        return _pushBack(target, key, function);
+    }
+
+    template <
+        typename TargetType,
+        typename Arg1
+    >
+    DelegateHandler pushBack(ResultType (TargetType:: *pmemfn)(Arg1), TargetType *target) {
+        assert(pmemfn && target);
+        GroupKey key(_DelegateCategory::AT_BACK, Group());
+        function<Signature> function = bind(pmemfn, target, placeholders::_1);
+        return _pushBack(target, key, function);
+    }
+    //template <
+    //    typename TargetType
+    //>
+    //void pushBack(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target) {
+    //}
+
+    DelegateHandler pushBack(const Group &group, const FunctionType &function) {
+        assert(function);
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        return _pushBack(nullptr, key, function);
+    }
+
+    DelegateHandler pushBack(const Group &group, const FunctionType &function, const void *address) {
+        assert(function && address);
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        return _pushBack(address, key, function);
+    }
+
+    DelegateHandler pushBack(const Group &group, Signature *pfn) {
+        assert(pfn);
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        function<Signature> function(pfn);
+        return _pushBack((const void *)pfn, key, function);
+    }
+
+    template <
+        typename TargetType
+    >
+    DelegateHandler pushBack(const Group &group, ResultType (TargetType:: *pmemfn)(), TargetType *target) {
+        assert(pmemfn && target);
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        function<Signature> function = bind(pmemfn, target);
+        return _pushBack(target, key, function);
     }
 
     //template <
@@ -60,66 +154,33 @@ public:
     //void pushBack(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target) {
     //}
 
-    void pushBack(const Group &group, const FunctionType &function) {
-        GroupKey key(_DelegateCategory::GROUPED, group);
-        return _afterInsert(_pushBackDelegate(key), nullptr, key, function);
+    DelegateHandler pushFront(const FunctionType &function) {
+        assert(function);
+        GroupKey key(_DelegateCategory::AT_FRONT, Group());
+        return _pushFront(nullptr, key, function);
     }
 
-    void pushBack(const Group &group, const FunctionType &function, const void *pUniqueAddress) {
-        assert(pUniqueAddress);
-        GroupKey key(_DelegateCategory::GROUPED, group);
-        return _afterInsert(_pushBackDelegate(key), pUniqueAddress, key, function);
+    DelegateHandler pushFront(const FunctionType &function, const void *address) {
+        assert(function && address);
+        GroupKey key(_DelegateCategory::AT_FRONT, Group());
+        return _pushFront(address, key, function);
     }
 
-    void pushBack(const Group &group, Signature *pfn) {
+    DelegateHandler pushFront(Signature *pfn) {
         assert(pfn);
-        GroupKey key(_DelegateCategory::GROUPED, group);
+        GroupKey key(_DelegateCategory::AT_FRONT, Group());
         function<Signature> function(pfn);
-        return _afterInsert(_pushBackDelegate(key), pfn, key, function);
+        return _pushFront((const void *)pfn, key, function);
     }
 
     template <
         typename TargetType
     >
-    void pushBack(const Group &group, ResultType (TargetType:: *pmemfn)(), TargetType *target) {
-        assert(pmemfn && target);
-        GroupKey key(_DelegateCategory::GROUPED, group);
-        function<Signature> function = bind(pmemfn, target);
-        return _afterInsert(_pushBackDelegate(key), target, key, function);
-    }
-
-    //template <
-    //    typename TargetType
-    //>
-    //void pushBack(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target) {
-    //}
-
-    void pushFront(const FunctionType &function) {
-        GroupKey key(_DelegateCategory::AT_FRONT, Group());
-        return _afterInsert(_pushFrontDelegate(key), nullptr, key, function);
-    }
-
-    void pushFront(const FunctionType &function, const void *pUniqueAddress) {
-        assert(pUniqueAddress);
-        GroupKey key(_DelegateCategory::AT_FRONT, Group());
-        return _afterInsert(_pushFrontDelegate(key), pUniqueAddress, key, function);
-    }
-
-    void pushFront(Signature *pfn) {
-        assert(pfn);
-        GroupKey key(_DelegateCategory::AT_FRONT, Group());
-        function<Signature> function(pfn);
-        return _afterInsert(_pushFrontDelegate(key), pfn, key, function);
-    }
-
-    template <
-        typename TargetType
-    >
-    void pushFront(ResultType (TargetType:: *pmemfn)(), TargetType *target) {
+    DelegateHandler pushFront(ResultType (TargetType:: *pmemfn)(), TargetType *target) {
         assert(pmemfn && target);
         GroupKey key(_DelegateCategory::AT_FRONT, Group());
         function<Signature> function = bind(pmemfn, target);
-        return _afterInsert(_pushFrontDelegate(key), target, key, function);
+        return _pushFront(target, key, function);
     }
 
     //template <
@@ -128,32 +189,33 @@ public:
     //void pushFront(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target) {
     //}
 
-    void pushFront(const Group &group, const FunctionType &function) {
+    DelegateHandler pushFront(const Group &group, const FunctionType &function) {
+        assert(function);
         GroupKey key(_DelegateCategory::GROUPED, group);
-        return _afterInsert(_pushFrontDelegate(key), nullptr, key, function);
+        return _pushFront(nullptr, key, function);
     }
 
-    void pushFront(const Group &group, const FunctionType &function, const void *pUniqueAddress) {
-        assert(pUniqueAddress);
+    DelegateHandler pushFront(const Group &group, const FunctionType &function, const void *address) {
+        assert(function && address);
         GroupKey key(_DelegateCategory::GROUPED, group);
-        return _afterInsert(_pushFrontDelegate(key), pUniqueAddress, key, function);
+        return _pushFront(address, key, function);
     }
 
-    void pushFront(const Group &group, Signature *pfn) {
+    DelegateHandler pushFront(const Group &group, Signature *pfn) {
         assert(pfn);
         GroupKey key(_DelegateCategory::GROUPED, group);
         function<Signature> function(pfn);
-        return _afterInsert(_pushFrontDelegate(key), pfn, key, function);
+        return _pushFront((const void *)pfn, key, function);
     }
 
     template <
         typename TargetType
     >
-    void pushFront(const Group &group, ResultType (TargetType:: *pmemfn)(), TargetType *target) {
+    DelegateHandler pushFront(const Group &group, ResultType (TargetType:: *pmemfn)(), TargetType *target) {
         assert(pmemfn && target);
         GroupKey key(_DelegateCategory::GROUPED, group);
         function<Signature> function = bind(pmemfn, target);
-        return _afterInsert(_pushFrontDelegate(key), target, key, function);
+        return _pushFront(target, key, function);
     }
 
     //template <
@@ -164,7 +226,28 @@ public:
 
     //DelegateHandler pushFront(void *pfn, const FunctionType &function);
     void find(void *address);
-    void remove(void *address);
+    void remove(void *address) {
+        auto addressIter = _address.find(address);
+        if (addressIter != _address.end()) {
+            (*addressIter->second)->disable();
+        }
+    }
+
+    void removeBackUngrouped() {
+        GroupKey key(_DelegateCategory::AT_BACK, Group());
+        _removeGroup(key);
+    }
+
+    void removeFrontUngrouped() {
+        GroupKey key(_DelegateCategory::AT_FRONT, Group());
+        _removeGroup(key);
+    }
+
+    void removeGroup(const Group & group) {
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        _removeGroup(key);
+    }
+
     void clear() {
         _delegates.clear();
         _address.clear();
@@ -175,68 +258,88 @@ public:
         _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
         auto end = _delegates.end();
         for (auto iter = _delegates.begin(); iter != end; ) {
-            if (iter->disabled()) {
+            if ((*iter)->disabled()) {
                 _removeDelegate(iter++);
                 continue;
             }
-            invoke(iter++->function);
+            invoke((*iter++)->getFunction());
         }
         return invoke.getCombinedResult();
     }
 
-
 private:
-    void _afterInsert(
-        const DelegateIteratorType &iter,
-        const void *address,
-        const GroupKey &key,
-        const FunctionType &function) {
-        iter->setAddress(address);
-        iter->groupKey = key;
-        iter->function = function;
-        _address.insert(make_pair(address, iter));
-    }
-
     bool _groupKeyEqual(const GroupKey &key1, const GroupKey &key2) {
         if (_groupKeyLess(key1, key2)) return false;
         if (_groupKeyLess(key2, key1)) return false;
         return true;
     }
 
-    const DelegateIteratorType _pushBackDelegate(const GroupKey &key) {
-        auto mapIter = (key.first == _DelegateCategory::AT_BACK) ? 
-            _groups.end() : _groups.upper_bound(key);
+    DelegateHandler _pushBack(
+        const void *address,
+        const GroupKey &key,
+        const FunctionType &function
+    ) {
+        auto delegate = make_shared<DelegateType>(address, key, function);
 
-        auto listIter = (mapIter == _groups.end()) ?
+        auto mapEnd = _groups.end();
+        auto mapIter = (key.first == _DelegateCategory::AT_BACK) ? 
+            mapEnd : _groups.upper_bound(key);
+
+        auto listIter = (mapIter == mapEnd) ?
             _delegates.end() : mapIter->second;
-        auto newIter = _delegates.insert(listIter, DelegateType());
+        auto newIter = _delegates.insert(listIter, delegate);
 
         mapIter = _groups.lower_bound(key);
-        if (mapIter == _groups.end() || !_groupKeyEqual(mapIter->first, key)) {
+        if (mapIter == mapEnd || !_groupKeyEqual(mapIter->first, key)) {
             _groups.insert(make_pair(key, newIter));
         }
-        return newIter;
+        _address.insert(make_pair(delegate->getAddress(), newIter));
+        return DelegateHandler(delegate);
     }
 
-    const DelegateIteratorType _pushFrontDelegate(const GroupKey &key) {
+    DelegateHandler _pushFront(
+        const void *address,
+        const GroupKey &key,
+        const FunctionType &function
+    ) {
+        auto delegate = make_shared<DelegateType>(address, key, function);
+
+        auto mapEnd = _groups.end();
         auto mapIter = (key.first == _DelegateCategory::AT_FRONT) ? 
             _groups.begin() : _groups.lower_bound(key);
 
-        auto listIter = (mapIter == _groups.end()) ?
+        auto listIter = (mapIter == mapEnd) ?
             _delegates.end() : mapIter->second;
-        auto newIter = _delegates.insert(listIter, DelegateType());
+        auto newIter = _delegates.insert(listIter, delegate);
 
-        if (mapIter != _groups.end() && _groupKeyEqual(mapIter->first, key)) {
+        if (mapIter != mapEnd && _groupKeyEqual(mapIter->first, key)) {
             _groups.erase(key);
         }
         _groups.insert(make_pair(key, newIter));
-        return newIter;
+        _address.insert(make_pair(delegate->getAddress(), newIter));
+        return DelegateHandler(delegate);
     }
 
     void _removeDelegate(const DelegateIteratorType &iter) {
-        _address.erase(iter->getAddress());
+        _address.erase((*iter)->getAddress());
+        auto mapIter = _groups.find((*iter)->getGroupKey());
+        if (mapIter != _groups.end() && mapIter->second == iter) {
+            _groups.erase(mapIter);
+        }
         _delegates.erase(iter);
     }
+
+    void _removeGroup(const GroupKey &key) {
+        auto mapIter = _groups.find(key);
+        if (mapIter != _groups.end()) {
+            auto bgn = mapIter->second;
+            auto upper = _groups.upper_bound(key);
+            auto end = (upper == _groups.end()) ? _delegates.end() : upper->second;
+            for_each(bgn, end, [](const shared_ptr<DelegateType> &p) { p->disable(); });
+            _groups.erase(mapIter);
+        }
+    }
+
     //bool _raising;
     //DelegateListType::iterator _raisingIter;
     DelegateListType _delegates;

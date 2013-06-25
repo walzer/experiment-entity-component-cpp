@@ -8,7 +8,7 @@
 
 namespace cc {;
 
-class DelegateBase : public enable_shared_from_this<DelegateBase> {
+class DelegateBase {
 public:
     void disable() {
         _disabled = true;
@@ -32,10 +32,10 @@ public:
         return (_address) ? _address : this;
     }
 protected:
-    DelegateBase() : _disabled(false), _address(nullptr) {}
+    DelegateBase(const void *address) : _disabled(false), _address(address) {}
 
-    const void *_address;
 private:
+    const void *_address;
     mutable bool _disabled;
     vector<weak_ptr<void>> _trackObjs;
 };
@@ -79,11 +79,26 @@ template <
 >
 class Delegate : public DelegateBase {
 public:
-    void setAddress(const void *address) {
-        _address = address;
+    Delegate(
+        const void *address,
+        const GroupKey &key,
+        const FunctionType &function
+    ) :
+    DelegateBase(address),
+    _function(function),
+    _groupKey(key) {}
+
+    const FunctionType &getFunction() const {
+        return _function;
     }
-    FunctionType function;
-    GroupKey groupKey;
+
+    const GroupKey &getGroupKey() const {
+        return _groupKey;
+    }
+
+private:
+    FunctionType _function;
+    GroupKey _groupKey;
 };
 
 class _UseLastValue

@@ -5,22 +5,22 @@
 
 namespace cc {;
 
-class DelegateHandler {
+class DelegateHandler2 {
 public:
     typedef ::std::weak_ptr<CCDelegateBase> HandlerType;
 
-    inline DelegateHandler();
-    inline DelegateHandler(const HandlerType& handler);
+    inline DelegateHandler2();
+    inline DelegateHandler2(const HandlerType& handler);
 
     inline void disable();
     inline bool enable();
     inline bool enabled() const;
     inline CCDelegateBase::Ptr getDelegateBase() const;
 
-    inline bool operator==(const DelegateHandler& other) const;
-    inline bool operator!=(const DelegateHandler& other) const;
-    inline bool operator<(const DelegateHandler& other) const;
-    inline void swap(DelegateHandler &other);
+    inline bool operator==(const DelegateHandler2& other) const;
+    inline bool operator!=(const DelegateHandler2& other) const;
+    inline bool operator<(const DelegateHandler2& other) const;
+    inline void swap(DelegateHandler2 &other);
 
 private:
     HandlerType _delegateBase;
@@ -46,14 +46,14 @@ public:
     
     Event2();
 
-    DelegateHandler add(::std::shared_ptr<Delegate>& delegate);
-    DelegateHandler add(const DelegateFunction& func,
+    DelegateHandler2 add(::std::shared_ptr<Delegate>& delegate);
+    DelegateHandler2 add(const DelegateFunction& func,
         CCDelegateAtPosition atPosition = AT_BACK);
-    DelegateHandler add(const GroupType& group,
+    DelegateHandler2 add(const GroupType& group,
         const DelegateFunction& func,
         CCDelegateAtPosition atPosition = AT_BACK);
 
-    void remove(const DelegateHandler& handler);
+    void remove(const DelegateHandler2& handler);
 
     ResultType operator () ();
 
@@ -140,18 +140,18 @@ void event2Test();
 namespace cc {;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Implement DelegateHandler
+// Implement DelegateHandler2
 
-DelegateHandler::DelegateHandler()
+DelegateHandler2::DelegateHandler2()
 {
 }
 
-DelegateHandler::DelegateHandler(const HandlerType& handler)
+DelegateHandler2::DelegateHandler2(const HandlerType& handler)
 {
     _delegateBase = handler;
 }
 
-void DelegateHandler::disable()
+void DelegateHandler2::disable()
 {
     CCDelegateBase::Ptr delegateBase = _delegateBase.lock();
     if (delegateBase)
@@ -160,7 +160,7 @@ void DelegateHandler::disable()
     }
 }
 
-bool DelegateHandler::enable()
+bool DelegateHandler2::enable()
 {
     CCDelegateBase::Ptr delegateBase = _delegateBase.lock();
     if (delegateBase)
@@ -171,7 +171,7 @@ bool DelegateHandler::enable()
     return false;
 }
 
-bool DelegateHandler::enabled() const
+bool DelegateHandler2::enabled() const
 {
     if (_delegateBase.expired())
     {
@@ -180,32 +180,32 @@ bool DelegateHandler::enabled() const
     return _delegateBase.lock()->getEnabledStatus();
 }
 
-CCDelegateBase::Ptr DelegateHandler::getDelegateBase() const
+CCDelegateBase::Ptr DelegateHandler2::getDelegateBase() const
 {
     return (_delegateBase.expired()) ? 
         CCDelegateBase::Ptr() : _delegateBase.lock();
 }
 
-bool DelegateHandler::operator==(const DelegateHandler& other) const
+bool DelegateHandler2::operator==(const DelegateHandler2& other) const
 {
     CCDelegateBase::Ptr l(_delegateBase.lock());
     CCDelegateBase::Ptr r(other._delegateBase.lock());
     return l == r;
 }
 
-bool DelegateHandler::operator!=(const DelegateHandler& other) const
+bool DelegateHandler2::operator!=(const DelegateHandler2& other) const
 {
     return !(*this == other);
 }
 
-bool DelegateHandler::operator<(const DelegateHandler& other) const
+bool DelegateHandler2::operator<(const DelegateHandler2& other) const
 {
     CCDelegateBase::Ptr l(_delegateBase.lock());
     CCDelegateBase::Ptr r(other._delegateBase.lock());
     return l < r;
 }
 
-void DelegateHandler::swap(DelegateHandler &other)
+void DelegateHandler2::swap(DelegateHandler2 &other)
 {
     ::std::swap(_delegateBase, other._delegateBase);
 }
@@ -230,7 +230,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-DelegateHandler Event2<Signature, GroupType, Combiner,Interrupter>::add(::std::shared_ptr<Delegate>& delegate)
+DelegateHandler2 Event2<Signature, GroupType, Combiner,Interrupter>::add(::std::shared_ptr<Delegate>& delegate)
 {
     DelegateList& list = getDelegateList(delegate.get());
     if (delegate->atPosition() == AT_BACK)
@@ -243,7 +243,7 @@ DelegateHandler Event2<Signature, GroupType, Combiner,Interrupter>::add(::std::s
         list.push_front(delegate);
         delegate->iterator = list.begin();
     }
-    return DelegateHandler(delegate);
+    return DelegateHandler2(delegate);
 }
 
 template <
@@ -252,7 +252,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-DelegateHandler Event2<Signature, GroupType, Combiner,Interrupter>::add(const DelegateFunction& func,
+DelegateHandler2 Event2<Signature, GroupType, Combiner,Interrupter>::add(const DelegateFunction& func,
     CCDelegateAtPosition atPosition)
 {
     auto delegate = ::std::make_shared<Delegate>(func, false,  atPosition);
@@ -265,7 +265,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-DelegateHandler Event2<Signature, GroupType, Combiner,Interrupter>::add(const GroupType& group,
+DelegateHandler2 Event2<Signature, GroupType, Combiner,Interrupter>::add(const GroupType& group,
     const DelegateFunction& func,
     CCDelegateAtPosition atPosition)
 {
@@ -280,7 +280,7 @@ template <
     typename Combiner,
     typename Interrupter
 >
-void Event2<Signature, GroupType, Combiner,Interrupter>::remove(const DelegateHandler& handler)
+void Event2<Signature, GroupType, Combiner,Interrupter>::remove(const DelegateHandler2& handler)
 {
     CCDelegateBase::Ptr delegateBase = handler.getDelegateBase();
     if (delegateBase)
