@@ -116,6 +116,16 @@ public:
     }
 };
 
+template <typename ResultType>
+struct _DelegateResultCheck {
+    typedef bool (type)(ResultType);
+};
+
+template <>
+struct _DelegateResultCheck<void> {
+    typedef bool(type)();
+};
+
 template <
     typename ResultType,
     typename FunctionType,
@@ -123,12 +133,13 @@ template <
 >
 class _DelegateInvoke {
 public:
+    typedef typename _DelegateResultCheck<ResultType>::type CheckSignature;
     ResultType getCombinedResult() {
         return _combinedResult;
     }
 
-    ResultType getResult() {
-        return _result;
+    bool checkResult(const function<CheckSignature> &function) {
+        return function(_result);
     }
 
     void operator () (const FunctionType &function) {
@@ -149,7 +160,9 @@ class _DelegateInvoke<void, FunctionType, Combiner> {
 public:
     void getCombinedResult() {}
 
-    void getResult() {}
+    bool checkResult(const function<bool()> &function) {
+        return function();
+    }
 
     void operator () (const FunctionType& function) {
         function();

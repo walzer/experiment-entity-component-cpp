@@ -55,20 +55,21 @@ private:
 
 template <
     typename Signature,
-    typename Combiner,// = _UseLastValue,
-    typename Group,// = int,
-    typename GroupCompare// = less<Group>
+    typename Combiner = _UseLastValue,
+    typename Group = int,
+    typename GroupCompare = less<Group>
 >
 class Event : private Uncopyable {
-public:
     typedef Event<Signature, Combiner, Group, GroupCompare> ThisType;
     typedef function<Signature> FunctionType;
     typedef typename FunctionType::result_type ResultType;
     typedef typename _DelegateGroupKey<Group>::type GroupKey;
+    typedef typename _DelegateResultCheck<ResultType>::type CheckSignature;
     typedef _DelegateGroupKeyLess<Group, GroupCompare> GroupKeyLess;
     typedef Delegate<FunctionType, GroupKey> DelegateType;
     typedef list<shared_ptr<DelegateType>> DelegateListType;
     typedef typename DelegateListType::iterator DelegateIteratorType;
+public:
 
     DelegateHandler push(
         const FunctionType &function, 
@@ -208,6 +209,68 @@ public:
                 continue;
             }
             invoke((*iter++)->getFunction());
+        }
+        return invoke.getCombinedResult();
+    }
+
+    ResultType raise(const Group &group) {
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        auto mapEnd = _groups.end();
+        auto mapIter = _groups.find(key);
+        if (mapIter != mapEnd) {
+            auto iter = mapIter->second;
+            mapIter = _groups.upper_bound(key);
+            auto end = (mapIter == mapEnd) ? _delegates.end() : mapIter->second;
+            for ( ; iter != end; ) {
+                if ((*iter)->disabled()) {
+                    _removeDelegate(iter++);
+                    continue;
+                }
+                invoke((*iter++)->getFunction());
+            }
+        }
+        return invoke.getCombinedResult();
+    }
+    
+    ResultType raiseUntil(const function<CheckSignature>  &function) {
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
+        auto end = _delegates.end();
+        for (auto iter = _delegates.begin(); iter != end; ) {
+            if ((*iter)->disabled()) {
+                _removeDelegate(iter++);
+                continue;
+            }
+            invoke((*iter++)->getFunction());
+            if (invoke.checkResult(function)) {
+                break;
+            }
+        }
+        return invoke.getCombinedResult();
+    }
+
+    ResultType raiseUntil(
+        const Group &group,
+        const function<CheckSignature>  &function
+    ) {
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
+        GroupKey key(_DelegateCategory::GROUPED, group);
+        auto mapEnd = _groups.end();
+        auto mapIter = _groups.find(key);
+        if (mapIter != mapEnd) {
+            auto iter = mapIter->second;
+            mapIter = _groups.upper_bound(key);
+            auto end = (mapIter == mapEnd) ? _delegates.end() : mapIter->second;
+            for ( ; iter != end; ) {
+                if ((*iter)->disabled()) {
+                    _removeDelegate(iter++);
+                    continue;
+                }
+                invoke((*iter++)->getFunction());
+                if (invoke.checkResult(function)) {
+                    break;
+                }
+            }
         }
         return invoke.getCombinedResult();
     }

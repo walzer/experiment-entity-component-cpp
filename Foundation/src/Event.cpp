@@ -49,14 +49,14 @@ void eventProfile() {
 ////////////////////////////////////////////////////////////////////////////////
 
 #define MEM_FN(ret, name) \
-    ret name##() { printf("call(%d) %s()\n", id, __FUNCTION__); return ret(); } \
+    ret name() { printf("call(%d) %s()\n", id, __FUNCTION__); return ret(); } \
     ret name##i(int i1) { printf("call(%d) %s(%d)\n", id, __FUNCTION__, i1); return ret(); } \
     ret name##ii(int i1, int i2) { printf("call(%d) %s(%d, %d)\n", id, __FUNCTION__, i1, i2); return ret(); } \
     ret name##iii(int i1, int i2, int i3) { printf("call(%d) %s(%d, %d, %d)\n", id, __FUNCTION__, i1, i2, i3); return ret(); } \
     ret name##iiii(int i1, int i2, int i3, int i4) { printf("call(%d) %s(%d, %d, %d, %d)\n", id, __FUNCTION__, i1, i2, i3, i4); return ret(); }
 
 #define STATIC_FN(ret, name) \
-    static ret name##() { printf("call %s()\n", __FUNCTION__); return ret(); } \
+    static ret name() { printf("call %s()\n", __FUNCTION__); return ret(); } \
     static ret name##i(int i1) { printf("call %s(%d)\n", __FUNCTION__, i1); return ret(); } \
     static ret name##ii(int i1, int i2) { printf("call %s(%d, %d)\n", __FUNCTION__, i1, i2); return ret(); } \
     static ret name##iii(int i1, int i2, int i3) { printf("call %s(%d, %d, %d)\n", __FUNCTION__, i1, i2, i3); return ret(); } \
@@ -75,7 +75,7 @@ struct EventFunctions {
     // bind functions
     static void tobindvfn() { printf("call bindvfn()\n"); }
     static function<void()> bindvfn;
-} efs1(1), efs2(2), efs3(3), efs4(4), efs5(5), efs6(6), efs7(7), efs8(8), efs9(9), efs10(10);
+} efs1(1), efs2(2), efs3(3), efs4(4), efs5(5), efs6(6), efs7(7), efs8(8);
 
 function<void()> EventFunctions::bindvfn = bind(&EventFunctions::tobindvfn);
 
@@ -84,14 +84,25 @@ void eventTest()
     printf("\n%d %s\n\n", __LINE__, __FUNCTION__);
 
     Event<void(), _UseLastValue, int, less<int>> ev;
-    printf("test varing insert delegate\n");
+    auto evUntil = [](){return true;};
+    printf("test Event<void()> common function\n");
     ev.push(EventFunctions::bindvfn);
     ev.push(EventFunctions::bindvfn, &EventFunctions::bindvfn);
     ev.push(EventFunctions::svfn);
     ev.push(&EventFunctions::vfn, &efs1);
+    ev.push(2, &EventFunctions::vfn, &efs2);
+    ev.push(2, &EventFunctions::vfn, &efs3);
+    ev.push(4, &EventFunctions::vfn, &efs5);
+    ev.push(4, &EventFunctions::vfn, &efs6);
     //ev.push(&VoidFunction::func, make_shared<VoidFunction>(6));
-
+    printf("Event<void()>::raise:\n");
     ev.raise();
+    printf("Event<void()>::raise group:\n");
+    ev.raise(2);
+    printf("Event<void()>::raise until:\n");
+    ev.raiseUntil(evUntil);
+    printf("Event<void()>::raise group until:\n");
+    ev.raiseUntil(2, evUntil);
     ev.removeAll();
 
     printf("test push order(8-1):\n");
@@ -178,6 +189,27 @@ void eventTest()
     printf("remove group 2:\n");
     ev.remove(2);
     ev.raise();
+
+    int val;
+    Event<int()> ei;
+    auto eiUntil = [](int){return true;};
+    printf("test Event<int()> common function\n");
+    ei.push(EventFunctions::sifn);
+    ei.push(&EventFunctions::ifn, &efs1);
+    ei.push(2, &EventFunctions::ifn, &efs2);
+    ei.push(2, &EventFunctions::ifn, &efs3);
+    ei.push(4, &EventFunctions::ifn, &efs5);
+    ei.push(4, &EventFunctions::ifn, &efs6);
+    //ev.push(&VoidFunction::func, make_shared<VoidFunction>(6));
+    printf("Event<int()>::raise:\n");
+    val = ei.raise();
+    printf("Event<int()>::raise group:\n");
+    val = ei.raise(2);
+    printf("Event<int()>::raise until:\n");
+    val = ei.raiseUntil(eiUntil);
+    printf("Event<int()>::raise group until:\n");
+    val = ei.raiseUntil(2, eiUntil);
+    ei.removeAll();
 
     Event<int(int), _UseLastValue, int, less<int>> eii;
     eii.push(EventFunctions::sifni);
