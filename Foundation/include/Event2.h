@@ -59,7 +59,7 @@ public:
 
 #define CCEVENT_DEFINE_OPERATOR_ARGS(...) \
     template< CC_TYPES_WITH_TYPENAME(__VA_ARGS__) > \
-    ResultType operator () (CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
+    ResultType operator () (CC_TYPES_APPEND_PARA(__VA_ARGS__)) \
     { \
         CCDelegateInvoke<DelegateFunction, ResultType, Combiner, Interrupter> invoker; \
         _raising = true; \
@@ -71,7 +71,7 @@ public:
             delegate = (Delegate*)(*_raisingIter++).get(); \
             if (delegate->getEnabledStatus()) \
             { \
-                if (invoker.invoke(delegate->function, CC_TYPES_TO_PARAS(__VA_ARGS__))) \
+                if (invoker.invoke(delegate->function, CC_TYPES_TO_PARA(__VA_ARGS__))) \
                 { \
                     goto EVENT_INTERRUPTED; \
                 } \
@@ -86,7 +86,7 @@ public:
                 delegate = (Delegate*)(*_raisingIter++).get(); \
                 if (delegate->getEnabledStatus()) \
                 { \
-                    if (invoker.invoke(delegate->function, CC_TYPES_TO_PARAS(__VA_ARGS__))) \
+                    if (invoker.invoke(delegate->function, CC_TYPES_TO_PARA(__VA_ARGS__))) \
                     { \
                         goto EVENT_INTERRUPTED; \
                     } \
@@ -99,7 +99,7 @@ public:
             delegate = (Delegate*)(*_raisingIter++).get(); \
             if (delegate->getEnabledStatus()) \
             { \
-                if (invoker.invoke(delegate->function, CC_TYPES_TO_PARAS(__VA_ARGS__))) \
+                if (invoker.invoke(delegate->function, CC_TYPES_TO_PARA(__VA_ARGS__))) \
                 { \
                     goto EVENT_INTERRUPTED; \
                 } \

@@ -45,6 +45,62 @@ private:
     vector<weak_ptr<void>> _trackObjs;
 };
 
+class DelegateHandler {
+    typedef weak_ptr<DelegateBase> HandlerType;
+public:
+
+    DelegateHandler() {}
+
+    DelegateHandler(const HandlerType& handler)
+        : _handler(handler){}
+
+    DelegateHandler &disable() {
+        shared_ptr<DelegateBase> delegateBase = _handler.lock();
+        if (delegateBase) {
+            delegateBase->disable();
+        }
+        return *this;
+    }
+
+    bool disabled() const {
+        if (_handler.expired())
+        {
+            return true;
+        }
+        return _handler.lock()->disabled();
+    }
+
+    DelegateHandler &track(const weak_ptr<void> &obj) {
+        if (!disabled()) {
+            _handler.lock()->track(obj);
+        }
+        return *this;
+    }
+
+    bool operator ==(const DelegateHandler& other) const {
+        shared_ptr<DelegateBase> l(_handler.lock());
+        shared_ptr<DelegateBase> r(other._handler.lock());
+        return l == r;
+    }
+
+    bool operator !=(const DelegateHandler& other) const {
+        return !(*this == other);
+    }
+
+    bool operator <(const DelegateHandler& other) const {
+        shared_ptr<DelegateBase> l(_handler.lock());
+        shared_ptr<DelegateBase> r(other._handler.lock());
+        return l < r;
+    }
+
+    void swap(DelegateHandler &other) {
+        ::cc::swap(_handler, other._handler);
+    }
+
+private:
+    HandlerType _handler;
+};
+
 enum class _DelegateCategory {
     AT_FRONT,
     GROUPED,
@@ -146,6 +202,26 @@ public:
         _result = function();
         _combinedResult = _combiner(_combinedResult, _result);
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Define member functors deal with 1-4 arguments.
+#define CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(...) \
+    template <CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    void operator () ( \
+        const FunctionType &function, \
+        CC_TYPES_APPEND_PARA(__VA_ARGS__) \
+    ) { \
+        _result = function(CC_TYPES_TO_PARA(__VA_ARGS__)); \
+        _combinedResult = _combiner(_combinedResult, _result); \
+    }
+
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1);
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1, Arg2);
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1, Arg2, Arg3);
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1, Arg2, Arg3, Arg4);
+#undef CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS
+    ////////////////////////////////////////////////////////////////////////////
+
 private:
     ResultType _result;
     ResultType _combinedResult;
@@ -167,6 +243,24 @@ public:
     void operator () (const FunctionType& function) {
         function();
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Define member functors deal with 1-4 arguments.
+#define CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(...) \
+    template <CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    void operator () ( \
+        const FunctionType &function, \
+        CC_TYPES_APPEND_PARA(__VA_ARGS__) \
+    ) { \
+        function(CC_TYPES_TO_PARA(__VA_ARGS__)); \
+    }
+
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1);
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1, Arg2);
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1, Arg2, Arg3);
+    CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS(Arg1, Arg2, Arg3, Arg4);
+#undef CC__DELEGATE_INVOKE_OPERATOR_WITH_ARGS
+    ////////////////////////////////////////////////////////////////////////////
 };
 
 }   // namespace cc

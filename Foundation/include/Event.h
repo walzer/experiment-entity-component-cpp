@@ -5,54 +5,17 @@
 
 namespace cc {;
 
-class DelegateHandler {
-public:
-    typedef weak_ptr<DelegateBase> HandlerType;
-
-    DelegateHandler() {}
-
-    DelegateHandler(const HandlerType& handler)
-        : _handler(handler){}
-
-    void disable() {
-        shared_ptr<DelegateBase> delegateBase = _handler.lock();
-        if (delegateBase) {
-            delegateBase->disable();
-        }
-    }
-
-    bool disabled() const {
-        if (_handler.expired())
-        {
-            return true;
-        }
-        return _handler.lock()->disabled();
-    }
-
-    bool operator ==(const DelegateHandler& other) const {
-        shared_ptr<DelegateBase> l(_handler.lock());
-        shared_ptr<DelegateBase> r(other._handler.lock());
-        return l == r;
-    }
-
-    bool operator !=(const DelegateHandler& other) const {
-        return !(*this == other);
-    }
-
-    bool operator <(const DelegateHandler& other) const {
-        shared_ptr<DelegateBase> l(_handler.lock());
-        shared_ptr<DelegateBase> r(other._handler.lock());
-        return l < r;
-    }
-
-    void swap(DelegateHandler &other) {
-        ::cc::swap(_handler, other._handler);
-    }
-
-private:
-    HandlerType _handler;
-};
-
+/*
+*   feature list:
+*     - Various delegate function style support, such as c style function, 
+*           member function, functor, lambda expression.
+*     - Grouping delegates support.
+*     - Combining Results, which delegate function returns, support.
+*     - Tracking shared objects life time.
+*   unsupport:
+*     - Blocking delegate.
+*     - Multi-thread access.
+*/
 template <
     typename Signature,
     typename Combiner = _UseLastValue,
@@ -108,25 +71,6 @@ public:
         return _push(function, target, pos);
     }
 
-    template <
-        typename TargetType,
-        typename Arg1
-    >
-    DelegateHandler push(
-        ResultType (TargetType:: *pmemfn)(Arg1),
-        TargetType *target,
-        const DelegatePosition pos = DelegatePosition::AT_BACK
-    ) {
-        assert(pmemfn && target);
-        function<Signature> function = bind(pmemfn, target, placeholders::_1);
-        return _push(function, target, pos);
-    }
-    //template <
-    //    typename TargetType
-    //>
-    //void push(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target) {
-    //}
-
     DelegateHandler push(
         const Group &group,
         const FunctionType &function,
@@ -166,12 +110,6 @@ public:
         function<Signature> function = bind(pmemfn, target);
         return _push(group, function, target, pos);
     }
-
-    //template <
-    //    typename TargetType
-    //>
-    //void push(ResultType (TargetType:: *pmemfn)(), const shared_ptr<TargetType> &target) {
-    //}
 
     void remove(void *address) {
         auto addressIter = _address.find(address);
@@ -213,7 +151,7 @@ public:
         return invoke.getCombinedResult();
     }
 
-    ResultType raise(const Group &group) {
+    ResultType raiseGroup(const Group &group) {
         _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
         GroupKey key(_DelegateCategory::GROUPED, group);
         auto mapEnd = _groups.end();
@@ -233,7 +171,7 @@ public:
         return invoke.getCombinedResult();
     }
     
-    ResultType raiseUntil(const function<CheckSignature>  &function) {
+    ResultType raiseUntil(const function<CheckSignature> &function) {
         _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
         auto end = _delegates.end();
         for (auto iter = _delegates.begin(); iter != end; ) {
@@ -249,9 +187,9 @@ public:
         return invoke.getCombinedResult();
     }
 
-    ResultType raiseUntil(
+    ResultType raiseGroupUntil(
         const Group &group,
-        const function<CheckSignature>  &function
+        const function<CheckSignature> &function
     ) {
         _DelegateInvoke<ResultType, FunctionType, Combiner> invoke;
         GroupKey key(_DelegateCategory::GROUPED, group);
@@ -275,6 +213,140 @@ public:
         return invoke.getCombinedResult();
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Define member functions to raise event with 1-4 arguments.
+#define CC_EVENT_OPERATOR_WITH_ARGS(...) \
+    template <typename TargetType, CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    DelegateHandler push( \
+        ResultType (TargetType:: *pmemfn)(__VA_ARGS__), \
+        TargetType *target, \
+        const DelegatePosition pos = DelegatePosition::AT_BACK \
+    ) { \
+        assert(pmemfn && target); \
+        function<Signature> function = bind( \
+            pmemfn, \
+            target, \
+            CC_TYPES_TO_PLACEHOLDER(__VA_ARGS__) \
+        ); \
+        return _push(function, target, pos); \
+    } \
+     \
+    template <typename TargetType, CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    DelegateHandler push( \
+        const Group &group, \
+        ResultType (TargetType:: *pmemfn)(__VA_ARGS__), \
+        TargetType *target, \
+        const DelegatePosition pos = DelegatePosition::AT_BACK \
+    ) { \
+        assert(pmemfn && target); \
+        function<Signature> function = bind( \
+            pmemfn, \
+            target, \
+            CC_TYPES_TO_PLACEHOLDER(__VA_ARGS__) \
+        ); \
+        return _push(group, function, target, pos); \
+    } \
+     \
+    template <CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    ResultType raise(CC_TYPES_APPEND_PARA(__VA_ARGS__)) { \
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke; \
+        auto end = _delegates.end(); \
+        for (auto iter = _delegates.begin(); iter != end; ) { \
+            if ((*iter)->disabled()) { \
+                _removeDelegate(iter++); \
+                continue; \
+            } \
+            invoke((*iter++)->getFunction(), CC_TYPES_TO_PARA(__VA_ARGS__)); \
+        } \
+        return invoke.getCombinedResult(); \
+    } \
+     \
+    template <CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    ResultType raiseGroup( \
+        const Group &group, \
+        CC_TYPES_APPEND_PARA(__VA_ARGS__) \
+    ) { \
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke; \
+        GroupKey key(_DelegateCategory::GROUPED, group); \
+        auto mapEnd = _groups.end(); \
+        auto mapIter = _groups.find(key); \
+        if (mapIter != mapEnd) { \
+            auto iter = mapIter->second; \
+            mapIter = _groups.upper_bound(key); \
+            auto end = (mapIter == mapEnd) ? \
+                _delegates.end() : mapIter->second; \
+            for ( ; iter != end; ) { \
+                if ((*iter)->disabled()) { \
+                    _removeDelegate(iter++); \
+                    continue; \
+                } \
+                invoke( \
+                    (*iter++)->getFunction(), \
+                    CC_TYPES_TO_PARA(__VA_ARGS__) \
+                ); \
+            } \
+        } \
+        return invoke.getCombinedResult(); \
+    } \
+     \
+    template <CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    ResultType raiseUntil( \
+        const function<CheckSignature> &function, \
+        CC_TYPES_APPEND_PARA(__VA_ARGS__) \
+    ) { \
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke; \
+        auto end = _delegates.end(); \
+        for (auto iter = _delegates.begin(); iter != end; ) { \
+            if ((*iter)->disabled()) { \
+                _removeDelegate(iter++); \
+                continue; \
+            } \
+            invoke((*iter++)->getFunction(), CC_TYPES_TO_PARA(__VA_ARGS__)); \
+            if (invoke.checkResult(function)) { \
+                break; \
+            } \
+        } \
+        return invoke.getCombinedResult(); \
+    } \
+     \
+    template <CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
+    ResultType raiseGroupUntil( \
+        const Group &group, \
+        const function<CheckSignature> &function, \
+        CC_TYPES_APPEND_PARA(__VA_ARGS__) \
+    ) { \
+        _DelegateInvoke<ResultType, FunctionType, Combiner> invoke; \
+        GroupKey key(_DelegateCategory::GROUPED, group); \
+        auto mapEnd = _groups.end(); \
+        auto mapIter = _groups.find(key); \
+        if (mapIter != mapEnd) { \
+            auto iter = mapIter->second; \
+            mapIter = _groups.upper_bound(key); \
+            auto end = (mapIter == mapEnd) ? \
+                _delegates.end() : mapIter->second; \
+            for ( ; iter != end; ) { \
+                if ((*iter)->disabled()) { \
+                    _removeDelegate(iter++); \
+                    continue; \
+                } \
+                invoke( \
+                    (*iter++)->getFunction(), \
+                    CC_TYPES_TO_PARA(__VA_ARGS__) \
+                ); \
+                if (invoke.checkResult(function)) { \
+                    break; \
+                } \
+            } \
+        } \
+        return invoke.getCombinedResult(); \
+    }
+
+    CC_EVENT_OPERATOR_WITH_ARGS(Arg1);
+    CC_EVENT_OPERATOR_WITH_ARGS(Arg1, Arg2);
+    CC_EVENT_OPERATOR_WITH_ARGS(Arg1, Arg2, Arg3);
+    CC_EVENT_OPERATOR_WITH_ARGS(Arg1, Arg2, Arg3, Arg4);
+#undef CC_EVENT_OPERATOR_WITH_ARGS
+    ////////////////////////////////////////////////////////////////////////////
 private:
     bool _groupKeyEqual(const GroupKey &key1, const GroupKey &key2) {
         if (_groupKeyLess(key1, key2)) return false;
@@ -371,14 +443,15 @@ private:
         if (mapIter != _groups.end()) {
             auto bgn = mapIter->second;
             auto upper = _groups.upper_bound(key);
-            auto end = (upper == _groups.end()) ? _delegates.end() : upper->second;
-            for_each(bgn, end, [](const shared_ptr<DelegateType> &p) { p->disable(); });
+            auto end = (upper == _groups.end()) ?
+                _delegates.end() : upper->second;
+            for_each(bgn, end, [](const shared_ptr<DelegateType> &p) {
+                p->disable();
+            });
             _groups.erase(mapIter);
         }
     }
 
-    //bool _raising;
-    //DelegateListType::iterator _raisingIter;
     DelegateListType _delegates;
     unordered_map<const void *, const DelegateIteratorType> _address;
     map<GroupKey, const DelegateIteratorType, GroupKeyLess> _groups;

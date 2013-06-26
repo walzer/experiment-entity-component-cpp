@@ -123,10 +123,9 @@ void CCComponentTest();
 #define CC_TO_STRINGCOMPONENT_REGISTER_MEMBER_FUNCTION_1(funcName, returnType) \
     registerFunction<returnType()>(CC_TO_STRING(funcName), \
         ::std::bind(& IMPL_CLASS :: funcName, this))
-#define _TYPE_TO_HOLDER(n, type) ::std::placeholders::_##n
 #define CC_TO_STRINGCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, ...) \
     registerFunction<returnType(__VA_ARGS__)>(CC_TO_STRING(funcName), \
-        ::std::bind(&IMPL_CLASS::funcName, this, CC_FOR_EACH_NUM(_TYPE_TO_HOLDER, __VA_ARGS__)))
+        ::std::bind(&IMPL_CLASS::funcName, this, CC_TYPES_TO_PLACEHOLDER(__VA_ARGS__)))
 #define CC_TO_STRINGCOMPONENT_REGISTER_MEMBER_FUNCTION_2(funcName, returnType, ...) \
     CC_TO_STRINGCOMPONENT_REGISTER_MEMBER_FUNCTION_ARGS(funcName, returnType, __VA_ARGS__)
 #define CC_TO_STRINGCOMPONENT_REGISTER_MEMBER_FUNCTION_3(funcName, returnType, ...) \
@@ -195,7 +194,7 @@ ReturnType CCComponent::callFunction(const String& funcName)
 
 #define CCCOMPONENT_IMPL_CALL_FUNCTION(ReturnType, ...) \
 template <typename ReturnType, CC_TYPES_WITH_TYPENAME(__VA_ARGS__)> \
-ReturnType CCComponent::callFunction(const String& funcName, CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
+ReturnType CCComponent::callFunction(const String& funcName, CC_TYPES_APPEND_PARA(__VA_ARGS__)) \
 { \
     FunctionType<::std::function<ReturnType(__VA_ARGS__)>>* pfn = nullptr; \
     auto it = _functions.find(funcName); \
@@ -205,7 +204,7 @@ ReturnType CCComponent::callFunction(const String& funcName, CC_TYPES_APPEND_PAR
     } \
     if (pfn) \
     { \
-        return (pfn->functor)(CC_TYPES_TO_PARAS(__VA_ARGS__)); \
+        return (pfn->functor)(CC_TYPES_TO_PARA(__VA_ARGS__)); \
     } \
     else \
     { \

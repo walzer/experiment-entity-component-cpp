@@ -87,9 +87,9 @@ public:
     
 #define CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(...) \
     template < CC_TYPES_WITH_TYPENAME(__VA_ARGS__) > \
-    bool invoke(const DelegateFunction& func, CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
+    bool invoke(const DelegateFunction& func, CC_TYPES_APPEND_PARA(__VA_ARGS__)) \
     { \
-        ResultType value = func(CC_TYPES_TO_PARAS(__VA_ARGS__)); \
+        ResultType value = func(CC_TYPES_TO_PARA(__VA_ARGS__)); \
         _result = _combiner(_result, value); \
         return _interrupter(value); \
     }
@@ -217,9 +217,9 @@ public:
 
 #define CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(...) \
     template < CC_TYPES_WITH_TYPENAME(__VA_ARGS__) > \
-    bool invoke(const DelegateFunction& func, CC_TYPES_APPEND_PARAS(__VA_ARGS__)) \
+    bool invoke(const DelegateFunction& func, CC_TYPES_APPEND_PARA(__VA_ARGS__)) \
     { \
-        func(CC_TYPES_TO_PARAS(__VA_ARGS__)); \
+        func(CC_TYPES_TO_PARA(__VA_ARGS__)); \
         return false; \
     }
     CCDELEGATE_INVOKE_DEFINE_INVOKE_ARGS(Arg1);
