@@ -1,6 +1,0 @@
-APP_ABI := armeabi x86
-APP_CPPFLAGS += -std=gnu++0x  -frtti
-APP_CPPFLAGS += -DBUILD_OGLES2 -DEGL_NOT_PRESENT
-APP_STL := gnustl_static
-APP_PLATFORM := android-8
-NDK_TOOLCHAIN_VERSION=clang3.1
