@@ -6,7 +6,6 @@ LOCAL_MODULE    := foundation
 
 FOUNDATION_SRC_FILES := $(addprefix ../../../foundation/src/, \
     Event.cpp \
-    Event2.cpp \
     profile.cpp \
 )
 

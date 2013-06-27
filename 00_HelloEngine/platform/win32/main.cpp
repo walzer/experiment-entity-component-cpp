@@ -3,10 +3,7 @@
 
 #include "pch.h"
 
-//#include "Game/GameApp.h"
-//#include "GameView.h"
 #include "Resource.h"
-//#include "CCRuntime_win32.h"
 
 using namespace std;
 using namespace cc;
@@ -25,78 +22,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
     FILE * console = nullptr;
     freopen_s(&console, "CONOUT$", "w", stdout);
 
-    ProfileInit();
     eventTest();
-    event2Test();
-    //CCComponentTest();
 
-    //MSG msg;
-    //HACCEL hAccelTable;
-    //GameApp game;
-    //CCRuntime_win32 runtime;
-
-    //game.init();
-    //// Perform application initialization:
-    //if (! runtime.init(hInstance))
-    //{
-    //    return FALSE;
-    //}
-    //GameView * view = static_cast<GameView*>(runtime.getSurface());
-    //ShowWindow(view->getHandle(), nCmdShow);
-    //UpdateWindow(view->getHandle());
-
-    //hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MY00_HELLOENGINE));
-
-    //LARGE_INTEGER nFreq;
-    //LARGE_INTEGER nLast;
-    //LARGE_INTEGER nNow;
-    //LARGE_INTEGER nInterval;
-
-    //QueryPerformanceFrequency(&nFreq);
-    //QueryPerformanceCounter(&nLast);
-    //nInterval.QuadPart = (LONGLONG)(0.05f * nFreq.QuadPart);
-
-    //// Main message loop:
-    //while (1)
-    //{
-    //    if (! PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-    //    {
-    //        // Get current time tick.
-    //        QueryPerformanceCounter(&nNow);
-
-    //        // If it's the time to draw next frame, draw it, else sleep a while.
-    //        if (nNow.QuadPart - nLast.QuadPart > nInterval.QuadPart)
-    //        {
-    //            nLast.QuadPart = nNow.QuadPart;
-    //            runtime.run();
-    //        }
-    //        else
-    //        {
-    //            Sleep(0);
-    //        }
-    //        continue;
-    //    }
-
-    //    if (WM_QUIT == msg.message)
-    //    {
-    //        // Quit message loop.
-    //        break;
-    //    }
-
-    //    // Deal with windows message.
-    //    if (! hAccelTable || ! TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-    //    {
-    //        TranslateMessage(&msg);
-    //        DispatchMessage(&msg);
-    //    }
-    //}
-
-    //runtime.done();
-    //game.done();
-
-    ProfileUnInit();
-    FreeConsole();
-    fclose(console);
-    //return (int) msg.wParam;
     return 0;
 }

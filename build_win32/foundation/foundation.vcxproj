@@ -11,31 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\foundation\include\CCComponent.h" />
-    <ClInclude Include="..\..\foundation\include\CCContext.h" />
     <ClInclude Include="..\..\foundation\include\Delegate.h" />
-    <ClInclude Include="..\..\foundation\include\CCEntity.h" />
-    <ClInclude Include="..\..\foundation\include\CCEntityManager.h" />
-    <ClInclude Include="..\..\foundation\include\Delegate2.h" />
     <ClInclude Include="..\..\foundation\include\Event.h" />
-    <ClInclude Include="..\..\foundation\include\CCFoundation.h" />
-    <ClInclude Include="..\..\Foundation\include\Event2.h" />
+    <ClInclude Include="..\..\foundation\include\Foundation.h" />
     <ClInclude Include="..\..\foundation\include\FundationMacrosH.h" />
-    <ClInclude Include="..\..\foundation\include\CCManager.h" />
-    <ClInclude Include="..\..\foundation\include\CCRuntime.h" />
-    <ClInclude Include="..\..\foundation\include\String.hpp" />
-    <ClInclude Include="..\..\foundation\include\CCSurface.h" />
-    <ClInclude Include="..\..\foundation\include\CCTimeManager.h" />
-    <ClInclude Include="..\..\foundation\include\CCVector.h" />
-    <ClInclude Include="..\..\foundation\include\CCVertices.h" />
     <ClInclude Include="..\..\foundation\include\CppStl.h" />
+    <ClInclude Include="..\..\foundation\include\profile.h" />
     <ClInclude Include="..\..\foundation\include\Uncopyable.h" />
     <ClInclude Include="..\..\foundation\src\FundationMacrosCPP.h" />
     <ClInclude Include="..\..\foundation\src\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\foundation\src\Event.cpp" />
-    <ClCompile Include="..\..\foundation\src\Event2.cpp" />
     <ClCompile Include="..\..\foundation\src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>

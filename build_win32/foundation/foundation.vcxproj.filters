@@ -11,39 +11,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\foundation\include\CCComponent.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCContext.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCEntity.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCEntityManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCFoundation.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCRuntime.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCSurface.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCTimeManager.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCVector.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\CCVertices.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\foundation\src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -62,17 +29,14 @@
     <ClInclude Include="..\..\foundation\include\Event.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\foundation\include\profile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foundation\include\Foundation.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\foundation\src\FundationMacrosCPP.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\String.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Foundation\include\Event2.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foundation\include\Delegate2.h">
-      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +47,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Foundation\src\profile.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\foundation\src\Event2.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
