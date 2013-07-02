@@ -113,6 +113,8 @@
 
 namespace cc {;
 using namespace std;
+typedef string String;
+typedef shared_ptr<const String> CachedString;
 }   // namespace cc
 
 #endif  // __CPP_STL_H__
