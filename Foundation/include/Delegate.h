@@ -23,10 +23,11 @@ public:
         if (_disabled) {
             return true;
         }
-        if (any_of(
-            _trackObjs.begin(),
-            _trackObjs.end(),
-            [](const weak_ptr<void> &o) { return o.expired(); })
+        if (
+            any_of(
+                _trackObjs.begin(),_trackObjs.end(),
+                [](const weak_ptr<void> &o) {return o.expired();}
+            )
         ) {
             _disabled = true;
         }

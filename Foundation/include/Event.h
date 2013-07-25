@@ -120,8 +120,8 @@ public:
 
     void remove(const DelegatePosition &pos) {
         GroupKey key(
-            (pos == DelegatePosition::AT_BACK) ?
-            _DelegateCategory::AT_BACK : _DelegateCategory::AT_FRONT,
+            (pos == DelegatePosition::AT_BACK)?
+            _DelegateCategory::AT_BACK: _DelegateCategory::AT_FRONT,
             Group()
         );
         _removeGroup(key);
