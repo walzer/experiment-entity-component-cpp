@@ -18,6 +18,7 @@
     <ClInclude Include="..\..\foundation\include\CppStl.h" />
     <ClInclude Include="..\..\foundation\include\IComponent.h" />
     <ClInclude Include="..\..\foundation\include\IComponentContainer.h" />
+    <ClInclude Include="..\..\foundation\include\IDom.h" />
     <ClInclude Include="..\..\foundation\include\profile.h" />
     <ClInclude Include="..\..\foundation\include\Uncopyable.h" />
     <ClInclude Include="..\..\foundation\src\FundationMacrosCPP.h" />

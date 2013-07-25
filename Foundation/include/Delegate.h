@@ -23,7 +23,11 @@ public:
         if (_disabled) {
             return true;
         }
-        if (any_of(_trackObjs.begin(), _trackObjs.end(), [](const weak_ptr<void> &o) { return o.expired(); })) {
+        if (any_of(
+            _trackObjs.begin(),
+            _trackObjs.end(),
+            [](const weak_ptr<void> &o) { return o.expired(); })
+        ) {
             _disabled = true;
         }
         return _disabled;
@@ -34,10 +38,13 @@ public:
     }
 
     const void *getAddress() const {
-        return (_address) ? _address : this;
+        return (_address)? _address: this;
     }
 protected:
-    DelegateBase(const void *address) : _disabled(false), _address(address) {}
+    DelegateBase(const void *address):
+        _disabled(false),
+        _address(address) {
+    }
 
 private:
     const void *_address;
@@ -49,10 +56,12 @@ class DelegateHandler {
     typedef weak_ptr<DelegateBase> HandlerType;
 public:
 
-    DelegateHandler() {}
+    DelegateHandler() {
+    }
 
-    DelegateHandler(const HandlerType& handler)
-        : _handler(handler){}
+    DelegateHandler(const HandlerType& handler):
+        _handler(handler){
+    }
 
     DelegateHandler &disable() {
         shared_ptr<DelegateBase> delegateBase = _handler.lock();
@@ -63,8 +72,7 @@ public:
     }
 
     bool disabled() const {
-        if (_handler.expired())
-        {
+        if (_handler.expired()) {
             return true;
         }
         return _handler.lock()->disabled();
@@ -118,18 +126,23 @@ template <
 >
 class _DelegateGroupKeyLess {
 public:
-    _DelegateGroupKeyLess() {}
+    _DelegateGroupKeyLess() {
+    }
 
-    _DelegateGroupKeyLess(const GroupCompare &compare)
-        : _compare(compare) {}
+    _DelegateGroupKeyLess(const GroupCompare &compare):
+        _compare(compare) {
+    }
 
     bool operator ()(
         const typename _DelegateGroupKey<Group>::type &key1,
         const typename _DelegateGroupKey<Group>::type &key2
     ) {
-        if (key1.first != key2.first ) return key1.first < key2.first;
+        if (key1.first != key2.first ) {
+            return key1.first < key2.first;
+        }
         return _compare(key1.second, key2.second);
     }
+
 private:
     GroupCompare _compare;
 };
@@ -138,16 +151,17 @@ template <
     typename FunctionType,
     typename GroupKey
 >
-class Delegate : public DelegateBase {
+class Delegate: public DelegateBase {
 public:
     Delegate(
         const void *address,
         const GroupKey &key,
         const FunctionType &function
-    ) :
-    DelegateBase(address),
-    _function(function),
-    _groupKey(key) {}
+    ):
+        DelegateBase(address),
+        _function(function),
+        _groupKey(key) {
+    }
 
     const FunctionType &getFunction() const {
         return _function;
@@ -166,8 +180,7 @@ class _UseLastValue
 {
 public:
     template <typename T>
-    T operator() (const T& , const T& last)
-    {
+    T operator()(const T &, const T &last) {
         return last;
     }
 };

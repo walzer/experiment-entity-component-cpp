@@ -22,7 +22,7 @@ template <
     typename Group = int,
     typename GroupCompare = less<Group>
 >
-class Event : private Uncopyable {
+class Event: private Uncopyable {
     typedef Event<Signature, Combiner, Group, GroupCompare> ThisType;
     typedef function<Signature> FunctionType;
     typedef typename FunctionType::result_type ResultType;
@@ -111,7 +111,7 @@ public:
         return _push(group, function, target, pos);
     }
 
-    void remove(void *address) {
+    void remove(const void *address) {
         auto addressIter = _address.find(address);
         if (addressIter != _address.end()) {
             (*addressIter->second)->disable();
@@ -127,7 +127,7 @@ public:
         _removeGroup(key);
     }
 
-    void remove(const Group & group) {
+    void remove(const Group &group) {
         GroupKey key(_DelegateCategory::GROUPED, group);
         _removeGroup(key);
     }
@@ -159,7 +159,7 @@ public:
         if (mapIter != mapEnd) {
             auto iter = mapIter->second;
             mapIter = _groups.upper_bound(key);
-            auto end = (mapIter == mapEnd) ? _delegates.end() : mapIter->second;
+            auto end = (mapIter == mapEnd)? _delegates.end(): mapIter->second;
             for ( ; iter != end; ) {
                 if ((*iter)->disabled()) {
                     _removeDelegate(iter++);
@@ -198,7 +198,7 @@ public:
         if (mapIter != mapEnd) {
             auto iter = mapIter->second;
             mapIter = _groups.upper_bound(key);
-            auto end = (mapIter == mapEnd) ? _delegates.end() : mapIter->second;
+            auto end = (mapIter == mapEnd)? _delegates.end(): mapIter->second;
             for ( ; iter != end; ) {
                 if ((*iter)->disabled()) {
                     _removeDelegate(iter++);
@@ -273,8 +273,7 @@ public:
         if (mapIter != mapEnd) { \
             auto iter = mapIter->second; \
             mapIter = _groups.upper_bound(key); \
-            auto end = (mapIter == mapEnd) ? \
-                _delegates.end() : mapIter->second; \
+            auto end = (mapIter == mapEnd)? _delegates.end(): mapIter->second; \
             for ( ; iter != end; ) { \
                 if ((*iter)->disabled()) { \
                     _removeDelegate(iter++); \
@@ -322,8 +321,7 @@ public:
         if (mapIter != mapEnd) { \
             auto iter = mapIter->second; \
             mapIter = _groups.upper_bound(key); \
-            auto end = (mapIter == mapEnd) ? \
-                _delegates.end() : mapIter->second; \
+            auto end = (mapIter == mapEnd)? _delegates.end(): mapIter->second; \
             for ( ; iter != end; ) { \
                 if ((*iter)->disabled()) { \
                     _removeDelegate(iter++); \
@@ -348,7 +346,10 @@ public:
 #undef CC_EVENT_OPERATOR_WITH_ARGS
     ////////////////////////////////////////////////////////////////////////////
 private:
-    bool _groupKeyEqual(const GroupKey &key1, const GroupKey &key2) {
+    bool _groupKeyEqual(
+        const GroupKey &key1,
+        const GroupKey &key2
+    ) {
         if (_groupKeyLess(key1, key2)) return false;
         if (_groupKeyLess(key2, key1)) return false;
         return true;
