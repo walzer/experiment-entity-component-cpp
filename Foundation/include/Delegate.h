@@ -57,8 +57,7 @@ class DelegateHandler {
     typedef weak_ptr<DelegateBase> HandlerType;
 public:
 
-    DelegateHandler() {
-    }
+    DelegateHandler() {}
 
     DelegateHandler(const HandlerType& handler):
         _handler(handler){
@@ -127,8 +126,7 @@ template <
 >
 class _DelegateGroupKeyLess {
 public:
-    _DelegateGroupKeyLess() {
-    }
+    _DelegateGroupKeyLess() {}
 
     _DelegateGroupKeyLess(const GroupCompare &compare):
         _compare(compare) {

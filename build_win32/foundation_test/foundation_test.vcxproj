@@ -89,6 +89,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\unit_test\foundation_test\testEvent.cpp" />
+    <ClCompile Include="..\..\unit_test\foundation_test\testIComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\unit_test\foundation_test\pch.h" />

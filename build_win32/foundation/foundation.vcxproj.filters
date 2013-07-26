@@ -41,9 +41,6 @@
     <ClInclude Include="..\..\foundation\include\IComponent.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\foundation\include\IComponentContainer.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\foundation\include\IDom.h">
       <Filter>include</Filter>
     </ClInclude>

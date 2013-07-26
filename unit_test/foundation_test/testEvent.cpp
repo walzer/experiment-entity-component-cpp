@@ -24,8 +24,7 @@ static vector<pair<const char *, int>> calledFunctions;
 struct EventFunctions {
     static int s_serial;
 
-    EventFunctions() : id(++s_serial){
-    }
+    EventFunctions(): id(++s_serial){}
     int id;
 
     MEM_FN(void, fnv)
@@ -41,7 +40,7 @@ struct EventFunctions {
 int EventFunctions::s_serial = 0;
 function<void()> EventFunctions::bfnv = bind(&EventFunctions::bindfnv);
 
-class EventTest : public testing::Test {
+class EventTest: public testing::Test {
 public:
     static void SetUpTestCase() {
         cout << "\nEventTest SetUpTestCase before run it's tests\n" << endl;
@@ -64,10 +63,10 @@ public:
 
     /*
         AT_FRONT: 0, 1
-        Group 1 : 2, 3
-        Group 3 : 4, 5
-        Group 5 : 6, 7
-        AT_BACK : 8, 9
+        Group 1: 2, 3
+        Group 3: 4, 5
+        Group 5: 6, 7
+        AT_BACK: 8, 9
     */
     EventFunctions objs[10];
     function<bool()> evUntil;   // event<void> until prediction
@@ -75,7 +74,7 @@ public:
 };
 
 TEST_F(EventTest, pushAndRemove) {
-    cout << "Use Event<void()> type for :\n";
+    cout << "Use Event<void()> type for:\n";
     Event<void()> e;
     decltype(calledFunctions.begin()) iter;
 
@@ -187,7 +186,7 @@ void PushDelegateToEvent<AtFront>(
 }
 
 template <typename PushPosition>
-class EventGroupTest : public EventTest {
+class EventGroupTest: public EventTest {
     typedef EventTest BaseType;
 public:
     virtual void SetUp() {
