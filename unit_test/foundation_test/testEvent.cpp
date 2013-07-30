@@ -61,6 +61,7 @@ public:
         cout << "test TearDown" << endl;
     }
 
+protected:
     /*
         AT_FRONT: 0, 1
         Group 1: 2, 3
