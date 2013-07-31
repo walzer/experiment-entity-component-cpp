@@ -8,9 +8,9 @@ class FooComponent: public IComponent {
 public:
     FooComponent():
         calledOnInit(0),
-        calledOnEnable(0) {
-        setTypeName(make_shared<String>("FooComponent"));
-    }
+        calledOnEnable(0) {}
+
+    virtual const TypeInfo *getTypeInfo();
 
     int calledOnInit;
     int calledOnEnable;
@@ -18,7 +18,7 @@ public:
 protected:
     bool _onInit(const IDom *) {
         ++calledOnInit;
-        setName(make_shared<String>("Foo"));
+        _setName(make_shared<String>("Foo"));
         return true;
     }
 
@@ -35,6 +35,8 @@ protected:
     }
 };
 
+CC_IMPL_COMPONENT_TYPE_INFO(FooComponent, nullptr, "abc", nullptr);
+
 class FooContainer: public IComponentContainer {
 };
 
@@ -48,7 +50,10 @@ TEST(IComponentTest, testMemberFunction) {
     EXPECT_EQ(false, foo.enabled());
     EXPECT_EQ(nullptr, foo.getOwner());
     EXPECT_EQ(nullptr, foo.getName());
-    EXPECT_STREQ("FooComponent", foo.getTypeName()->c_str());
+    auto info = foo.getTypeInfo();
+    EXPECT_STREQ("FooComponent", info->name);
+    EXPECT_STREQ("abc", (info->dependences)[0]);
+    EXPECT_EQ(nullptr, (info->dependences)[1]);
 
     // Initialized state.
     ASSERT_EQ(true, foo.init());

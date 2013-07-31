@@ -16,6 +16,13 @@ protected:
     virtual void _onDone() = 0;
 
 public:
+    struct TypeInfo {
+        const TypeInfo *base;
+        const char *name;
+        function<shared_ptr<IComponent> ()> create;
+        const char **dependences;
+    };
+
     IComponent():
         _owner(nullptr),
         _enabled(false),
@@ -23,6 +30,10 @@ public:
     }
 
     virtual ~IComponent() {}
+    
+    virtual const TypeInfo *getTypeInfo() {
+        return nullptr;
+    }
 
     bool init(const IDom *arguments = nullptr) {
         if (!_inited) {
@@ -65,10 +76,6 @@ public:
         return _name;
     }
 
-    const CachedString &getTypeName() const {
-        return _typeName;
-    }
-
     const IComponentContainer *getOwner() const {
         return _owner;
     }
@@ -98,21 +105,16 @@ public:
     }
 
 protected:
-    void setName(const CachedString &name) {
+    void _setName(const CachedString &name) {
         _name = name;
     }
 
-    void setTypeName(const CachedString &typeName) {
-        _typeName = typeName;
-    }
-
-    void setOwner(IComponentContainer *owner) {
+    void _setOwner(IComponentContainer *owner) {
         _owner = owner;
     }
 
 private:
     CachedString _name;
-    CachedString _typeName;
     IComponentContainer *_owner;
     bool _enabled;
     bool _inited;
@@ -128,5 +130,21 @@ public:
 };
 
 }   // namespace cc
+
+#define CC_IMPL_COMPONENT_TYPE_INFO(type, baseInfo, ...) \
+    const cc::IComponent::TypeInfo *type::getTypeInfo() { \
+        static const char *dependences[] = { \
+            __VA_ARGS__ \
+        }; \
+        static cc::IComponent::TypeInfo info = { \
+            baseInfo, \
+            #type, \
+            []()->cc::shared_ptr<cc::IComponent> { \
+                return cc::make_shared<type>(); \
+            }, \
+            dependences \
+        }; \
+        return &info; \
+    }
 
 #endif  // __FOUNDATION__I_COMPONENT_H__
