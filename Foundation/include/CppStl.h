@@ -49,6 +49,7 @@
 #include <cwchar>           // various wide and multibyte string handling functions
 /*  vs2012 hasn't implement yet */
 // #include <cuchar>           // (since C++11)	 C-style Unicode character conversion functions
+/*  ::cc::String instead */
 #include <string>           // std::basic_string class template
 
 /*  Containers library  */
@@ -115,6 +116,7 @@ namespace cc {;
 using namespace std;
 typedef string String;
 typedef shared_ptr<const String> CachedString;
+#define CC_CSTR(str) ::cc::make_shared<::cc::String>(str)
 }   // namespace cc
 
 #endif  // __CPP_STL_H__

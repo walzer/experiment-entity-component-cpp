@@ -44,6 +44,9 @@
     <ClInclude Include="..\..\foundation\include\IDom.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\foundation\include\ComponentFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\foundation\src\pch.cpp">
@@ -53,6 +56,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Foundation\src\profile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\foundation\src\ComponentFactory.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

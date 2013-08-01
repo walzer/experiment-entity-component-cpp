@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\foundation\include\ComponentFactory.h" />
     <ClInclude Include="..\..\foundation\include\Delegate.h" />
     <ClInclude Include="..\..\foundation\include\Event.h" />
     <ClInclude Include="..\..\foundation\include\Foundation.h" />
@@ -24,6 +25,7 @@
     <ClInclude Include="..\..\foundation\src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\foundation\src\ComponentFactory.cpp" />
     <ClCompile Include="..\..\foundation\src\Event.cpp" />
     <ClCompile Include="..\..\foundation\src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

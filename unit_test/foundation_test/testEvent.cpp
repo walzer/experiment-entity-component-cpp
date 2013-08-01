@@ -2,6 +2,8 @@
 
 #include "Event.h"
 
+namespace {;
+
 using namespace cc;
 
 /* key: function name, value: object id */
@@ -419,3 +421,5 @@ TEST_F(EventTest, withResultAndArgs) {
     e.raise(1, 2, 3, 4);
     ASSERT_EQ(0, calledFunctions.size());
 }
+
+}   // namespace

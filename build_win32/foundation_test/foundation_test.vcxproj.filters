@@ -20,9 +20,15 @@
     <ClCompile Include="..\..\unit_test\foundation_test\testIComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\unit_test\foundation_test\testComponentFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\unit_test\foundation_test\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\unit_test\foundation_test\FooComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,46 +1,39 @@
 #include "pch.h"
 
-#include "IComponent.h"
-
-using namespace cc;
-
-class FooComponent: public IComponent {
-public:
-    FooComponent():
-        calledOnInit(0),
-        calledOnEnable(0) {}
-
-    virtual const TypeInfo *getTypeInfo();
-
-    int calledOnInit;
-    int calledOnEnable;
-
-protected:
-    bool _onInit(const IDom *) {
-        ++calledOnInit;
-        _setName(make_shared<String>("Foo"));
-        return true;
-    }
-
-    void _onEnable() {
-        ++calledOnEnable;
-    }
-
-    void _onDisable() {
-        --calledOnEnable;
-    }
-
-    void _onDone() {
-        --calledOnInit;
-    }
-};
+#include "FooComponent.h"
 
 CC_IMPL_COMPONENT_TYPE_INFO(FooComponent, nullptr, "abc", nullptr);
 
-class FooContainer: public IComponentContainer {
-};
+FooComponent::FooComponent():
+    calledOnInit(0),
+    calledOnEnable(0) {}
+
+bool FooComponent::_onInit(const ::cc::IDom *) {
+    ++calledOnInit;
+    _setName(CC_CSTR("Foo"));
+    return true;
+}
+
+void FooComponent::_onEnable() {
+    ++calledOnEnable;
+}
+
+void FooComponent::_onDisable() {
+    --calledOnEnable;
+}
+
+void FooComponent::_onDone() {
+    --calledOnInit;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
+
+namespace {;
+
+using namespace cc;
+
+class FooContainer: public IComponentContainer {
+};
 
 TEST(IComponentTest, testMemberFunction) {
     FooComponent foo;
@@ -51,9 +44,9 @@ TEST(IComponentTest, testMemberFunction) {
     EXPECT_EQ(nullptr, foo.getOwner());
     EXPECT_EQ(nullptr, foo.getName());
     auto info = foo.getTypeInfo();
-    EXPECT_STREQ("FooComponent", info->name);
-    EXPECT_STREQ("abc", (info->dependences)[0]);
-    EXPECT_EQ(nullptr, (info->dependences)[1]);
+    EXPECT_STREQ("FooComponent", info.name);
+    EXPECT_STREQ("abc", (info.dependences)[0]);
+    EXPECT_EQ(nullptr, (info.dependences)[1]);
 
     // Initialized state.
     ASSERT_EQ(true, foo.init());
@@ -142,3 +135,5 @@ INSTANTIATE_TEST_CASE_P(
         testing::Range(0, 4)
     )
 );
+
+}   // namespace

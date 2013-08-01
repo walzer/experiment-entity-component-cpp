@@ -2,27 +2,29 @@
 #define __FOUNDATION__I_COMPONENT_H__
 
 #include "CppStl.h"
+#include "Uncopyable.h"
 
 namespace cc {;
 
+class IComponent;
 class IComponentContainer;
 class IDom;
 
+struct ComponentTypeInfo {
+    const ComponentTypeInfo *base;
+    const char *name;
+    function<shared_ptr<IComponent> ()> create;
+    const char **dependences;
+};
+
 class IComponent: private enable_shared_from_this<IComponent> {
 protected:
-    virtual bool _onInit(const IDom *arguments) = 0;
+    virtual bool _onInit(const IDom *args) = 0;
     virtual void _onEnable() = 0;
     virtual void _onDisable() = 0;
     virtual void _onDone() = 0;
 
 public:
-    struct TypeInfo {
-        const TypeInfo *base;
-        const char *name;
-        function<shared_ptr<IComponent> ()> create;
-        const char **dependences;
-    };
-
     IComponent():
         _owner(nullptr),
         _enabled(false),
@@ -31,9 +33,7 @@ public:
 
     virtual ~IComponent() {}
     
-    virtual const TypeInfo *getTypeInfo() {
-        return nullptr;
-    }
+    virtual const ComponentTypeInfo &getType() = 0;
 
     bool init(const IDom *arguments = nullptr) {
         if (!_inited) {
@@ -131,20 +131,27 @@ public:
 
 }   // namespace cc
 
+#define CC_DECL_COMPONENT_TYPE_INFO \
+    public: \
+        virtual const ::cc::ComponentTypeInfo &getType() { \
+            return getTypeInfo(); \
+        } \
+        static const ::cc::ComponentTypeInfo &getTypeInfo()
+
 #define CC_IMPL_COMPONENT_TYPE_INFO(type, baseInfo, ...) \
-    const cc::IComponent::TypeInfo *type::getTypeInfo() { \
+    const ::cc::ComponentTypeInfo &type::getTypeInfo() { \
         static const char *dependences[] = { \
             __VA_ARGS__ \
         }; \
-        static cc::IComponent::TypeInfo info = { \
+        static ::cc::ComponentTypeInfo info = { \
             baseInfo, \
             #type, \
             []()->cc::shared_ptr<cc::IComponent> { \
-                return cc::make_shared<type>(); \
+                return ::cc::make_shared<type>(); \
             }, \
             dependences \
         }; \
-        return &info; \
+        return info; \
     }
 
 #endif  // __FOUNDATION__I_COMPONENT_H__
